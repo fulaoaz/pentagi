@@ -1973,412 +1973,412 @@ Each operation will provide real-time status updates and confirmation when requi
 
 // Reset Password Screen constants
 const (
-	ResetPasswordFormTitle       = "Reset Admin Password"
-	ResetPasswordFormDescription = "Reset the administrator password for PentAGI"
-	ResetPasswordFormName        = "Reset Password"
-	ResetPasswordFormOverview    = `Reset the password for the default administrator account (admin@pentagi.com).
+	ResetPasswordFormTitle       = "重置管理员密码"
+	ResetPasswordFormDescription = "重置 PentAGI 的管理员密码"
+	ResetPasswordFormName        = "重置密码"
+	ResetPasswordFormOverview    = `重置默认管理员账号（admin@pentagi.com）的密码。
 
-This operation requires PentAGI to be running and will update the password in the PostgreSQL database.
+此操作要求 PentAGI 处于运行状态，并将在 PostgreSQL 数据库中更新密码。
 
-Enter your new password twice to confirm and press Enter to apply the change.
+请两次输入新密码以确认，然后按 Enter 应用更改。
 
-Password requirements:
-• Minimum 5 characters
-• Both password fields must match`
+密码要求：
+• 至少 5 个字符
+• 两次输入的密码必须一致`
 
 	// Form fields
-	ResetPasswordNewPassword         = "New Password"
-	ResetPasswordNewPasswordDesc     = "Enter the new administrator password"
-	ResetPasswordConfirmPassword     = "Confirm Password"
-	ResetPasswordConfirmPasswordDesc = "Re-enter the new password to confirm"
+	ResetPasswordNewPassword         = "新密码"
+	ResetPasswordNewPasswordDesc     = "输入新的管理员密码"
+	ResetPasswordConfirmPassword     = "确认密码"
+	ResetPasswordConfirmPasswordDesc = "再次输入新密码以确认"
 
 	// Status messages
-	ResetPasswordNotAvailable = "PentAGI must be running to reset password"
-	ResetPasswordAvailable    = "Password reset is available"
-	ResetPasswordInProgress   = "Resetting password..."
-	ResetPasswordSuccess      = "Password has been successfully reset"
-	ResetPasswordErrorPrefix  = "Error: "
+	ResetPasswordNotAvailable = "重置密码需要 PentAGI 处于运行状态"
+	ResetPasswordAvailable    = "可以重置密码"
+	ResetPasswordInProgress   = "正在重置密码..."
+	ResetPasswordSuccess      = "密码已成功重置"
+	ResetPasswordErrorPrefix  = "错误："
 
 	// Validation errors
-	ResetPasswordErrorEmptyPassword = "Password cannot be empty"
-	ResetPasswordErrorShortPassword = "Password must be at least 5 characters long"
-	ResetPasswordErrorMismatch      = "Passwords do not match"
+	ResetPasswordErrorEmptyPassword = "密码不能为空"
+	ResetPasswordErrorShortPassword = "密码长度至少为 5 个字符"
+	ResetPasswordErrorMismatch      = "两次输入的密码不一致"
 
 	// Help content
-	ResetPasswordHelpContent = `Reset the administrator password for accessing PentAGI.
+	ResetPasswordHelpContent = `重置用于登录 PentAGI 的管理员密码。
 
-This operation:
-• Updates the password for admin@pentagi.com account
-• Sets the user status to 'active'
-• Requires PentAGI database to be accessible
-• Does not affect other user accounts
+此操作会：
+• 更新 admin@pentagi.com 账号的密码
+• 将该用户状态设为 'active'
+• 需要能够访问 PentAGI 数据库
+• 不影响其他用户账号
 
-The password change takes effect immediately after successful completion.
+操作成功完成后，密码更改立即生效。
 
-Enter the same password in both fields and press Enter to confirm the change.`
+在两个字段中输入相同的密码，然后按 Enter 确认更改。`
 )
 
 // Processor Operation Form constants
 const (
 	// Dynamic title templates
 	ProcessorOperationFormTitle       = "%s"
-	ProcessorOperationFormDescription = "Execute %s operation"
+	ProcessorOperationFormDescription = "执行 %s 操作"
 	ProcessorOperationFormName        = "%s"
 
 	// Common status messages
-	ProcessorOperationNotStarted = "Ready to execute %s operation"
-	ProcessorOperationInProgress = "Executing %s operation...\n"
-	ProcessorOperationCompleted  = "%s operation completed successfully\n"
-	ProcessorOperationFailed     = "Failed to execute %s operation"
+	ProcessorOperationNotStarted = "已就绪，可执行 %s 操作"
+	ProcessorOperationInProgress = "正在执行 %s 操作...\n"
+	ProcessorOperationCompleted  = "%s 操作已成功完成\n"
+	ProcessorOperationFailed     = "执行 %s 操作失败"
 
 	// Confirmation messages
-	ProcessorOperationConfirmation = "Are you sure you want to %s?"
-	ProcessorOperationPressEnter   = "Press Enter to %s"
-	ProcessorOperationPressYN      = "Press Y to confirm, N to cancel"
+	ProcessorOperationConfirmation = "确定要%s吗？"
+	ProcessorOperationPressEnter   = "按 Enter 即可%s"
+	ProcessorOperationPressYN      = "按 Y 确认，按 N 取消"
 	// Short notice without hotkeys (for static help panel)
-	ProcessorOperationRequiresConfirmationShort = "This operation requires confirmation"
+	ProcessorOperationRequiresConfirmationShort = "此操作需要确认"
 	// Additional terminal messages
-	ProcessorOperationCancelled = "Operation cancelled"
-	ProcessorOperationUnknown   = "Unknown operation: %s"
+	ProcessorOperationCancelled = "操作已取消"
+	ProcessorOperationUnknown   = "未知操作：%s"
 
 	// Operation specific messages
-	ProcessorOperationStarting    = "Starting services..."
-	ProcessorOperationStopping    = "Stopping services..."
-	ProcessorOperationRestarting  = "Restarting services..."
-	ProcessorOperationDownloading = "Downloading images..."
-	ProcessorOperationUpdating    = "Updating components..."
-	ProcessorOperationResetting   = "Resetting to factory defaults..."
-	ProcessorOperationRemoving    = "Removing containers..."
-	ProcessorOperationPurging     = "Purging all data..."
-	ProcessorOperationInstalling  = "Installing PentAGI services..."
+	ProcessorOperationStarting    = "正在启动服务..."
+	ProcessorOperationStopping    = "正在停止服务..."
+	ProcessorOperationRestarting  = "正在重启服务..."
+	ProcessorOperationDownloading = "正在下载镜像..."
+	ProcessorOperationUpdating    = "正在更新组件..."
+	ProcessorOperationResetting   = "正在恢复出厂默认设置..."
+	ProcessorOperationRemoving    = "正在移除容器..."
+	ProcessorOperationPurging     = "正在清除所有数据..."
+	ProcessorOperationInstalling  = "正在安装 PentAGI 服务..."
 
 	// Help text templates
-	ProcessorOperationHelpTitle           = "%s Operation"
-	ProcessorOperationHelpContent         = "This operation will %s."
-	ProcessorOperationHelpContentDownload = "This operation will download %s components."
-	ProcessorOperationHelpContentUpdate   = "This operation will update %s components."
+	ProcessorOperationHelpTitle           = "%s 操作"
+	ProcessorOperationHelpContent         = "此操作将%s。"
+	ProcessorOperationHelpContentDownload = "此操作将下载 %s 组件。"
+	ProcessorOperationHelpContentUpdate   = "此操作将更新 %s 组件。"
 	// Generic title/description/builders for dynamic operations
-	OperationTitleInstallPentagi    = "Install PentAGI"
-	OperationDescInstallPentagi     = "Install and configure PentAGI services"
-	OperationTitleDownload          = "Download %s"
-	OperationDescDownloadComponents = "Download %s components"
-	OperationTitleUpdate            = "Update %s"
-	OperationDescUpdateToLatest     = "Update %s to latest version"
-	OperationTitleExecute           = "Execute %s"
-	OperationDescExecuteOn          = "Execute %s on %s"
-	OperationProgressExecuting      = "Executing %s..."
+	OperationTitleInstallPentagi    = "安装 PentAGI"
+	OperationDescInstallPentagi     = "安装并配置 PentAGI 服务"
+	OperationTitleDownload          = "下载 %s"
+	OperationDescDownloadComponents = "下载 %s 组件"
+	OperationTitleUpdate            = "更新 %s"
+	OperationDescUpdateToLatest     = "将 %s 更新到最新版本"
+	OperationTitleExecute           = "执行 %s"
+	OperationDescExecuteOn          = "执行 %s（作用于 %s）"
+	OperationProgressExecuting      = "正在执行 %s..."
 
 	// Terminal not initialized
-	ProcessorOperationTerminalNotInitialized = "Terminal is not initialized"
+	ProcessorOperationTerminalNotInitialized = "终端未初始化"
 )
 
 // Operation-specific help texts
 const (
-	ProcessorHelpInstallPentagi = `This will:
-• Deploy Docker containers for selected services
-• Configure networking and volumes
-• Start all enabled services
-• Set up monitoring if configured
+	ProcessorHelpInstallPentagi = `此操作将：
+• 为所选服务部署 Docker 容器
+• 配置网络与数据卷
+• 启动所有已启用的服务
+• 如已配置，则设置监控组件
 
-Installation will use your current configuration settings.`
+安装将使用你当前的配置设置。`
 
-	ProcessorHelpStartPentagi = `This will:
-• Core PentAGI API and web interface
-• Configured Langfuse analytics (if enabled)
-• Observability stack (if enabled)
+	ProcessorHelpStartPentagi = `此操作将启动：
+• PentAGI 核心 API 与 Web 界面
+• 已配置的 Langfuse 分析组件（如已启用）
+• Observability 可观测性栈（如已启用）
 
-Services will be started in the correct dependency order.`
+服务将按正确的依赖顺序启动。`
 
-	ProcessorHelpStopPentagi = `This will:
-• Gracefully shutdown containers
-• Preserve all data and configurations
-• Network connections will be closed
+	ProcessorHelpStopPentagi = `此操作将：
+• 优雅地关闭容器
+• 保留所有数据与配置
+• 关闭网络连接
 
-You can restart services later without losing any data.`
+稍后可以重新启动服务，不会丢失任何数据。`
 
-	ProcessorHelpRestartPentagi = `This will:
-• Stop running containers
-• Apply any configuration changes
-• Start services with fresh state
+	ProcessorHelpRestartPentagi = `此操作将：
+• 停止正在运行的容器
+• 应用所有配置更改
+• 以全新状态启动服务
 
-Useful after configuration updates or to resolve issues.`
+在更新配置后或需要排查问题时很有用。`
 
-	ProcessorHelpDownloadWorkerImage = `This large image (6GB+) contains:
-• Kali Linux tools and utilities
-• Security testing frameworks
-• Network analysis software
+	ProcessorHelpDownloadWorkerImage = `该大型镜像（6GB 以上）包含：
+• Kali Linux 工具与实用程序
+• 安全测试框架
+• 网络分析软件
 
-Required for pentesting operations.`
+执行渗透测试操作所必需。`
 
-	ProcessorHelpUpdateWorkerImage = `This will:
-• Pull the latest pentesting image
-• Update security tools and frameworks
-• Preserve existing worker containers
+	ProcessorHelpUpdateWorkerImage = `此操作将：
+• 拉取最新的渗透测试镜像
+• 更新安全工具与框架
+• 保留现有的工作容器
 
-Note: This is a large download (6GB+).`
+注意：这是一次大体积下载（6GB 以上）。`
 
-	ProcessorHelpUpdatePentagi = `This will:
-• Download latest container images
-• Perform rolling update of services
-• Preserve all data and configurations
+	ProcessorHelpUpdatePentagi = `此操作将：
+• 下载最新的容器镜像
+• 对服务执行滚动更新
+• 保留所有数据与配置
 
-Services will be briefly unavailable during update.`
+更新期间服务会短暂不可用。`
 
-	ProcessorHelpUpdateInstaller = `This will:
-• Download the latest installer binary
-• Replace the current installer
-• Exit for manual restart
+	ProcessorHelpUpdateInstaller = `此操作将：
+• 下载最新的安装程序二进制文件
+• 替换当前的安装程序
+• 退出，等待手动重启
 
-You'll need to restart the installer after update.`
+更新完成后你需要重新启动安装程序。`
 
-	ProcessorHelpFactoryReset = `⚠️  WARNING: This operation will:
-• Remove all containers and networks
-• Delete all configuration files
-• Clear stored data and volumes
-• Restore default settings
+	ProcessorHelpFactoryReset = `⚠️  警告：此操作将：
+• 移除所有容器与网络
+• 删除所有配置文件
+• 清除已存储的数据与数据卷
+• 恢复默认设置
 
-This action cannot be undone!`
+此操作无法撤销！`
 
-	ProcessorHelpRemovePentagi = `This will:
-• Stop and remove all containers
-• Remove Docker networks
-• Preserve volumes and data
-• Keep configuration files
+	ProcessorHelpRemovePentagi = `此操作将：
+• 停止并移除所有容器
+• 移除 Docker 网络
+• 保留数据卷与数据
+• 保留配置文件
 
-You can reinstall later without losing data.`
+稍后可以重新安装，不会丢失数据。`
 
-	ProcessorHelpPurgePentagi = `⚠️  WARNING: This will permanently delete:
-• All containers and images
-• All data volumes
-• All configuration files
-• All stored results
+	ProcessorHelpPurgePentagi = `⚠️  警告：此操作将永久删除：
+• 所有容器与镜像
+• 所有数据卷
+• 所有配置文件
+• 所有已保存的结果
 
-This action cannot be undone!`
+此操作无法撤销！`
 )
 
 // environment variable descriptions (centralized)
 const (
-	EnvDesc_OPEN_AI_KEY                       = "OpenAI API Key"
-	EnvDesc_OPEN_AI_SERVER_URL                = "OpenAI Server URL"
-	EnvDesc_ANTHROPIC_API_KEY                 = "Anthropic API Key"
-	EnvDesc_ANTHROPIC_SERVER_URL              = "Anthropic Server URL"
-	EnvDesc_GEMINI_API_KEY                    = "Google Gemini API Key"
-	EnvDesc_GEMINI_SERVER_URL                 = "Gemini Server URL"
-	EnvDesc_BEDROCK_DEFAULT_AUTH              = "AWS Bedrock Use Default Credential Chain"
-	EnvDesc_BEDROCK_BEARER_TOKEN              = "AWS Bedrock Bearer Token"
+	EnvDesc_OPEN_AI_KEY                       = "OpenAI API 密钥"
+	EnvDesc_OPEN_AI_SERVER_URL                = "OpenAI 服务器地址"
+	EnvDesc_ANTHROPIC_API_KEY                 = "Anthropic API 密钥"
+	EnvDesc_ANTHROPIC_SERVER_URL              = "Anthropic 服务器地址"
+	EnvDesc_GEMINI_API_KEY                    = "Google Gemini API 密钥"
+	EnvDesc_GEMINI_SERVER_URL                 = "Gemini 服务器地址"
+	EnvDesc_BEDROCK_DEFAULT_AUTH              = "AWS Bedrock 使用默认凭证链"
+	EnvDesc_BEDROCK_BEARER_TOKEN              = "AWS Bedrock Bearer 令牌"
 	EnvDesc_BEDROCK_ACCESS_KEY_ID             = "AWS Bedrock Access Key ID"
 	EnvDesc_BEDROCK_SECRET_ACCESS_KEY         = "AWS Bedrock Secret Access Key"
-	EnvDesc_BEDROCK_SESSION_TOKEN             = "AWS Bedrock Session Token"
-	EnvDesc_BEDROCK_REGION                    = "AWS Bedrock Region"
-	EnvDesc_BEDROCK_SERVER_URL                = "AWS Bedrock Custom Endpoint URL"
-	EnvDesc_OLLAMA_SERVER_URL                 = "Ollama Server URL"
-	EnvDesc_OLLAMA_SERVER_API_KEY             = "Ollama Server API Key (Cloud)"
-	EnvDesc_OLLAMA_SERVER_MODEL               = "Ollama Default Model"
-	EnvDesc_OLLAMA_SERVER_CONFIG_PATH         = "Ollama Container Config Path"
-	EnvDesc_OLLAMA_SERVER_PULL_MODELS_TIMEOUT = "Ollama Model Pull Timeout"
-	EnvDesc_OLLAMA_SERVER_PULL_MODELS_ENABLED = "Ollama Auto-pull Models"
-	EnvDesc_OLLAMA_SERVER_LOAD_MODELS_ENABLED = "Ollama Load Models List"
-	EnvDesc_DEEPSEEK_API_KEY                  = "DeepSeek API Key"
-	EnvDesc_DEEPSEEK_SERVER_URL               = "DeepSeek Server URL"
-	EnvDesc_DEEPSEEK_PROVIDER                 = "DeepSeek Provider Name Prefix (for LiteLLM, e.g., 'deepseek')"
-	EnvDesc_GLM_API_KEY                       = "GLM API Key"
-	EnvDesc_GLM_SERVER_URL                    = "GLM Server URL"
-	EnvDesc_GLM_PROVIDER                      = "GLM Provider Name Prefix (for LiteLLM, e.g., 'zai')"
-	EnvDesc_KIMI_API_KEY                      = "Kimi API Key"
-	EnvDesc_KIMI_SERVER_URL                   = "Kimi Server URL"
-	EnvDesc_KIMI_PROVIDER                     = "Kimi Provider Name Prefix (for LiteLLM, e.g., 'moonshot')"
-	EnvDesc_QWEN_API_KEY                      = "Qwen API Key"
-	EnvDesc_QWEN_SERVER_URL                   = "Qwen Server URL"
-	EnvDesc_QWEN_PROVIDER                     = "Qwen Provider Name Prefix (for LiteLLM, e.g., 'dashscope')"
-	EnvDesc_LLM_SERVER_URL                    = "Custom LLM Server URL"
-	EnvDesc_LLM_SERVER_KEY                    = "Custom LLM API Key"
-	EnvDesc_LLM_SERVER_MODEL                  = "Custom LLM Model"
-	EnvDesc_LLM_SERVER_CONFIG_PATH            = "Custom LLM Container Config Path"
-	EnvDesc_LLM_SERVER_LEGACY_REASONING       = "Custom LLM Legacy Reasoning"
-	EnvDesc_LLM_SERVER_PRESERVE_REASONING     = "Custom LLM Preserve Reasoning Content"
-	EnvDesc_LLM_SERVER_PROVIDER               = "Custom LLM Provider Name"
+	EnvDesc_BEDROCK_SESSION_TOKEN             = "AWS Bedrock 会话令牌"
+	EnvDesc_BEDROCK_REGION                    = "AWS Bedrock 区域"
+	EnvDesc_BEDROCK_SERVER_URL                = "AWS Bedrock 自定义端点地址"
+	EnvDesc_OLLAMA_SERVER_URL                 = "Ollama 服务器地址"
+	EnvDesc_OLLAMA_SERVER_API_KEY             = "Ollama 服务器 API 密钥（云端）"
+	EnvDesc_OLLAMA_SERVER_MODEL               = "Ollama 默认模型"
+	EnvDesc_OLLAMA_SERVER_CONFIG_PATH         = "Ollama 容器内配置文件路径"
+	EnvDesc_OLLAMA_SERVER_PULL_MODELS_TIMEOUT = "Ollama 模型下载超时"
+	EnvDesc_OLLAMA_SERVER_PULL_MODELS_ENABLED = "Ollama 自动下载模型"
+	EnvDesc_OLLAMA_SERVER_LOAD_MODELS_ENABLED = "Ollama 加载模型列表"
+	EnvDesc_DEEPSEEK_API_KEY                  = "DeepSeek API 密钥"
+	EnvDesc_DEEPSEEK_SERVER_URL               = "DeepSeek 服务器地址"
+	EnvDesc_DEEPSEEK_PROVIDER                 = "DeepSeek 提供商名称前缀（用于 LiteLLM，例如 'deepseek'）"
+	EnvDesc_GLM_API_KEY                       = "GLM API 密钥"
+	EnvDesc_GLM_SERVER_URL                    = "GLM 服务器地址"
+	EnvDesc_GLM_PROVIDER                      = "GLM 提供商名称前缀（用于 LiteLLM，例如 'zai'）"
+	EnvDesc_KIMI_API_KEY                      = "Kimi API 密钥"
+	EnvDesc_KIMI_SERVER_URL                   = "Kimi 服务器地址"
+	EnvDesc_KIMI_PROVIDER                     = "Kimi 提供商名称前缀（用于 LiteLLM，例如 'moonshot'）"
+	EnvDesc_QWEN_API_KEY                      = "Qwen API 密钥"
+	EnvDesc_QWEN_SERVER_URL                   = "Qwen 服务器地址"
+	EnvDesc_QWEN_PROVIDER                     = "Qwen 提供商名称前缀（用于 LiteLLM，例如 'dashscope'）"
+	EnvDesc_LLM_SERVER_URL                    = "自定义 LLM 服务器地址"
+	EnvDesc_LLM_SERVER_KEY                    = "自定义 LLM API 密钥"
+	EnvDesc_LLM_SERVER_MODEL                  = "自定义 LLM 模型"
+	EnvDesc_LLM_SERVER_CONFIG_PATH            = "自定义 LLM 容器内配置文件路径"
+	EnvDesc_LLM_SERVER_LEGACY_REASONING       = "自定义 LLM 旧版推理模式"
+	EnvDesc_LLM_SERVER_PRESERVE_REASONING     = "自定义 LLM 保留推理内容"
+	EnvDesc_LLM_SERVER_PROVIDER               = "自定义 LLM 提供商名称"
 
-	EnvDesc_LANGFUSE_LISTEN_IP   = "Langfuse Listen IP"
-	EnvDesc_LANGFUSE_LISTEN_PORT = "Langfuse Listen Port"
-	EnvDesc_LANGFUSE_BASE_URL    = "Langfuse Base URL"
-	EnvDesc_LANGFUSE_PROJECT_ID  = "Langfuse Project ID"
-	EnvDesc_LANGFUSE_PUBLIC_KEY  = "Langfuse Public Key"
-	EnvDesc_LANGFUSE_SECRET_KEY  = "Langfuse Secret Key"
+	EnvDesc_LANGFUSE_LISTEN_IP   = "Langfuse 监听 IP"
+	EnvDesc_LANGFUSE_LISTEN_PORT = "Langfuse 监听端口"
+	EnvDesc_LANGFUSE_BASE_URL    = "Langfuse 基础地址"
+	EnvDesc_LANGFUSE_PROJECT_ID  = "Langfuse 项目 ID"
+	EnvDesc_LANGFUSE_PUBLIC_KEY  = "Langfuse 公开密钥"
+	EnvDesc_LANGFUSE_SECRET_KEY  = "Langfuse 私密密钥"
 
 	// langfuse init variables
-	EnvDesc_LANGFUSE_INIT_PROJECT_ID         = "Langfuse Init Project ID"
-	EnvDesc_LANGFUSE_INIT_PROJECT_PUBLIC_KEY = "Langfuse Init Project Public Key"
-	EnvDesc_LANGFUSE_INIT_PROJECT_SECRET_KEY = "Langfuse Init Project Secret Key"
-	EnvDesc_LANGFUSE_INIT_USER_EMAIL         = "Langfuse Init User Email"
-	EnvDesc_LANGFUSE_INIT_USER_NAME          = "Langfuse Init User Name"
-	EnvDesc_LANGFUSE_INIT_USER_PASSWORD      = "Langfuse Init User Password"
+	EnvDesc_LANGFUSE_INIT_PROJECT_ID         = "Langfuse 初始化项目 ID"
+	EnvDesc_LANGFUSE_INIT_PROJECT_PUBLIC_KEY = "Langfuse 初始化项目公开密钥"
+	EnvDesc_LANGFUSE_INIT_PROJECT_SECRET_KEY = "Langfuse 初始化项目私密密钥"
+	EnvDesc_LANGFUSE_INIT_USER_EMAIL         = "Langfuse 初始化用户邮箱"
+	EnvDesc_LANGFUSE_INIT_USER_NAME          = "Langfuse 初始化用户名"
+	EnvDesc_LANGFUSE_INIT_USER_PASSWORD      = "Langfuse 初始化用户密码"
 
-	EnvDesc_LANGFUSE_OTEL_EXPORTER_OTLP_ENDPOINT = "Langfuse OTLP endpoint for OpenTelemetry exporter"
+	EnvDesc_LANGFUSE_OTEL_EXPORTER_OTLP_ENDPOINT = "Langfuse 的 OpenTelemetry 导出器 OTLP 端点"
 
-	EnvDesc_GRAFANA_LISTEN_IP     = "Grafana Listen IP"
-	EnvDesc_GRAFANA_LISTEN_PORT   = "Grafana Listen Port"
-	EnvDesc_OTEL_GRPC_LISTEN_IP   = "OTel gRPC Listen IP"
-	EnvDesc_OTEL_GRPC_LISTEN_PORT = "OTel gRPC Listen Port"
-	EnvDesc_OTEL_HTTP_LISTEN_IP   = "OTel HTTP Listen IP"
-	EnvDesc_OTEL_HTTP_LISTEN_PORT = "OTel HTTP Listen Port"
-	EnvDesc_OTEL_HOST             = "OpenTelemetry Host"
+	EnvDesc_GRAFANA_LISTEN_IP     = "Grafana 监听 IP"
+	EnvDesc_GRAFANA_LISTEN_PORT   = "Grafana 监听端口"
+	EnvDesc_OTEL_GRPC_LISTEN_IP   = "OTel gRPC 监听 IP"
+	EnvDesc_OTEL_GRPC_LISTEN_PORT = "OTel gRPC 监听端口"
+	EnvDesc_OTEL_HTTP_LISTEN_IP   = "OTel HTTP 监听 IP"
+	EnvDesc_OTEL_HTTP_LISTEN_PORT = "OTel HTTP 监听端口"
+	EnvDesc_OTEL_HOST             = "OpenTelemetry 主机地址"
 
-	EnvDesc_SUMMARIZER_PRESERVE_LAST       = "Summarizer Preserve Last"
-	EnvDesc_SUMMARIZER_USE_QA              = "Summarizer Use QA"
-	EnvDesc_SUMMARIZER_SUM_MSG_HUMAN_IN_QA = "Summarizer Human in QA"
-	EnvDesc_SUMMARIZER_LAST_SEC_BYTES      = "Summarizer Last Section Bytes"
-	EnvDesc_SUMMARIZER_MAX_BP_BYTES        = "Summarizer Max BP Bytes"
-	EnvDesc_SUMMARIZER_MAX_QA_BYTES        = "Summarizer Max QA Bytes"
-	EnvDesc_SUMMARIZER_MAX_QA_SECTIONS     = "Summarizer Max QA Sections"
-	EnvDesc_SUMMARIZER_KEEP_QA_SECTIONS    = "Summarizer Keep QA Sections"
+	EnvDesc_SUMMARIZER_PRESERVE_LAST       = "摘要器：末段大小管理"
+	EnvDesc_SUMMARIZER_USE_QA              = "摘要器：启用问答摘要"
+	EnvDesc_SUMMARIZER_SUM_MSG_HUMAN_IN_QA = "摘要器：压缩问答中的用户消息"
+	EnvDesc_SUMMARIZER_LAST_SEC_BYTES      = "摘要器：末段字节上限"
+	EnvDesc_SUMMARIZER_MAX_BP_BYTES        = "摘要器：单条回复字节上限"
+	EnvDesc_SUMMARIZER_MAX_QA_BYTES        = "摘要器：问答总字节上限"
+	EnvDesc_SUMMARIZER_MAX_QA_SECTIONS     = "摘要器：问答段落数上限"
+	EnvDesc_SUMMARIZER_KEEP_QA_SECTIONS    = "摘要器：保留的最近段落数"
 
-	EnvDesc_ASSISTANT_SUMMARIZER_PRESERVE_LAST    = "Assistant Summarizer Preserve Last"
-	EnvDesc_ASSISTANT_SUMMARIZER_LAST_SEC_BYTES   = "Assistant Summarizer Last Section Bytes"
-	EnvDesc_ASSISTANT_SUMMARIZER_MAX_BP_BYTES     = "Assistant Summarizer Max BP Bytes"
-	EnvDesc_ASSISTANT_SUMMARIZER_MAX_QA_BYTES     = "Assistant Summarizer Max QA Bytes"
-	EnvDesc_ASSISTANT_SUMMARIZER_MAX_QA_SECTIONS  = "Assistant Summarizer Max QA Sections"
-	EnvDesc_ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS = "Assistant Summarizer Keep QA Sections"
+	EnvDesc_ASSISTANT_SUMMARIZER_PRESERVE_LAST    = "助手摘要器：末段大小管理"
+	EnvDesc_ASSISTANT_SUMMARIZER_LAST_SEC_BYTES   = "助手摘要器：末段字节上限"
+	EnvDesc_ASSISTANT_SUMMARIZER_MAX_BP_BYTES     = "助手摘要器：单条回复字节上限"
+	EnvDesc_ASSISTANT_SUMMARIZER_MAX_QA_BYTES     = "助手摘要器：问答总字节上限"
+	EnvDesc_ASSISTANT_SUMMARIZER_MAX_QA_SECTIONS  = "助手摘要器：问答段落数上限"
+	EnvDesc_ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS = "助手摘要器：保留的最近段落数"
 
-	EnvDesc_EMBEDDING_PROVIDER        = "Embedding Provider"
-	EnvDesc_EMBEDDING_URL             = "Embedding URL"
-	EnvDesc_EMBEDDING_KEY             = "Embedding API Key"
-	EnvDesc_EMBEDDING_MODEL           = "Embedding Model"
-	EnvDesc_EMBEDDING_BATCH_SIZE      = "Embedding Batch Size"
-	EnvDesc_EMBEDDING_STRIP_NEW_LINES = "Embedding Strip New Lines"
-	EnvDesc_EMBEDDING_MAX_TEXT_BYTES  = "Embedding Max Text Bytes"
+	EnvDesc_EMBEDDING_PROVIDER        = "向量化提供商"
+	EnvDesc_EMBEDDING_URL             = "向量化服务地址"
+	EnvDesc_EMBEDDING_KEY             = "向量化 API 密钥"
+	EnvDesc_EMBEDDING_MODEL           = "向量化模型"
+	EnvDesc_EMBEDDING_BATCH_SIZE      = "向量化批处理大小"
+	EnvDesc_EMBEDDING_STRIP_NEW_LINES = "向量化前移除换行符"
+	EnvDesc_EMBEDDING_MAX_TEXT_BYTES  = "向量化单块文本字节上限"
 
-	EnvDesc_ASK_USER = "Human-in-the-loop"
+	EnvDesc_ASK_USER = "人工介入（Human-in-the-loop）"
 
-	EnvDesc_ASSISTANT_USE_AGENTS = "Enable multi-agent mode for assistant"
+	EnvDesc_ASSISTANT_USE_AGENTS = "为助手启用多智能体模式"
 
-	EnvDesc_EXECUTION_MONITOR_ENABLED          = "Enable Execution Monitoring (beta)"
-	EnvDesc_EXECUTION_MONITOR_SAME_TOOL_LIMIT  = "Same Tool Call Threshold"
-	EnvDesc_EXECUTION_MONITOR_TOTAL_TOOL_LIMIT = "Total Tool Call Threshold"
-	EnvDesc_MAX_GENERAL_AGENT_TOOL_CALLS       = "Max Tool Calls for General Agents"
-	EnvDesc_MAX_LIMITED_AGENT_TOOL_CALLS       = "Max Tool Calls for Limited Agents"
-	EnvDesc_AGENT_PLANNING_STEP_ENABLED        = "Enable Task Planning (beta)"
+	EnvDesc_EXECUTION_MONITOR_ENABLED          = "启用执行监控（beta）"
+	EnvDesc_EXECUTION_MONITOR_SAME_TOOL_LIMIT  = "相同工具调用阈值"
+	EnvDesc_EXECUTION_MONITOR_TOTAL_TOOL_LIMIT = "工具调用总数阈值"
+	EnvDesc_MAX_GENERAL_AGENT_TOOL_CALLS       = "通用智能体的工具调用上限"
+	EnvDesc_MAX_LIMITED_AGENT_TOOL_CALLS       = "受限智能体的工具调用上限"
+	EnvDesc_AGENT_PLANNING_STEP_ENABLED        = "启用任务规划（beta）"
 
-	EnvDesc_SCRAPER_PUBLIC_URL                    = "Scraper Public URL"
-	EnvDesc_SCRAPER_PRIVATE_URL                   = "Scraper Private URL"
-	EnvDesc_LOCAL_SCRAPER_USERNAME                = "Local Scraper Username"
-	EnvDesc_LOCAL_SCRAPER_PASSWORD                = "Local Scraper Password"
-	EnvDesc_LOCAL_SCRAPER_MAX_CONCURRENT_SESSIONS = "Scraper Max Concurrent Sessions"
+	EnvDesc_SCRAPER_PUBLIC_URL                    = "Scraper 公网地址"
+	EnvDesc_SCRAPER_PRIVATE_URL                   = "Scraper 内网地址"
+	EnvDesc_LOCAL_SCRAPER_USERNAME                = "本地 Scraper 用户名"
+	EnvDesc_LOCAL_SCRAPER_PASSWORD                = "本地 Scraper 密码"
+	EnvDesc_LOCAL_SCRAPER_MAX_CONCURRENT_SESSIONS = "Scraper 最大并发会话数"
 
-	EnvDesc_DUCKDUCKGO_ENABLED    = "DuckDuckGo Search"
-	EnvDesc_DUCKDUCKGO_REGION     = "DuckDuckGo Region"
-	EnvDesc_DUCKDUCKGO_SAFESEARCH = "DuckDuckGo Safe Search"
-	EnvDesc_DUCKDUCKGO_TIME_RANGE = "DuckDuckGo Time Range"
-	EnvDesc_SPLOITUS_ENABLED      = "Sploitus Search"
-	EnvDesc_PERPLEXITY_API_KEY    = "Perplexity API Key"
-	EnvDesc_TAVILY_API_KEY        = "Tavily API Key"
-	EnvDesc_TRAVERSAAL_API_KEY    = "Traversaal API Key"
-	EnvDesc_GOOGLE_API_KEY        = "Google Search API Key"
-	EnvDesc_GOOGLE_CX_KEY         = "Google Search CX Key"
-	EnvDesc_GOOGLE_LR_KEY         = "Google Search LR Key"
+	EnvDesc_DUCKDUCKGO_ENABLED    = "DuckDuckGo 搜索"
+	EnvDesc_DUCKDUCKGO_REGION     = "DuckDuckGo 地区"
+	EnvDesc_DUCKDUCKGO_SAFESEARCH = "DuckDuckGo 安全搜索"
+	EnvDesc_DUCKDUCKGO_TIME_RANGE = "DuckDuckGo 时间范围"
+	EnvDesc_SPLOITUS_ENABLED      = "Sploitus 搜索"
+	EnvDesc_PERPLEXITY_API_KEY    = "Perplexity API 密钥"
+	EnvDesc_TAVILY_API_KEY        = "Tavily API 密钥"
+	EnvDesc_TRAVERSAAL_API_KEY    = "Traversaal API 密钥"
+	EnvDesc_GOOGLE_API_KEY        = "Google 搜索 API 密钥"
+	EnvDesc_GOOGLE_CX_KEY         = "Google 搜索引擎 ID（CX）"
+	EnvDesc_GOOGLE_LR_KEY         = "Google 搜索语言限制（LR）"
 
-	EnvDesc_DOCKER_INSIDE                    = "Docker Inside Container"
-	EnvDesc_DOCKER_NET_ADMIN                 = "Docker Network Admin"
-	EnvDesc_DOCKER_SOCKET                    = "Docker Socket Path"
-	EnvDesc_DOCKER_NETWORK                   = "Docker Network"
-	EnvDesc_DOCKER_PUBLIC_IP                 = "Docker Public IP"
-	EnvDesc_DOCKER_WORK_DIR                  = "Docker Work Directory"
-	EnvDesc_DOCKER_DEFAULT_IMAGE             = "Docker Default Image"
-	EnvDesc_DOCKER_DEFAULT_IMAGE_FOR_PENTEST = "Docker Pentest Image"
-	EnvDesc_DOCKER_HOST                      = "Docker Host"
-	EnvDesc_DOCKER_TLS_VERIFY                = "Docker TLS Verify"
-	EnvDesc_DOCKER_CERT_PATH                 = "Docker Certificate Path"
+	EnvDesc_DOCKER_INSIDE                    = "允许工作容器管理 Docker"
+	EnvDesc_DOCKER_NET_ADMIN                 = "Docker 网络管理权限"
+	EnvDesc_DOCKER_SOCKET                    = "Docker 套接字路径"
+	EnvDesc_DOCKER_NETWORK                   = "Docker 网络"
+	EnvDesc_DOCKER_PUBLIC_IP                 = "Docker 公网 IP"
+	EnvDesc_DOCKER_WORK_DIR                  = "Docker 工作目录"
+	EnvDesc_DOCKER_DEFAULT_IMAGE             = "Docker 默认镜像"
+	EnvDesc_DOCKER_DEFAULT_IMAGE_FOR_PENTEST = "Docker 渗透测试镜像"
+	EnvDesc_DOCKER_HOST                      = "Docker 主机地址"
+	EnvDesc_DOCKER_TLS_VERIFY                = "Docker TLS 验证"
+	EnvDesc_DOCKER_CERT_PATH                 = "Docker 证书路径"
 
-	EnvDesc_LICENSE_KEY                       = "PentAGI License Key"
-	EnvDesc_PENTAGI_LISTEN_IP                 = "PentAGI Server Host"
-	EnvDesc_PENTAGI_LISTEN_PORT               = "PentAGI Server Port"
-	EnvDesc_PUBLIC_URL                        = "PentAGI Public URL"
-	EnvDesc_CORS_ORIGINS                      = "PentAGI CORS Origins"
-	EnvDesc_COOKIE_SIGNING_SALT               = "PentAGI Cookie Signing Salt"
-	EnvDesc_PROXY_URL                         = "HTTP/HTTPS Proxy URL"
-	EnvDesc_HTTP_CLIENT_TIMEOUT               = "HTTP Client Timeout (seconds)"
-	EnvDesc_TERMINAL_TOOL_TIMEOUT             = "Terminal Tool Timeout (seconds)"
-	EnvDesc_EXTERNAL_SSL_CA_PATH              = "Custom CA Certificate Path"
-	EnvDesc_EXTERNAL_SSL_INSECURE             = "Skip SSL Verification"
-	EnvDesc_PENTAGI_SSL_DIR                   = "PentAGI SSL Directory"
-	EnvDesc_PENTAGI_DATA_DIR                  = "PentAGI Data Directory"
-	EnvDesc_PENTAGI_DOCKER_SOCKET             = "Mount Docker Socket Path"
-	EnvDesc_PENTAGI_DOCKER_CERT_PATH          = "Mount Docker Certificate Path"
-	EnvDesc_PENTAGI_LLM_SERVER_CONFIG_PATH    = "Custom LLM Host Config Path"
-	EnvDesc_PENTAGI_OLLAMA_SERVER_CONFIG_PATH = "Ollama Host Config Path"
+	EnvDesc_LICENSE_KEY                       = "PentAGI 许可证密钥"
+	EnvDesc_PENTAGI_LISTEN_IP                 = "PentAGI 服务监听 IP"
+	EnvDesc_PENTAGI_LISTEN_PORT               = "PentAGI 服务监听端口"
+	EnvDesc_PUBLIC_URL                        = "PentAGI 公开访问地址"
+	EnvDesc_CORS_ORIGINS                      = "PentAGI 允许的 CORS 来源"
+	EnvDesc_COOKIE_SIGNING_SALT               = "PentAGI Cookie 签名盐值"
+	EnvDesc_PROXY_URL                         = "HTTP/HTTPS 代理地址"
+	EnvDesc_HTTP_CLIENT_TIMEOUT               = "HTTP 客户端超时（秒）"
+	EnvDesc_TERMINAL_TOOL_TIMEOUT             = "终端工具超时（秒）"
+	EnvDesc_EXTERNAL_SSL_CA_PATH              = "自定义 CA 证书路径"
+	EnvDesc_EXTERNAL_SSL_INSECURE             = "跳过 SSL 验证"
+	EnvDesc_PENTAGI_SSL_DIR                   = "PentAGI SSL 证书目录"
+	EnvDesc_PENTAGI_DATA_DIR                  = "PentAGI 数据目录"
+	EnvDesc_PENTAGI_DOCKER_SOCKET             = "挂载的 Docker 套接字路径"
+	EnvDesc_PENTAGI_DOCKER_CERT_PATH          = "挂载的 Docker 证书路径"
+	EnvDesc_PENTAGI_LLM_SERVER_CONFIG_PATH    = "自定义 LLM 主机侧配置路径"
+	EnvDesc_PENTAGI_OLLAMA_SERVER_CONFIG_PATH = "Ollama 主机侧配置路径"
 
-	EnvDesc_STATIC_DIR     = "Frontend Static Directory"
-	EnvDesc_STATIC_URL     = "Frontend Static URL"
-	EnvDesc_SERVER_PORT    = "Backend Server Port"
-	EnvDesc_SERVER_HOST    = "Backend Server Host"
-	EnvDesc_SERVER_SSL_CRT = "Backend Server SSL Certificate Path"
-	EnvDesc_SERVER_SSL_KEY = "Backend Server SSL Key Path"
-	EnvDesc_SERVER_USE_SSL = "Backend Server Use SSL"
+	EnvDesc_STATIC_DIR     = "前端静态资源目录"
+	EnvDesc_STATIC_URL     = "前端静态资源地址"
+	EnvDesc_SERVER_PORT    = "后端服务端口"
+	EnvDesc_SERVER_HOST    = "后端服务主机"
+	EnvDesc_SERVER_SSL_CRT = "后端服务 SSL 证书路径"
+	EnvDesc_SERVER_SSL_KEY = "后端服务 SSL 私钥路径"
+	EnvDesc_SERVER_USE_SSL = "后端服务启用 SSL"
 
-	EnvDesc_PERPLEXITY_MODEL        = "Perplexity Model"
-	EnvDesc_PERPLEXITY_CONTEXT_SIZE = "Perplexity Context Size"
+	EnvDesc_PERPLEXITY_MODEL        = "Perplexity 模型"
+	EnvDesc_PERPLEXITY_CONTEXT_SIZE = "Perplexity 上下文大小"
 
-	EnvDesc_SEARXNG_URL        = "Searxng Search URL"
-	EnvDesc_SEARXNG_CATEGORIES = "Searxng Search Categories"
-	EnvDesc_SEARXNG_LANGUAGE   = "Searxng Search Language"
-	EnvDesc_SEARXNG_SAFESEARCH = "Searxng Safe Search"
-	EnvDesc_SEARXNG_TIME_RANGE = "Searxng Time Range"
-	EnvDesc_SEARXNG_TIMEOUT    = "Searxng Timeout"
+	EnvDesc_SEARXNG_URL        = "Searxng 搜索地址"
+	EnvDesc_SEARXNG_CATEGORIES = "Searxng 搜索分类"
+	EnvDesc_SEARXNG_LANGUAGE   = "Searxng 搜索语言"
+	EnvDesc_SEARXNG_SAFESEARCH = "Searxng 安全搜索"
+	EnvDesc_SEARXNG_TIME_RANGE = "Searxng 时间范围"
+	EnvDesc_SEARXNG_TIMEOUT    = "Searxng 超时时间"
 
-	EnvDesc_OAUTH_GOOGLE_CLIENT_ID     = "OAuth Google Client ID"
-	EnvDesc_OAUTH_GOOGLE_CLIENT_SECRET = "OAuth Google Client Secret"
-	EnvDesc_OAUTH_GITHUB_CLIENT_ID     = "OAuth GitHub Client ID"
-	EnvDesc_OAUTH_GITHUB_CLIENT_SECRET = "OAuth GitHub Client Secret"
+	EnvDesc_OAUTH_GOOGLE_CLIENT_ID     = "Google OAuth 客户端 ID"
+	EnvDesc_OAUTH_GOOGLE_CLIENT_SECRET = "Google OAuth 客户端密钥"
+	EnvDesc_OAUTH_GITHUB_CLIENT_ID     = "GitHub OAuth 客户端 ID"
+	EnvDesc_OAUTH_GITHUB_CLIENT_SECRET = "GitHub OAuth 客户端密钥"
 
-	EnvDesc_LANGFUSE_EE_LICENSE_KEY   = "Langfuse Enterprise License Key"
-	EnvDesc_PENTAGI_POSTGRES_PASSWORD = "PentAGI PostgreSQL Password"
+	EnvDesc_LANGFUSE_EE_LICENSE_KEY   = "Langfuse 企业版许可证密钥"
+	EnvDesc_PENTAGI_POSTGRES_PASSWORD = "PentAGI PostgreSQL 密码"
 
-	EnvDesc_GRAPHITI_URL        = "Graphiti Server URL"
-	EnvDesc_GRAPHITI_TIMEOUT    = "Graphiti Request Timeout"
-	EnvDesc_GRAPHITI_MODEL_NAME = "Graphiti Extraction Model"
-	EnvDesc_NEO4J_USER          = "Neo4j Username"
-	EnvDesc_NEO4J_DATABASE      = "Neo4j Database Name"
-	EnvDesc_NEO4J_PASSWORD      = "Neo4j Database Password"
+	EnvDesc_GRAPHITI_URL        = "Graphiti 服务地址"
+	EnvDesc_GRAPHITI_TIMEOUT    = "Graphiti 请求超时"
+	EnvDesc_GRAPHITI_MODEL_NAME = "Graphiti 实体抽取模型"
+	EnvDesc_NEO4J_USER          = "Neo4j 用户名"
+	EnvDesc_NEO4J_DATABASE      = "Neo4j 数据库名"
+	EnvDesc_NEO4J_PASSWORD      = "Neo4j 数据库密码"
 )
 
 // dynamic, contextual sections used in processor operation forms
 const (
 	// section headers
-	ProcessorSectionCurrentState = "Current state"
-	ProcessorSectionPlanned      = "Planned actions"
-	ProcessorSectionEffects      = "Effects"
+	ProcessorSectionCurrentState = "当前状态"
+	ProcessorSectionPlanned      = "计划执行的操作"
+	ProcessorSectionEffects      = "影响说明"
 
 	// component labels
 	ProcessorComponentPentagi       = "PentAGI"
 	ProcessorComponentLangfuse      = "Langfuse"
 	ProcessorComponentObservability = "Observability"
 
-	ProcessorComponentWorkerImage           = "worker image"
-	ProcessorComponentComposeStacks         = "compose stacks"
-	ProcessorComponentDefaultFiles          = "default files"
-	ProcessorItemComposeFiles               = "compose files"
-	ProcessorItemComposeStacksImagesVolumes = "compose stacks, images, volumes"
+	ProcessorComponentWorkerImage           = "工作容器镜像"
+	ProcessorComponentComposeStacks         = "compose 服务栈"
+	ProcessorComponentDefaultFiles          = "默认文件"
+	ProcessorItemComposeFiles               = "compose 文件"
+	ProcessorItemComposeStacksImagesVolumes = "compose 服务栈、镜像、数据卷"
 
 	// common states
-	ProcessorStateInstalled = "installed"
-	ProcessorStateMissing   = "not installed"
-	ProcessorStateRunning   = "running"
-	ProcessorStateStopped   = "stopped"
-	ProcessorStateEmbedded  = "embedded"
-	ProcessorStateExternal  = "external"
-	ProcessorStateConnected = "connected"
-	ProcessorStateDisabled  = "disabled"
-	ProcessorStateUnknown   = "unknown"
+	ProcessorStateInstalled = "已安装"
+	ProcessorStateMissing   = "未安装"
+	ProcessorStateRunning   = "运行中"
+	ProcessorStateStopped   = "已停止"
+	ProcessorStateEmbedded  = "内置部署"
+	ProcessorStateExternal  = "外部服务"
+	ProcessorStateConnected = "已连接"
+	ProcessorStateDisabled  = "已禁用"
+	ProcessorStateUnknown   = "状态未知"
 
 	// planned action bullet prefixes
-	PlannedWillStart    = "will start:"
-	PlannedWillStop     = "will stop:"
-	PlannedWillRestart  = "will restart:"
-	PlannedWillUpdate   = "will update:"
-	PlannedWillSkip     = "will skip:"
-	PlannedWillRemove   = "will remove:"
-	PlannedWillPurge    = "will purge:"
-	PlannedWillDownload = "will download:"
-	PlannedWillRestore  = "will restore:"
+	PlannedWillStart    = "将启动："
+	PlannedWillStop     = "将停止："
+	PlannedWillRestart  = "将重启："
+	PlannedWillUpdate   = "将更新："
+	PlannedWillSkip     = "将跳过："
+	PlannedWillRemove   = "将移除："
+	PlannedWillPurge    = "将彻底清除："
+	PlannedWillDownload = "将下载："
+	PlannedWillRestore  = "将还原："
 
 	// effect notes per operation (concise and practical)
 	EffectsStart           = "PentAGI web UI becomes available. Background services are brought online in the required order."

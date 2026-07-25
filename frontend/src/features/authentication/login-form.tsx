@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
+import type { Translate } from '@/lib/i18n';
 import type { OAuthProvider } from '@/providers/user-provider';
 
 import Github from '@/components/icons/github';
@@ -12,46 +13,48 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FormSubmitButton } from '@/components/ui/form-submit-button';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/hooks/use-locale';
 import { useUser } from '@/providers/user-provider';
 
 import { PasswordChangeForm } from './password-change-form';
 
-const formSchema = z.object({
-    mail: z
-        .string()
-        .min(1, {
-            message: 'Login is required',
-        })
-        .refine(
-            (value) => z.string().email().safeParse(value).success || ['admin', 'demo'].includes(value.toLowerCase()),
-            {
-                message: 'Invalid login',
-            },
-        ),
-    password: z.string().min(1, {
-        message: 'Password is required',
-    }),
-});
-
-const errorMessage = 'Invalid login or password';
-const errorProviderMessage = 'Authentication failed';
+// Built inside the component so validation messages follow the active locale;
+// a module-level schema would capture whichever locale was loaded first.
+const buildFormSchema = (t: Translate) =>
+    z.object({
+        mail: z
+            .string()
+            .min(1, {
+                message: t('auth.loginRequired'),
+            })
+            .refine(
+                (value) =>
+                    z.string().email().safeParse(value).success || ['admin', 'demo'].includes(value.toLowerCase()),
+                {
+                    message: t('auth.invalidLogin'),
+                },
+            ),
+        password: z.string().min(1, {
+            message: t('auth.passwordRequired'),
+        }),
+    });
 
 interface AuthProviderAction {
     icon: React.ReactNode;
     id: OAuthProvider;
-    name: string;
+    nameKey: string;
 }
 
 const providerActions: AuthProviderAction[] = [
     {
         icon: <Google className="size-5" />,
         id: 'google',
-        name: 'Continue with Google',
+        nameKey: 'auth.continueWithGoogle',
     },
     {
         icon: <Github className="size-5" />,
         id: 'github',
-        name: 'Continue with GitHub',
+        nameKey: 'auth.continueWithGithub',
     },
 ];
 
@@ -61,6 +64,10 @@ interface LoginFormProps {
 }
 
 function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
+    const { t } = useLocale();
+    const formSchema = useMemo(() => buildFormSchema(t), [t]);
+    const errorMessage = t('auth.invalidLoginOrPassword');
+    const errorProviderMessage = t('auth.providerFailed');
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             mail: '',
@@ -155,10 +162,8 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
     if (shouldShowPasswordChange) {
         return (
             <div className="mx-auto flex w-[350px] flex-col gap-6">
-                <h1 className="text-center text-3xl font-bold">Update Password</h1>
-                <p className="text-muted-foreground text-center text-sm">
-                    You need to change your password before continuing.
-                </p>
+                <h1 className="text-center text-3xl font-bold">{t('auth.updatePassword')}</h1>
+                <p className="text-muted-foreground text-center text-sm">{t('auth.passwordChangeHint')}</p>
                 <PasswordChangeForm
                     isModal={false}
                     onSkip={handleSkipPasswordChange}
@@ -191,7 +196,7 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
                                         variant="secondary"
                                     >
                                         {provider.icon}
-                                        {provider.name}
+                                        {t(provider.nameKey)}
                                     </Button>
                                 ))}
                         </div>
@@ -201,7 +206,7 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
                                 <div className="w-full border-t border-gray-300" />
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="bg-background px-2">or</span>
+                                <span className="bg-background px-2">{t('auth.or')}</span>
                             </div>
                         </div>
                     </>
@@ -213,12 +218,12 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
                         name="mail"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Login</FormLabel>
+                                <FormLabel>{t('auth.login')}</FormLabel>
                                 <FormControl>
                                     <Input
                                         {...field}
                                         autoFocus
-                                        placeholder="Enter your email"
+                                        placeholder={t('auth.enterEmail')}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -231,11 +236,11 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel>{t('auth.password')}</FormLabel>
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        placeholder="Enter your password"
+                                        placeholder={t('auth.enterPassword')}
                                         type="password"
                                     />
                                 </FormControl>
@@ -245,7 +250,7 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
                     />
 
                     <FormSubmitButton className="w-full">
-                        <span>Sign in</span>
+                        <span>{t('auth.signIn')}</span>
                     </FormSubmitButton>
 
                     {error && <FormMessage>{error}</FormMessage>}

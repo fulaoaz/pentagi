@@ -567,71 +567,71 @@ The architecture of PentAGI is designed to be modular, scalable, and secure. Her
 
 The system uses Docker containers for isolation and easy deployment, with separate networks for core services, monitoring, and analytics to ensure proper security boundaries. Each component is designed to scale horizontally and can be configured for high availability in production environments.
 
-## Quick Start
+## 快速开始
 
-### System Requirements
+### 系统要求
 
-- Docker and Docker Compose (or Podman - see [Podman configuration](#running-pentagi-with-podman))
-- Minimum 2 vCPU
-- Minimum 4GB RAM
-- 20GB free disk space
-- Internet access for downloading images and updates
+- Docker 与 Docker Compose（或 Podman，参见 [Podman 配置](#running-pentagi-with-podman)）
+- 至少 2 个 vCPU
+- 至少 4GB 内存
+- 20GB 可用磁盘空间
+- 可访问互联网，用于下载镜像和更新
 
-### Using Installer (Recommended)
+### 使用安装程序（推荐）
 
-PentAGI provides an interactive installer with a terminal-based UI for streamlined configuration and deployment. The installer guides you through system checks, LLM provider setup, search engine configuration, and security hardening.
+PentAGI 提供带终端界面的交互式安装程序，用于简化配置与部署。安装程序会引导你完成系统检查、LLM 提供商设置、搜索引擎配置和安全加固。
 
-**Supported Platforms:**
-- **Linux**: amd64 [download](https://pentagi.com/downloads/linux/amd64/installer-latest.zip) | arm64 [download](https://pentagi.com/downloads/linux/arm64/installer-latest.zip)
-- **Windows**: amd64 [download](https://pentagi.com/downloads/windows/amd64/installer-latest.zip)
-- **macOS**: amd64 (Intel) [download](https://pentagi.com/downloads/darwin/amd64/installer-latest.zip) | arm64 (M-series) [download](https://pentagi.com/downloads/darwin/arm64/installer-latest.zip)
+**支持的平台：**
+- **Linux**：amd64 [下载](https://pentagi.com/downloads/linux/amd64/installer-latest.zip) | arm64 [下载](https://pentagi.com/downloads/linux/arm64/installer-latest.zip)
+- **Windows**：amd64 [下载](https://pentagi.com/downloads/windows/amd64/installer-latest.zip)
+- **macOS**：amd64（Intel）[下载](https://pentagi.com/downloads/darwin/amd64/installer-latest.zip) | arm64（M 系列芯片）[下载](https://pentagi.com/downloads/darwin/arm64/installer-latest.zip)
 
-**Quick Installation (Linux amd64):**
+**快速安装（Linux amd64）：**
 
 ```bash
-# Create installation directory
+# 创建安装目录
 mkdir -p pentagi && cd pentagi
 
-# Download installer
+# 下载安装程序
 wget -O installer.zip https://pentagi.com/downloads/linux/amd64/installer-latest.zip
 
-# Extract
+# 解压
 unzip installer.zip
 
-# Run interactive installer
+# 运行交互式安装程序
 ./installer
 ```
 
-**Prerequisites & Permissions:**
+**前置条件与权限：**
 
-The installer requires appropriate privileges to interact with the Docker API for proper operation. By default, it uses the Docker socket (`/var/run/docker.sock`) which requires either:
+安装程序需要具备相应权限才能与 Docker API 交互并正常工作。默认情况下它使用 Docker 套接字（`/var/run/docker.sock`），因此需要满足以下任一条件：
 
-- **Option 1 (Recommended for production):** Run the installer as root:
+- **方式 1（生产环境推荐）：** 以 root 身份运行安装程序：
   ```bash
   sudo ./installer
   ```
 
-- **Option 2 (Development environments):** Grant your user access to the Docker socket by adding them to the `docker` group:
+- **方式 2（开发环境）：** 将你的用户加入 `docker` 组，以获得 Docker 套接字的访问权限：
   ```bash
-  # Add your user to the docker group
+  # 将当前用户加入 docker 组
   sudo usermod -aG docker $USER
   
-  # Log out and log back in, or activate the group immediately
+  # 注销后重新登录，或立即激活该组
   newgrp docker
   
-  # Verify Docker access (should run without sudo)
+  # 验证 Docker 访问权限（应无需 sudo 即可执行）
   docker ps
   ```
 
-  ⚠️ **Security Note:** Adding a user to the `docker` group grants root-equivalent privileges. Only do this for trusted users in controlled environments. For production deployments, consider using rootless Docker mode or running the installer with sudo.
+  ⚠️ **安全提示：** 将用户加入 `docker` 组等同于授予 root 权限。请仅在受控环境中对可信用户这样做。生产部署建议改用 rootless 模式的 Docker，或以 sudo 运行安装程序。
 
-The installer will:
-1. **System Checks**: Verify Docker, network connectivity, and system requirements
-2. **Environment Setup**: Create and configure `.env` file with optimal defaults
-3. **Provider Configuration**: Set up LLM providers (OpenAI, Anthropic, Gemini, Bedrock, Ollama, Custom)
-4. **Search Engines**: Configure DuckDuckGo, Google, Tavily, Traversaal, Perplexity, Sploitus, Searxng
-5. **Security Hardening**: Generate secure credentials and configure SSL certificates
-6. **Deployment**: Start PentAGI with docker-compose
+安装程序会执行以下步骤：
+1. **系统检查**：验证 Docker、网络连通性和系统要求
+2. **环境准备**：创建 `.env` 文件并写入合适的默认配置
+3. **提供商配置**：设置 LLM 提供商（OpenAI、Anthropic、Gemini、Bedrock、Ollama、自定义）
+4. **搜索引擎**：配置 DuckDuckGo、Google、Tavily、Traversaal、Perplexity、Sploitus、Searxng
+5. **安全加固**：生成安全凭据并配置 SSL 证书
+6. **部署**：通过 docker-compose 启动 PentAGI
 
 ### Current Web Settings Coverage
 

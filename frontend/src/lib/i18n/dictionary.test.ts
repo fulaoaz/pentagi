@@ -34,7 +34,9 @@ describe('dictionaries', () => {
 
         for (const [key, template] of Object.entries(dictionaries[fallbackLocale])) {
             for (const locale of locales) {
-                expect(placeholders(dictionaries[locale][key]), `${locale}:${key} placeholder mismatch`).toEqual(
+                // The key-set test above guarantees the lookup is present; `?? ''`
+                // only satisfies `noUncheckedIndexedAccess`.
+                expect(placeholders(dictionaries[locale][key] ?? ''), `${locale}:${key} placeholder mismatch`).toEqual(
                     placeholders(template),
                 );
             }

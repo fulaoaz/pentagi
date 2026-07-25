@@ -11,6 +11,7 @@ export {
     type Locale,
     localeNames,
     locales,
+    type Translate,
     type TranslationValues,
 } from './types';
 

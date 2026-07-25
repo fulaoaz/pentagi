@@ -19,12 +19,12 @@ export const isLocale = (value: unknown): value is Locale =>
  */
 export type Dictionary = Record<string, string>;
 
-/** Values interpolated into a message via `{name}` placeholders. */
-export type TranslationValues = Record<string, number | string>;
-
 /**
  * The translator returned by `useLocale()`. Exported so helpers that build
  * localized values outside a component (zod schemas, column definitions) can
  * take it as a parameter.
  */
 export type Translate = (key: string, values?: TranslationValues) => string;
+
+/** Values interpolated into a message via `{name}` placeholders. */
+export type TranslationValues = Record<string, number | string>;

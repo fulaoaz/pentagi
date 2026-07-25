@@ -6,6 +6,7 @@ import {
     Folder,
     GitFork,
     KeyRound,
+    Languages,
     LayoutDashboard,
     LibraryBig,
     LogOut,
@@ -21,6 +22,7 @@ import {
 import { useMemo, useState } from 'react';
 import { Link, useMatch, useParams } from 'react-router-dom';
 
+import type { Locale } from '@/lib/i18n';
 import type { Flow } from '@/providers/sidebar-flows-provider';
 import type { Theme } from '@/providers/theme-provider';
 
@@ -53,6 +55,7 @@ import { PasswordChangeForm } from '@/features/authentication/password-change-fo
 import { useResourcesUpload } from '@/features/resources/use-resources-upload';
 import { useLocale } from '@/hooks/use-locale';
 import { useTheme } from '@/hooks/use-theme';
+import { localeNames, locales } from '@/lib/i18n';
 import { useFavorites } from '@/providers/favorites-provider';
 import { useSidebarFlows } from '@/providers/sidebar-flows-provider';
 import { useUser } from '@/providers/user-provider';
@@ -76,7 +79,7 @@ export function MainSidebar() {
 
     const { authInfo, logout } = useUser();
     const user = authInfo?.user;
-    const { t } = useLocale();
+    const { locale, setLocale, t } = useLocale();
     const { setTheme, theme } = useTheme();
     const { addFavoriteFlow, favoriteFlowIds, removeFavoriteFlow } = useFavorites();
     const { flows } = useSidebarFlows();
@@ -355,6 +358,30 @@ export function MainSidebar() {
                                             >
                                                 <Moon className="size-4" />
                                             </TabsTrigger>
+                                        </TabsList>
+                                    </Tabs>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="cursor-default hover:bg-transparent focus:bg-transparent"
+                                    onSelect={(event) => event.preventDefault()}
+                                >
+                                    <Languages />
+                                    {t('settings.language')}
+                                    <Tabs
+                                        className="-my-1.5 -mr-2 ml-auto"
+                                        onValueChange={(value) => setLocale(value as Locale)}
+                                        value={locale}
+                                    >
+                                        <TabsList className="h-7 p-0.5">
+                                            {locales.map((value) => (
+                                                <TabsTrigger
+                                                    className="h-6 px-2 text-xs"
+                                                    key={value}
+                                                    value={value}
+                                                >
+                                                    {localeNames[value]}
+                                                </TabsTrigger>
+                                            ))}
                                         </TabsList>
                                     </Tabs>
                                 </DropdownMenuItem>

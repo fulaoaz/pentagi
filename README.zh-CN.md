@@ -753,72 +753,72 @@ NEO4J_URI=bolt://neo4j:7687
 ASSISTANT_USE_AGENTS=false         # Default value for agent usage when creating new assistants
 ```
 
-5. Change all security related environment variables in `.env` file to improve security.
+5. 修改 `.env` 文件中所有与安全相关的环境变量，以提升安全性。
 
 <details>
-    <summary>Security related environment variables</summary>
+    <summary>与安全相关的环境变量</summary>
 
-### Main Security Settings
-- `COOKIE_SIGNING_SALT` - Salt for cookie signing, change to random value
-- `PUBLIC_URL` - Public URL of your server (eg. `https://pentagi.example.com`)
-- `SERVER_SSL_CRT` and `SERVER_SSL_KEY` - Custom paths to your existing SSL certificate and key for HTTPS (these paths should be used in the docker-compose.yml file to mount as volumes)
+### 主要安全设置
+- `COOKIE_SIGNING_SALT` —— 用于签名 Cookie 的盐值，请改为随机值
+- `PUBLIC_URL` —— 你的服务器公开地址（例如 `https://pentagi.example.com`）
+- `SERVER_SSL_CRT` 和 `SERVER_SSL_KEY` —— 指向你已有的 HTTPS 证书与私钥的自定义路径（这些路径需要在 docker-compose.yml 中以卷的形式挂载）
 
-### Scraper Access
-- `SCRAPER_PUBLIC_URL` - Public URL for scraper if you want to use different scraper server for public URLs
-- `SCRAPER_PRIVATE_URL` - Private URL for scraper (local scraper server in docker-compose.yml file to access it to local URLs)
+### 抓取服务访问
+- `SCRAPER_PUBLIC_URL` —— 若希望用另一台抓取服务器处理公网地址，可在此配置其公开地址
+- `SCRAPER_PRIVATE_URL` —— 抓取服务的内网地址（docker-compose.yml 中的本地抓取服务器，用于访问本地地址）
 
-### Access Credentials
-- `PENTAGI_POSTGRES_USER` and `PENTAGI_POSTGRES_PASSWORD` - PostgreSQL credentials
-- `NEO4J_USER` and `NEO4J_PASSWORD` - Neo4j credentials (for Graphiti knowledge graph)
+### 访问凭据
+- `PENTAGI_POSTGRES_USER` 和 `PENTAGI_POSTGRES_PASSWORD` —— PostgreSQL 凭据
+- `NEO4J_USER` 和 `NEO4J_PASSWORD` —— Neo4j 凭据（用于 Graphiti 知识图谱）
 
 </details>
 
-6. Remove all inline comments from `.env` file if you want to use it in VSCode or other IDEs as a envFile option:
+6. 如果希望在 VSCode 或其他 IDE 中把 `.env` 作为 envFile 使用，可移除文件中所有行内注释：
 
 ```bash
 perl -i -pe 's/\s+#.*$//' .env
 ```
 
-7. Run the PentAGI stack:
+7. 启动 PentAGI 组件栈：
 
 ```bash
 curl -O https://raw.githubusercontent.com/vxcontrol/pentagi/master/docker-compose.yml
 docker compose up -d
 ```
 
-Visit [localhost:8443](https://localhost:8443) to access PentAGI Web UI (default is `admin@pentagi.com` / `admin`)
+访问 [localhost:8443](https://localhost:8443) 即可打开 PentAGI 网页界面（默认账号为 `admin@pentagi.com` / `admin`）
 
-#### Web UI Accounts
+#### 网页界面账号
 
-PentAGI does not expose public self-service sign-up from the login page. A fresh installation creates the default local administrator account:
+PentAGI 的登录页面不提供公开的自助注册功能。全新安装会创建默认的本地管理员账号：
 
-- **Email**: `admin@pentagi.com`
-- **Password**: `admin`
+- **邮箱**：`admin@pentagi.com`
+- **密码**：`admin`
 
-On first login, change the default password before using the instance for real work. If the administrator password is lost later, use the installer maintenance menu to reset the default `admin@pentagi.com` account password.
+首次登录后，请在正式使用前修改默认密码。若之后丢失管理员密码，可通过安装程序的维护菜单重置默认 `admin@pentagi.com` 账号的密码。
 
-For multi-user setups, an authenticated administrator can manage local users through the Users REST API (`/api/v1/users/`). The OpenAPI UI is available at `https://localhost:8443/api/v1/swagger/index.html` after the instance is running.
+对于多用户场景，已认证的管理员可以通过用户管理 REST API（`/api/v1/users/`）管理本地用户。实例启动后，OpenAPI 界面可在 `https://localhost:8443/api/v1/swagger/index.html` 访问。
 
 > [!NOTE]
-> If you caught an error about `pentagi-network` or `observability-network` or `langfuse-network` you need to run `docker-compose.yml` firstly to create these networks and after that run `docker-compose-langfuse.yml`, `docker-compose-graphiti.yml`, and `docker-compose-observability.yml` to use Langfuse, Graphiti, and Observability services.
+> 如果遇到关于 `pentagi-network`、`observability-network` 或 `langfuse-network` 的错误，需要先运行 `docker-compose.yml` 创建这些网络，之后再运行 `docker-compose-langfuse.yml`、`docker-compose-graphiti.yml` 和 `docker-compose-observability.yml` 来启用 Langfuse、Graphiti 和可观测性服务。
 >
-> You have to set at least one Language Model provider (OpenAI, Anthropic, Gemini, AWS Bedrock, or Ollama) to use PentAGI. AWS Bedrock provides enterprise-grade access to multiple foundation models from leading AI companies, while Ollama provides zero-cost local inference if you have sufficient computational resources. Additional API keys for search engines are optional but recommended for better results.
+> 使用 PentAGI 至少需要配置一个语言模型提供商（OpenAI、Anthropic、Gemini、AWS Bedrock 或 Ollama）。AWS Bedrock 以企业级方式提供多家领先 AI 公司的基础模型；如果你有足够的算力，Ollama 则可实现零成本的本地推理。搜索引擎的额外 API 密钥是可选的，但配置后能获得更好的结果。
 >
-> **For fully local deployment with advanced models**: See our comprehensive guide on [Running PentAGI with vLLM and Qwen3.5-27B-FP8](examples/guides/vllm-qwen35-27b-fp8.md) for a production-grade local LLM setup. This configuration achieves ~13,000 TPS for prompt processing and ~650 TPS for completion on 4× RTX 5090 GPUs, supporting 12+ concurrent flows with complete independence from cloud providers.
+> **使用先进模型进行完全本地化部署**：请参阅我们的完整指南[使用 vLLM 与 Qwen3.5-27B-FP8 运行 PentAGI](examples/guides/vllm-qwen35-27b-fp8.md)，了解生产级的本地 LLM 部署方案。该配置在 4 张 RTX 5090 显卡上可达到约 13,000 TPS 的提示处理速度和约 650 TPS 的生成速度，支持 12 个以上并发任务流，且完全不依赖云端提供商。
 >
-> `LLM_SERVER_*` environment variables are experimental feature and will be changed in the future. Right now you can use them to specify custom LLM server URL and one model for all agent types.
+> `LLM_SERVER_*` 系列环境变量属于实验性功能，未来可能变更。目前可用它们指定自定义 LLM 服务地址，并为所有智能体类型统一指定一个模型。
 >
-> `PROXY_URL` is a global proxy URL for all LLM providers and external search systems. You can use it for isolation from external networks.
+> `PROXY_URL` 是面向所有 LLM 提供商和外部搜索系统的全局代理地址，可用于与外部网络隔离。
 >
-> The `docker-compose.yml` file runs the PentAGI service as root user because it needs access to docker.sock for container management. If you're using TCP/IP network connection to Docker instead of socket file, you can remove root privileges and use the default `pentagi` user for better security.
+> `docker-compose.yml` 以 root 用户运行 PentAGI 服务，因为容器管理需要访问 docker.sock。如果你使用 TCP/IP 方式连接 Docker 而非套接字文件，可以去掉 root 权限、改用默认的 `pentagi` 用户，以获得更好的安全性。
 
-### Accessing PentAGI from External Networks
+### 从外部网络访问 PentAGI
 
-By default, PentAGI binds to `127.0.0.1` (localhost only) for security. To access PentAGI from other machines on your network, you need to configure external access.
+出于安全考虑，PentAGI 默认绑定到 `127.0.0.1`（仅本机可访问）。若要从网络中的其他机器访问 PentAGI，需要配置外部访问。
 
-#### Configuration Steps
+#### 配置步骤
 
-1. **Update `.env` file** with your server's IP address:
+1. **更新 `.env` 文件**，填入服务器的 IP 地址：
 
 ```bash
 # Network binding - allow external connections
@@ -835,35 +835,35 @@ CORS_ORIGINS=https://localhost:8443,https://192.168.1.100:8443
 ```
 
 > [!IMPORTANT]
-> - Replace `192.168.1.100` with your actual server's IP address
-> - Do NOT use `0.0.0.0` in `PUBLIC_URL` or `CORS_ORIGINS` - use the actual IP address
-> - Include both localhost and your server IP in `CORS_ORIGINS` for flexibility
+> - 请把 `192.168.1.100` 替换为你服务器的实际 IP 地址
+> - 不要在 `PUBLIC_URL` 或 `CORS_ORIGINS` 中使用 `0.0.0.0`，要填写实际 IP 地址
+> - 建议在 `CORS_ORIGINS` 中同时包含 localhost 和服务器 IP，以便灵活访问
 
-2. **Recreate containers** to apply the changes:
+2. **重新创建容器**以应用变更：
 
 ```bash
 docker compose down
 docker compose up -d --force-recreate
 ```
 
-3. **Verify port binding:**
+3. **验证端口绑定：**
 
 ```bash
 docker ps | grep pentagi
 ```
 
-You should see `0.0.0.0:8443->8443/tcp` or `:::8443->8443/tcp`.
+你应当看到 `0.0.0.0:8443->8443/tcp` 或 `:::8443->8443/tcp`。
 
-If you see `127.0.0.1:8443->8443/tcp`, the environment variable wasn't picked up. In this case, directly edit `docker-compose.yml` line 31:
+如果看到的是 `127.0.0.1:8443->8443/tcp`，说明环境变量未生效。这种情况下请直接修改 `docker-compose.yml` 的第 31 行：
 
 ```yaml
 ports:
   - "0.0.0.0:8443:8443"
 ```
 
-Then recreate containers again.
+然后再次重新创建容器。
 
-4. **Configure firewall** to allow incoming connections on port 8443:
+4. **配置防火墙**，放通 8443 端口的入站连接：
 
 ```bash
 # Ubuntu/Debian with UFW
@@ -875,25 +875,25 @@ sudo firewall-cmd --permanent --add-port=8443/tcp
 sudo firewall-cmd --reload
 ```
 
-5. **Access PentAGI:**
+5. **访问 PentAGI：**
 
-- **Local access:** `https://localhost:8443`
-- **Network access:** `https://your-server-ip:8443`
+- **本机访问：** `https://localhost:8443`
+- **网络访问：** `https://你的服务器IP:8443`
 
 > [!NOTE]
-> You'll need to accept the self-signed SSL certificate warning in your browser when accessing via IP address.
+> 通过 IP 地址访问时，需要在浏览器中接受自签名 SSL 证书的警告。
 
 ---
 
-### Running PentAGI with Podman
+### 使用 Podman 运行 PentAGI
 
-PentAGI fully supports Podman as a Docker alternative. However, when using **Podman in rootless mode**, the scraper service requires special configuration because rootless containers cannot bind privileged ports (ports below 1024).
+PentAGI 完整支持以 Podman 替代 Docker。不过在 **Podman 无根（rootless）模式** 下，抓取服务需要特殊配置，因为无根容器无法绑定特权端口（1024 以下的端口）。
 
-#### Podman Rootless Configuration
+#### Podman 无根模式配置
 
-The default scraper configuration uses port 443 (HTTPS), which is a privileged port. For Podman rootless, reconfigure the scraper to use a non-privileged port:
+抓取服务默认使用 443 端口（HTTPS），这是特权端口。在 Podman 无根模式下，需要将抓取服务改为使用非特权端口：
 
-**1. Edit `docker-compose.yml`** - modify the `scraper` service (around line 199):
+**1. 编辑 `docker-compose.yml`** —— 修改 `scraper` 服务（大约在第 199 行）：
 
 ```yaml
 scraper:
@@ -920,7 +920,7 @@ scraper:
   shm_size: 2g
 ```
 
-**2. Update `.env` file** - change the scraper URL to use HTTP and port 3000:
+**2. 更新 `.env` 文件** —— 将抓取服务地址改为使用 HTTP 和 3000 端口：
 
 ```bash
 # Scraper configuration for Podman rootless
@@ -930,39 +930,39 @@ LOCAL_SCRAPER_PASSWORD=somepass
 ```
 
 > [!IMPORTANT]
-> Key changes for Podman:
-> - Use **HTTP** instead of HTTPS for `SCRAPER_PRIVATE_URL`
-> - Use port **3000** instead of 443
-> - Change internal `expose` to `3000/tcp`
-> - Update port mapping to target `3000` instead of `443`
+> Podman 下的关键改动：
+> - `SCRAPER_PRIVATE_URL` 使用 **HTTP** 而非 HTTPS
+> - 使用 **3000** 端口而非 443
+> - 将容器内部的 `expose` 改为 `3000/tcp`
+> - 将端口映射的目标端口从 `443` 改为 `3000`
 
-**3. Recreate containers:**
+**3. 重新创建容器：**
 
 ```bash
 podman-compose down
 podman-compose up -d --force-recreate
 ```
 
-**4. Test scraper connectivity:**
+**4. 测试抓取服务连通性：**
 
 ```bash
 # Test from within the pentagi container
 podman exec -it pentagi wget -O- "http://someuser:somepass@scraper:3000/html?url=http://example.com"
 ```
 
-If you see HTML output, the scraper is working correctly.
+如果输出了 HTML 内容，说明抓取服务工作正常。
 
-#### Podman Rootful Mode
+#### Podman 有根模式
 
-If you're running Podman in rootful mode (with sudo), you can use the default configuration without modifications. The scraper will work on port 443 as intended.
+如果以有根模式（使用 sudo）运行 Podman，可直接使用默认配置，无需改动。抓取服务会按预期在 443 端口工作。
 
-#### Docker Compatibility
+#### 与 Docker 的兼容性
 
-All Podman configurations remain fully compatible with Docker. The non-privileged port approach works identically on both container runtimes.
+上述 Podman 配置与 Docker 完全兼容。非特权端口的做法在两种容器运行时中表现一致。
 
-### Assistant Configuration
+### 助手配置
 
-PentAGI allows you to configure default behavior for assistants:
+PentAGI 允许你为助手配置默认行为：
 
 | Variable               | Default | Description                                                             |
 | ---------------------- | ------- | ----------------------------------------------------------------------- |

@@ -666,60 +666,60 @@ const (
 
 // LLM Provider Form status messages
 const (
-	LLMProviderFormTitle       = "LLM Provider %s Configuration"
-	LLMProviderFormDescription = "Configure your Large Language Model provider settings"
-	LLMProviderFormName        = "LLM Provider %s"
-	LLMProviderFormOverview    = `Agent Role Assignment:
-• Primary Agent & Pentester: Use reasoning models (o3, grok-4, claude-sonnet-4, gemini-2.5-pro) for complex vulnerability analysis
-• Assistant & Adviser: Advanced models (o4-mini, claude-sonnet-4) for strategic planning and recommendations
-• Coder & Installer: Precision models (gpt-4.1, claude-sonnet-4) for exploit development and system configuration
-• Searcher & Enricher: Fast models (gpt-4.1-mini, claude-3.5-haiku, gemini-2.0-flash-lite) for information gathering
-• Simple tasks: Lightweight models for JSON parsing and basic operations
+	LLMProviderFormTitle       = "LLM 提供商 %s 配置"
+	LLMProviderFormDescription = "配置大语言模型提供商的相关设置"
+	LLMProviderFormName        = "LLM 提供商 %s"
+	LLMProviderFormOverview    = `智能体角色分配：
+• Primary Agent 与 Pentester：使用推理型模型（o3、grok-4、claude-sonnet-4、gemini-2.5-pro）进行复杂漏洞分析
+• Assistant 与 Adviser：使用高级模型（o4-mini、claude-sonnet-4）进行策略规划与建议
+• Coder 与 Installer：使用精确型模型（gpt-4.1、claude-sonnet-4）进行漏洞利用开发与系统配置
+• Searcher 与 Enricher：使用快速模型（gpt-4.1-mini、claude-3.5-haiku、gemini-2.0-flash-lite）进行信息收集
+• 简单任务：使用轻量模型处理 JSON 解析和基础操作
 
-Performance Considerations:
-• Reasoning models provide step-by-step analysis but are slower and more expensive
-• Standard models offer faster responses suitable for high-frequency agent interactions
-• Each agent type uses provider-specific model configurations optimized for security testing workflows
+性能考量：
+• 推理型模型提供逐步分析，但速度更慢、成本更高
+• 标准模型响应更快，适合高频次的智能体交互
+• 每类智能体都使用针对安全测试流程优化的、提供商专属的模型配置
 
-Your configuration will determine which models each agent uses for different penetration testing scenarios.`
+你的配置将决定各个智能体在不同渗透测试场景中所使用的模型。`
 )
 
 // Monitoring Screen
 const (
-	MonitoringTitle       = "Monitoring Configuration"
-	MonitoringDescription = "Configure monitoring and observability platforms for comprehensive system insights"
-	MonitoringName        = "Monitoring"
-	MonitoringOverview    = `Comprehensive monitoring and observability for production-ready deployments.
+	MonitoringTitle       = "监控配置"
+	MonitoringDescription = "配置监控与可观测性平台，全面掌握系统运行状况"
+	MonitoringName        = "监控"
+	MonitoringOverview    = `为生产级部署提供全面的监控与可观测性能力。
 
-Why monitoring matters:
-• Track performance bottlenecks: Identify slow LLM calls, database queries, and system resources
-• Debug issues faster: Detailed traces help diagnose problems across distributed components
-• Optimize costs: Monitor token usage patterns and optimize expensive LLM interactions
-• Production readiness: Essential for reliable operation in critical environments
+监控的意义：
+• 定位性能瓶颈：找出缓慢的 LLM 调用、数据库查询和系统资源占用
+• 更快排查问题：详细的调用链有助于诊断分布式组件间的故障
+• 优化成本：监控 token 使用模式，优化高开销的 LLM 交互
+• 生产就绪：在关键环境中稳定运行的必备能力
 
-Platform Options:
-Langfuse: Specialized LLM observability with conversation tracking, prompt engineering insights, and cost analytics
-Observability: Full-stack monitoring with metrics, traces, logs, and alerting for infrastructure and application health
+平台选项：
+Langfuse：专注 LLM 可观测性，提供会话追踪、提示词工程洞察和成本分析
+Observability：全栈监控，为基础设施与应用健康提供指标、追踪、日志和告警
 
-Quick Setup:
-• Development: Enable Langfuse for LLM insights only
-• Production: Enable both platforms for comprehensive monitoring
-• Cost-conscious: Use embedded modes to avoid external service fees`
+快速配置建议：
+• 开发环境：仅启用 Langfuse 以获取 LLM 洞察
+• 生产环境：同时启用两个平台以实现全面监控
+• 成本敏感：使用内置模式，避免外部服务费用`
 )
 
 // Langfuse Integration constants
 const (
-	MonitoringLangfuseFormTitle       = "Langfuse Configuration"
-	MonitoringLangfuseFormDescription = "Configuration of Langfuse integration for LLM monitoring"
+	MonitoringLangfuseFormTitle       = "Langfuse 配置"
+	MonitoringLangfuseFormDescription = "配置 Langfuse 集成，用于 LLM 监控"
 	MonitoringLangfuseFormName        = "Langfuse"
-	MonitoringLangfuseFormOverview    = `Langfuse provides:
-• Complete conversation tracking
-• Model performance metrics
-• Cost monitoring and optimization
-• User behavior analytics
-• Debug traces for AI interactions
+	MonitoringLangfuseFormOverview    = `Langfuse（LLM 可观测性平台）提供：
+• 完整的对话追踪
+• 模型性能指标
+• 成本监控与优化
+• 用户行为分析
+• AI 交互的调试链路
 
-Choose between embedded instance or external connection.`
+可选择使用内置实例或连接外部服务。`
 
 	// Deployment types
 	MonitoringLangfuseEmbedded = "内置服务"
@@ -840,150 +840,146 @@ Graphiti 提供时序知识图谱能力：
 
 	// Help text
 	MonitoringGraphitiModeGuide    = "选择部署方式：内置（本地 Neo4j）、外部（已有 Graphiti）、禁用（不启用知识图谱）"
-	MonitoringGraphitiEmbeddedHelp = `⚠️  BETA: This feature is under active development. Monitor updates for improvements.
+	MonitoringGraphitiEmbeddedHelp = `⚠️  测试功能：该功能仍在积极开发中，请关注后续更新以获取改进。
 
-Embedded deploys complete Graphiti stack:
-• Neo4j graph database
-• Graphiti API service
-• Automatic entity extraction from agent interactions
-• Temporal relationship tracking
-• Private knowledge graph on your server
+内置方式会部署完整的 Graphiti 组件栈：
+• Neo4j 图数据库
+• Graphiti API 服务
+• 自动从智能体交互中抽取实体
+• 时序关系追踪
+• 知识图谱私有化保存在你的服务器上
 
-Prerequisites:
-• OpenAI provider must be configured (LLM Providers → OpenAI)
-• OpenAI API key is used for entity extraction
-• Configured model will be used for knowledge graph operations
+前置条件：
+• 必须已配置 OpenAI 提供商（LLM 提供商 → OpenAI）
+• 实体抽取会使用 OpenAI API 密钥
+• 已配置的模型将用于知识图谱相关操作
 
-Resource requirements:
-• ~1.5GB RAM, 3GB disk space minimum
-• Neo4j UI: http://localhost:7474
-• Graphiti API: http://localhost:8000
-• Automatic setup and maintenance
+资源需求：
+• 至少约 1.5GB 内存、3GB 磁盘空间
+• Neo4j 界面：http://localhost:7474
+• Graphiti API：http://localhost:8000
+• 自动完成部署与维护
 
-Best for: Teams wanting knowledge graph capabilities with full data control and privacy.`
-	MonitoringGraphitiExternalHelp = `⚠️  BETA: This feature is under active development. Monitor updates for improvements.
+适用场景：希望使用知识图谱能力，同时完全掌控数据与隐私的团队。`
+	MonitoringGraphitiExternalHelp = `⚠️  测试功能：该功能仍在积极开发中，请关注后续更新以获取改进。
 
-External connects to your existing Graphiti server:
+外部方式连接到你已有的 Graphiti 服务器：
 
-• No local infrastructure needed
-• Managed updates and maintenance
-• Shared knowledge graph across teams
-• Data stored on external provider
+• 无需本地基础设施
+• 更新与维护由对方托管
+• 团队之间可共享知识图谱
+• 数据保存在外部服务方
 
-Setup requirements:
-• Graphiti server URL and access
-• Network connectivity required
-• External server must be configured with OpenAI API key
-• Model and extraction settings configured on external server
+配置要求：
+• 需要 Graphiti 服务器地址及访问权限
+• 需要网络连通
+• 外部服务器必须已配置 OpenAI API 密钥
+• 模型与抽取相关设置需在外部服务器上配置
 
-Best for: Teams using existing Graphiti deployments or cloud services.`
-	MonitoringGraphitiDisabledHelp = `Graphiti is disabled. You will not have:
+适用场景：已有 Graphiti 部署或使用云服务的团队。`
+	MonitoringGraphitiDisabledHelp = `Graphiti 已禁用。你将无法使用：
 
-• Temporal knowledge graph
-• Entity and relationship extraction
-• Semantic memory for AI agents
-• Knowledge reuse across flows
-• Advanced contextual search
+• 时序知识图谱
+• 实体与关系抽取
+• 智能体的语义记忆
+• 跨任务流复用知识
+• 高级上下文检索
 
-Note: Graphiti is currently in beta.
-Consider enabling for production use
-to build a knowledge base from
-penetration testing results.`
+注意：Graphiti 目前处于测试阶段。
+生产环境建议启用，以便将渗透测试
+结果沉淀为知识库。`
 )
 
 // Observability Integration constants
 const (
-	MonitoringObservabilityFormTitle       = "Observability Configuration"
-	MonitoringObservabilityFormDescription = "Configuration of monitoring and observability stack"
+	MonitoringObservabilityFormTitle       = "Observability 配置"
+	MonitoringObservabilityFormDescription = "配置监控与可观测性组件栈"
 	MonitoringObservabilityFormName        = "Observability"
-	MonitoringObservabilityFormOverview    = `Observability stack includes:
-• Grafana dashboards for visualization
-• VictoriaMetrics for time-series data
-• Jaeger for distributed tracing
-• Loki for log aggregation
-• OpenTelemetry for data collection
+	MonitoringObservabilityFormOverview    = `可观测性组件栈包含：
+• Grafana —— 可视化仪表盘
+• VictoriaMetrics —— 时序数据存储
+• Jaeger —— 分布式链路追踪
+• Loki —— 日志聚合
+• OpenTelemetry —— 数据采集
 
-Monitor PentAGI performance and system health.`
+用于监控 PentAGI 的性能与系统健康状况。`
 
 	// Deployment types
-	MonitoringObservabilityEmbedded = "Embedded Stack"
-	MonitoringObservabilityExternal = "External Collector"
-	MonitoringObservabilityDisabled = "Disabled"
+	MonitoringObservabilityEmbedded = "内置组件栈"
+	MonitoringObservabilityExternal = "外部采集器"
+	MonitoringObservabilityDisabled = "已禁用"
 
 	// Form fields
-	MonitoringObservabilityDeploymentType     = "Deployment Type"
-	MonitoringObservabilityDeploymentTypeDesc = "Select the deployment type for monitoring"
-	MonitoringObservabilityOTelHost           = "OpenTelemetry Host"
-	MonitoringObservabilityOTelHostDesc       = "Address of the external OpenTelemetry collector"
+	MonitoringObservabilityDeploymentType     = "部署方式"
+	MonitoringObservabilityDeploymentTypeDesc = "选择监控组件的部署方式"
+	MonitoringObservabilityOTelHost           = "OpenTelemetry 主机"
+	MonitoringObservabilityOTelHostDesc       = "外部 OpenTelemetry 采集器的地址"
 
 	// embedded listen fields
-	MonitoringObservabilityGrafanaListenIP        = "Grafana Listen IP"
-	MonitoringObservabilityGrafanaListenIPDesc    = "Bind address used by Docker port mapping (e.g., 0.0.0.0 to expose on all interfaces)"
-	MonitoringObservabilityGrafanaListenPort      = "Grafana Listen Port"
-	MonitoringObservabilityGrafanaListenPortDesc  = "External TCP port exposed by Docker for Grafana web UI"
-	MonitoringObservabilityOTelGrpcListenIP       = "OTel gRPC Listen IP"
-	MonitoringObservabilityOTelGrpcListenIPDesc   = "Bind address used by Docker port mapping (e.g., 0.0.0.0 to expose on all interfaces)"
-	MonitoringObservabilityOTelGrpcListenPort     = "OTel gRPC Listen Port"
-	MonitoringObservabilityOTelGrpcListenPortDesc = "External TCP port exposed by Docker for OTel gRPC receiver"
-	MonitoringObservabilityOTelHttpListenIP       = "OTel HTTP Listen IP"
-	MonitoringObservabilityOTelHttpListenIPDesc   = "Bind address used by Docker port mapping (e.g., 0.0.0.0 to expose on all interfaces)"
-	MonitoringObservabilityOTelHttpListenPort     = "OTel HTTP Listen Port"
-	MonitoringObservabilityOTelHttpListenPortDesc = "External TCP port exposed by Docker for OTel HTTP receiver"
+	MonitoringObservabilityGrafanaListenIP        = "Grafana 监听 IP"
+	MonitoringObservabilityGrafanaListenIPDesc    = "Docker 端口映射所用的绑定地址（例如 0.0.0.0 表示在所有网络接口上开放）"
+	MonitoringObservabilityGrafanaListenPort      = "Grafana 监听端口"
+	MonitoringObservabilityGrafanaListenPortDesc  = "Docker 为 Grafana 网页界面开放的外部 TCP 端口"
+	MonitoringObservabilityOTelGrpcListenIP       = "OTel gRPC 监听 IP"
+	MonitoringObservabilityOTelGrpcListenIPDesc   = "Docker 端口映射所用的绑定地址（例如 0.0.0.0 表示在所有网络接口上开放）"
+	MonitoringObservabilityOTelGrpcListenPort     = "OTel gRPC 监听端口"
+	MonitoringObservabilityOTelGrpcListenPortDesc = "Docker 为 OTel gRPC 接收端开放的外部 TCP 端口"
+	MonitoringObservabilityOTelHttpListenIP       = "OTel HTTP 监听 IP"
+	MonitoringObservabilityOTelHttpListenIPDesc   = "Docker 端口映射所用的绑定地址（例如 0.0.0.0 表示在所有网络接口上开放）"
+	MonitoringObservabilityOTelHttpListenPort     = "OTel HTTP 监听端口"
+	MonitoringObservabilityOTelHttpListenPortDesc = "Docker 为 OTel HTTP 接收端开放的外部 TCP 端口"
 
 	// Help text
-	MonitoringObservabilityModeGuide    = "Choose monitoring: Embedded (full stack), External (existing infra), Disabled (no monitoring)"
-	MonitoringObservabilityEmbeddedHelp = `Embedded deploys complete monitoring:
-• Grafana dashboards and alerting
-• VictoriaMetrics time-series database
-• Jaeger distributed tracing UI
-• Loki log aggregation system
-• ClickHouse analytical database
-• Node Exporter + cAdvisor metrics
-• OpenTelemetry data collection
+	MonitoringObservabilityModeGuide    = "选择监控方式：内置（完整组件栈）、外部（已有基础设施）、禁用（不启用监控）"
+	MonitoringObservabilityEmbeddedHelp = `内置方式会部署完整的监控体系：
+• Grafana 仪表盘与告警
+• VictoriaMetrics 时序数据库
+• Jaeger 分布式追踪界面
+• Loki 日志聚合系统
+• ClickHouse 分析型数据库
+• Node Exporter + cAdvisor 指标采集
+• OpenTelemetry 数据采集
 
-Auto-instrumented components with
-pre-built dashboards for system health,
-performance analysis, and debugging.
+各组件已自动接入监控，并预置了用于
+系统健康、性能分析与问题排查的仪表盘。
 
-Resource requirements:
-• ~1.5GB RAM, 3GB disk space minimum
-• Grafana UI: http://localhost:3000
-• Profiling: http://localhost:7777
+资源需求：
+• 至少约 1.5GB 内存、3GB 磁盘空间
+• Grafana 界面：http://localhost:3000
+• 性能分析：http://localhost:7777
 
-Best for: Complete system visibility,
-troubleshooting, and performance tuning.`
-	MonitoringObservabilityExternalHelp = `External sends telemetry to your existing monitoring infrastructure:
+适用场景：需要完整的系统可见性、
+问题排查与性能调优。`
+	MonitoringObservabilityExternalHelp = `外部方式会将遥测数据发送到你已有的监控基础设施：
 
-• OTLP protocol over HTTP/2 (no TLS)
-• Your collector must support:
-  - OTLP HTTP receiver (port 4318)
-  - OTLP gRPC receiver (port 8148)
-  - tls: insecure: true setting
-• Sends metrics, traces, and logs
-• Compatible with enterprise platforms:
-  Datadog, New Relic, Splunk, etc.
+• 使用基于 HTTP/2 的 OTLP 协议（不启用 TLS）
+• 你的采集器必须支持：
+  - OTLP HTTP 接收端（端口 4318）
+  - OTLP gRPC 接收端（端口 8148）
+  - tls: insecure: true 配置
+• 发送指标、链路追踪与日志
+• 兼容各类企业级平台：
+  Datadog、New Relic、Splunk 等
 
-OTEL_HOST example:
+OTEL_HOST 示例：
 your-collector:4318
 
-Collector config requirement:
+采集器配置要求：
 tls: insecure: true
 
-Best for: Organizations with existing
-monitoring infrastructure or centralized
-observability platforms.`
-	MonitoringObservabilityDisabledHelp = `Observability is disabled. You will not have:
+适用场景：已有监控基础设施或
+统一可观测性平台的组织。`
+	MonitoringObservabilityDisabledHelp = `可观测性已禁用。你将无法使用：
 
-• System performance monitoring
-• Distributed request tracing
-• Structured log aggregation
-• Resource usage analytics
-• Error tracking and alerting
-• Performance bottleneck analysis
+• 系统性能监控
+• 分布式请求追踪
+• 结构化日志聚合
+• 资源使用分析
+• 错误追踪与告警
+• 性能瓶颈分析
 
-Consider enabling for production use
-to monitor system health, debug issues,
-and optimize performance effectively.`
+生产环境建议启用，以便监控系统健康、
+排查问题并有效优化性能。`
 )
 
 // Summarizer Screen
@@ -1112,41 +1108,41 @@ const (
 当前算法会压缩较早的内容，同时保持最近上下文的质量。`
 
 	// Enhanced Help Text - Assistant specific (interactive conversations)
-	SummarizerFormAssistantHelp = `Optimized for interactive conversations requiring context continuity.
+	SummarizerFormAssistantHelp = `针对需要保持上下文连续性的交互式对话进行了优化。
 
-Default tuning (3 Recent Sections, 75KB limits):
-• Typical range: 8K-40K tokens
-• Good for: Extended dialogues, reasoning chains, context-dependent tasks
-• Models: Works well with 32K+ context models
+默认配置（3 个保留区段、75KB 上限）：
+• 典型区间：8K-40K tokens
+• 适用场景：长对话、推理链、依赖上下文的任务
+• 模型要求：在 32K 以上上下文的模型上表现良好
 
-Adjustments by model type:
-• Short context (≤16K): Recent Sections=1-2, Section Limit=45KB
-• Long context (128K+): Can increase Recent Sections=5-7
-• High-frequency chat: Reduce Recent Sections=2 for faster responses
+按模型类型调整：
+• 短上下文（≤16K）：保留区段数=1-2，区段大小上限=45KB
+• 长上下文（128K+）：可将保留区段数提高到 5-7
+• 高频对话：将保留区段数降到 2，以获得更快响应
 
-Advanced tuning:
-• QA Memory 200KB+ for document analysis conversations
-• Response Limit 24-32KB for detailed technical responses
-• Keep User Messages uncompressed (SummHumanInQA=false) for better context
+进阶调优：
+• 文档分析类对话可将问答记忆上限设为 200KB 以上
+• 详尽的技术回答可将回复大小上限设为 24-32KB
+• 保持用户消息不被压缩（SummHumanInQA=false）以获得更好的上下文
 
-Performance optimization:
-• Each Recent Section ≈ 9-18KB in assistant mode
-• Size Management reduces growth by ~20% but may lose detail
-• QA compression triggers less often due to larger default limits
+性能优化：
+• 在助手模式下，每个保留区段约占 9-18KB
+• 启用大小管理可减少约 20% 的增长，但可能丢失细节
+• 由于默认上限较大，问答压缩触发的频率更低
 
-Size Management enabled by default - maintains conversation flow while preventing context overflow.
-Monitor actual token usage and adjust Recent Sections first, then limits.`
+大小管理默认启用，在防止上下文溢出的同时保持对话流畅。
+建议先观察实际 token 用量，优先调整保留区段数，再调整各项上限。`
 
 	// Context size estimation
-	SummarizerContextEstimatedSize    = "Estimated context size: %s\n%s"
-	SummarizerContextTokenRange       = "~%s tokens"
-	SummarizerContextTokenRangeMinMax = "~%s-%s tokens"
-	SummarizerContextRequires256K     = "Requires 256K+ context model"
-	SummarizerContextRequires128K     = "Requires 128K+ context model"
-	SummarizerContextRequires64K      = "Requires 64K+ context model"
-	SummarizerContextRequires32K      = "Requires 32K+ context model"
-	SummarizerContextRequires16K      = "Requires 16K+ context model"
-	SummarizerContextFitsIn8K         = "Fits in 8K+ context model"
+	SummarizerContextEstimatedSize    = "预计上下文规模：%s\n%s"
+	SummarizerContextTokenRange       = "约 %s tokens"
+	SummarizerContextTokenRangeMinMax = "约 %s-%s tokens"
+	SummarizerContextRequires256K     = "需要 256K 以上上下文的模型"
+	SummarizerContextRequires128K     = "需要 128K 以上上下文的模型"
+	SummarizerContextRequires64K      = "需要 64K 以上上下文的模型"
+	SummarizerContextRequires32K      = "需要 32K 以上上下文的模型"
+	SummarizerContextRequires16K      = "需要 16K 以上上下文的模型"
+	SummarizerContextFitsIn8K         = "可在 8K 以上上下文的模型中运行"
 )
 
 // Tools screen strings
@@ -1239,73 +1235,73 @@ const (
 	ServerSettingsDataDirHint             = "数据目录"
 
 	// Help texts per-field
-	ServerSettingsGeneralHelp = `PentAGI exposes its web UI via Docker with configurable host and port.
+	ServerSettingsGeneralHelp = `PentAGI 通过 Docker 对外提供网页界面，主机地址与端口均可配置。
 
-Public URL must reflect how users reach the server. If using a subpath (e.g., /pentagi/), include it here. CORS controls browser access from specified origins. Proxy affects outbound traffic to LLM/search providers and other external services used by Tools.
+公开 URL 必须与用户实际访问服务器的方式一致。如果使用子路径（例如 /pentagi/），请一并填入。CORS 控制来自指定来源的浏览器访问。代理会影响发往 LLM/搜索提供商以及工具所用其他外部服务的出站流量。
 
-SSL directory allows providing custom certificates. When set, server will use server.crt and server.key from that directory. Data directory stores artifacts and working files for flows.`
+SSL 目录用于提供自定义证书。设置后，服务器将使用该目录下的 server.crt 和 server.key。数据目录用于存放任务流的产物与工作文件。`
 
-	ServerSettingsLicenseKeyHelp = `PentAGI License Key in format of XXXX-XXXX-XXXX-XXXX. It's used to communicate with PentAGI Cloud API.`
+	ServerSettingsLicenseKeyHelp = `PentAGI 许可证密钥，格式为 XXXX-XXXX-XXXX-XXXX，用于与 PentAGI Cloud API 通信。`
 
-	ServerSettingsHostHelp = `Bind address for published port in docker-compose mapping.
+	ServerSettingsHostHelp = `docker-compose 端口映射中对外发布端口所用的绑定地址。
 
-Examples:
-• 127.0.0.1 — local-only access
-• 0.0.0.0 — expose on all interfaces`
+示例：
+• 127.0.0.1 —— 仅本机访问
+• 0.0.0.0 —— 在所有网络接口上开放`
 
-	ServerSettingsPortHelp = `External port for PentAGI UI. Must be available on the host. Example: 8443.`
+	ServerSettingsPortHelp = `PentAGI 界面对外使用的端口，必须在主机上未被占用。示例：8443。`
 
-	ServerSettingsPublicURLHelp = `Set the public base URL used in redirects and links.
+	ServerSettingsPublicURLHelp = `设置重定向和链接中使用的公开基础 URL。
 
-Examples:
+示例：
 • http://localhost:8443
 • https://example.com/
-• https://example.com/pentagi/ (with base path)`
+• https://example.com/pentagi/（带子路径）`
 
-	ServerSettingsCORSOriginsHelp = `Comma-separated allowed origins for browser access.`
+	ServerSettingsCORSOriginsHelp = `允许浏览器访问的来源列表，以逗号分隔。`
 
-	ServerSettingsProxyURLHelp = `HTTP or HTTPS proxy for outbound requests to LLM providers and external tools. Not used for Docker API communication.`
+	ServerSettingsProxyURLHelp = `用于发往 LLM 提供商和外部工具的出站请求的 HTTP 或 HTTPS 代理。不用于 Docker API 通信。`
 
-	ServerSettingsHTTPClientTimeoutHelp = `Timeout in seconds for all external HTTP/HTTPS API calls including:
-• LLM provider requests (OpenAI, Anthropic, Bedrock, etc.)
-• Search engine queries (Google, Tavily, Perplexity, etc.)
-• External tool integrations
-• Embedding generation requests
+	ServerSettingsHTTPClientTimeoutHelp = `所有外部 HTTP/HTTPS API 调用的超时时间（秒），包括：
+• LLM 提供商请求（OpenAI、Anthropic、Bedrock 等）
+• 搜索引擎查询（Google、Tavily、Perplexity 等）
+• 外部工具集成
+• 向量嵌入生成请求
 
-Default: 600 seconds (10 minutes)
-Setting to 0 disables timeout (not recommended in production)
-Too low values may cause legitimate long-running requests to fail.`
+默认值：600 秒（10 分钟）
+设为 0 表示不限制超时（不建议在生产环境使用）
+数值过低可能导致正常的长耗时请求失败。`
 
-	ServerSettingsTerminalToolTimeoutHelp = `Default timeout in seconds applied when an agent requests timeout=0 or a negative timeout value.
+	ServerSettingsTerminalToolTimeoutHelp = `当智能体请求 timeout=0 或负数超时值时所采用的默认超时时间（秒）。
 
-This affects commands executed through the isolated terminal container, including scanners and CLI-based utilities.
+该设置影响通过隔离终端容器执行的命令，包括各类扫描器和命令行工具。
 
-Default: 1200 seconds (20 minutes)
-Allowed range: 1–10800 seconds (up to 3 hours)
-Values <= 0 or above 10800 are clamped to the maximum (10800 s = 3 hours); agents are never allowed to run indefinitely.
-Explicit timeout values provided by the tool call override this default when they are within the 1–10800 s range.`
+默认值：1200 秒（20 分钟）
+允许范围：1–10800 秒（最多 3 小时）
+小于等于 0 或大于 10800 的值会被限制为最大值（10800 秒 = 3 小时）；智能体永远不允许无限期运行。
+工具调用显式提供的超时值若在 1–10800 秒范围内，将覆盖此默认值。`
 
-	ServerSettingsExternalSSLCAPathHelp = `Path to custom CA certificate file (PEM format) inside the container.
+	ServerSettingsExternalSSLCAPathHelp = `容器内自定义 CA 证书文件（PEM 格式）的路径。
 
-Must point to /opt/pentagi/ssl/ directory, which is mounted from pentagi-ssl volume on the host.
+必须指向 /opt/pentagi/ssl/ 目录，该目录由主机上的 pentagi-ssl 卷挂载而来。
 
-Examples:
+示例：
 • /opt/pentagi/ssl/ca-bundle.pem
 • /opt/pentagi/ssl/corporate-ca.pem
 
-File can contain multiple root and intermediate certificates.`
+该文件可包含多个根证书和中间证书。`
 
-	ServerSettingsExternalSSLInsecureHelp = `Disable SSL/TLS certificate validation for connections to LLM providers and external services.
+	ServerSettingsExternalSSLInsecureHelp = `禁用与 LLM 提供商及外部服务连接时的 SSL/TLS 证书校验。
 
-⚠ WARNING: Use only for testing with self-signed certificates. Never enable in production.
+⚠ 警告：仅可用于自签名证书的测试场景，切勿在生产环境启用。
 
-When enabled, all certificate validation is bypassed, making connections vulnerable to man-in-the-middle attacks.`
+启用后将完全跳过证书校验，连接会面临中间人攻击风险。`
 
-	ServerSettingsSSLDirHelp = `Path to directory with server.crt and server.key in PEM format. server.crt may include fullchain. Overrides default generated certificate behavior.`
+	ServerSettingsSSLDirHelp = `存放 PEM 格式 server.crt 与 server.key 的目录路径。server.crt 可包含完整证书链。此设置会覆盖默认的自动生成证书行为。`
 
-	ServerSettingsDataDirHelp = `Host directory for persistent data. PentAGI stores agent artifacts under flow-N subdirectories, which map to /work inside worker containers.`
+	ServerSettingsDataDirHelp = `用于存放持久化数据的主机目录。PentAGI 会将智能体产物存放在 flow-N 子目录下，这些目录会映射到工作容器内的 /work。`
 
-	ServerSettingsCookieSigningSaltHelp = `Secret salt used to sign cookies. Keep it private.`
+	ServerSettingsCookieSigningSaltHelp = `用于签名 Cookie 的密钥盐值，请妥善保密。`
 )
 
 // Human-in-the-loop screen strings
@@ -1401,40 +1397,40 @@ API 密钥获取地址：
 • Traversaal: https://traversaal.ai/
 • Google: https://developers.google.com/custom-search/v1/introduction`
 
-	ToolsSearchEnginesDuckDuckGo               = "DuckDuckGo Search"
-	ToolsSearchEnginesDuckDuckGoDesc           = "Enable DuckDuckGo search (no API key required)"
-	ToolsSearchEnginesDuckDuckGoRegion         = "DuckDuckGo Region"
-	ToolsSearchEnginesDuckDuckGoRegionDesc     = "DuckDuckGo region code (e.g., us-en, uk-en, cn-zh)"
-	ToolsSearchEnginesDuckDuckGoSafeSearch     = "DuckDuckGo Safe Search"
-	ToolsSearchEnginesDuckDuckGoSafeSearchDesc = "DuckDuckGo safe search (strict, moderate, off)"
-	ToolsSearchEnginesDuckDuckGoTimeRange      = "DuckDuckGo Time Range"
-	ToolsSearchEnginesDuckDuckGoTimeRangeDesc  = "DuckDuckGo time range (d: day, w: week, m: month, y: year)"
-	ToolsSearchEnginesSploitus                 = "Sploitus Search"
-	ToolsSearchEnginesSploitusDesc             = "Enable Sploitus search for exploits and vulnerabilities (no API key required)"
-	ToolsSearchEnginesPerplexityKey            = "Perplexity API Key"
-	ToolsSearchEnginesPerplexityKeyDesc        = "API key for Perplexity AI search"
-	ToolsSearchEnginesTavilyKey                = "Tavily API Key"
-	ToolsSearchEnginesTavilyKeyDesc            = "API key for Tavily search service"
-	ToolsSearchEnginesTraversaalKey            = "Traversaal API Key"
-	ToolsSearchEnginesTraversaalKeyDesc        = "API key for Traversaal web scraping"
-	ToolsSearchEnginesGoogleKey                = "Google Search API Key"
-	ToolsSearchEnginesGoogleKeyDesc            = "Google Custom Search API key"
-	ToolsSearchEnginesGoogleCX                 = "Google Search Engine ID"
-	ToolsSearchEnginesGoogleCXDesc             = "Google Custom Search Engine ID"
-	ToolsSearchEnginesGoogleLR                 = "Google Language Restriction"
-	ToolsSearchEnginesGoogleLRDesc             = "Google Search Engine language restriction (e.g., lang_en, lang_cn, etc.)"
-	ToolsSearchEnginesSearxngURL               = "Searxng Search URL"
-	ToolsSearchEnginesSearxngURLDesc           = "Searxng search engine URL"
-	ToolsSearchEnginesSearxngCategories        = "Searxng Search Categories"
-	ToolsSearchEnginesSearxngCategoriesDesc    = "Searxng search engine categories (e.g., general, it, web, news, technology, science, health, other)"
-	ToolsSearchEnginesSearxngLanguage          = "Searxng Search Language"
-	ToolsSearchEnginesSearxngLanguageDesc      = "Searxng search engine language (en, ch, fr, de, it, es, pt, ru, zh, empty for all languages)"
-	ToolsSearchEnginesSearxngSafeSearch        = "Searxng Safe Search"
-	ToolsSearchEnginesSearxngSafeSearchDesc    = "Searxng search engine safe search (0: off, 1: moderate, 2: strict)"
-	ToolsSearchEnginesSearxngTimeRange         = "Searxng Time Range"
-	ToolsSearchEnginesSearxngTimeRangeDesc     = "Searxng search engine time range (day, month, year)"
-	ToolsSearchEnginesSearxngTimeout           = "Searxng Timeout"
-	ToolsSearchEnginesSearxngTimeoutDesc       = "Searxng request timeout in seconds"
+	ToolsSearchEnginesDuckDuckGo               = "DuckDuckGo 搜索"
+	ToolsSearchEnginesDuckDuckGoDesc           = "启用 DuckDuckGo 搜索（无需 API 密钥）"
+	ToolsSearchEnginesDuckDuckGoRegion         = "DuckDuckGo 区域"
+	ToolsSearchEnginesDuckDuckGoRegionDesc     = "DuckDuckGo 区域代码（例如 us-en、uk-en、cn-zh）"
+	ToolsSearchEnginesDuckDuckGoSafeSearch     = "DuckDuckGo 安全搜索"
+	ToolsSearchEnginesDuckDuckGoSafeSearchDesc = "DuckDuckGo 安全搜索级别（strict 严格、moderate 中等、off 关闭）"
+	ToolsSearchEnginesDuckDuckGoTimeRange      = "DuckDuckGo 时间范围"
+	ToolsSearchEnginesDuckDuckGoTimeRangeDesc  = "DuckDuckGo 时间范围（d: 天、w: 周、m: 月、y: 年）"
+	ToolsSearchEnginesSploitus                 = "Sploitus 搜索"
+	ToolsSearchEnginesSploitusDesc             = "启用 Sploitus 漏洞利用与漏洞信息搜索（无需 API 密钥）"
+	ToolsSearchEnginesPerplexityKey            = "Perplexity API 密钥"
+	ToolsSearchEnginesPerplexityKeyDesc        = "Perplexity AI 搜索的 API 密钥"
+	ToolsSearchEnginesTavilyKey                = "Tavily API 密钥"
+	ToolsSearchEnginesTavilyKeyDesc            = "Tavily 搜索服务的 API 密钥"
+	ToolsSearchEnginesTraversaalKey            = "Traversaal API 密钥"
+	ToolsSearchEnginesTraversaalKeyDesc        = "Traversaal 网页抓取的 API 密钥"
+	ToolsSearchEnginesGoogleKey                = "Google 搜索 API 密钥"
+	ToolsSearchEnginesGoogleKeyDesc            = "Google 自定义搜索 API 密钥"
+	ToolsSearchEnginesGoogleCX                 = "Google 搜索引擎 ID"
+	ToolsSearchEnginesGoogleCXDesc             = "Google 自定义搜索引擎 ID"
+	ToolsSearchEnginesGoogleLR                 = "Google 语言限制"
+	ToolsSearchEnginesGoogleLRDesc             = "Google 搜索引擎的语言限制（例如 lang_en、lang_cn 等）"
+	ToolsSearchEnginesSearxngURL               = "Searxng 搜索地址"
+	ToolsSearchEnginesSearxngURLDesc           = "Searxng 搜索引擎的 URL"
+	ToolsSearchEnginesSearxngCategories        = "Searxng 搜索分类"
+	ToolsSearchEnginesSearxngCategoriesDesc    = "Searxng 搜索引擎分类（例如 general、it、web、news、technology、science、health、other）"
+	ToolsSearchEnginesSearxngLanguage          = "Searxng 搜索语言"
+	ToolsSearchEnginesSearxngLanguageDesc      = "Searxng 搜索引擎语言（en、ch、fr、de、it、es、pt、ru、zh，留空表示所有语言）"
+	ToolsSearchEnginesSearxngSafeSearch        = "Searxng 安全搜索"
+	ToolsSearchEnginesSearxngSafeSearchDesc    = "Searxng 搜索引擎安全搜索级别（0: 关闭、1: 中等、2: 严格）"
+	ToolsSearchEnginesSearxngTimeRange         = "Searxng 时间范围"
+	ToolsSearchEnginesSearxngTimeRangeDesc     = "Searxng 搜索引擎时间范围（day 天、month 月、year 年）"
+	ToolsSearchEnginesSearxngTimeout           = "Searxng 超时"
+	ToolsSearchEnginesSearxngTimeoutDesc       = "Searxng 请求超时时间（秒）"
 )
 
 // Scraper screen strings
@@ -1472,106 +1468,106 @@ The scraper supports:
 	ToolsScraperPublicPassword            = "Public URL Password"
 	ToolsScraperPublicPasswordDesc        = "Password for public scraper access"
 	ToolsScraperPrivateUsername           = "Private URL Username"
-	ToolsScraperPrivateUsernameDesc       = "Username for private scraper access"
-	ToolsScraperPrivatePassword           = "Private URL Password"
-	ToolsScraperPrivatePasswordDesc       = "Password for private scraper access"
-	ToolsScraperLocalUsername             = "Local URL Username"
-	ToolsScraperLocalUsernameDesc         = "Username for embedded scraper service"
-	ToolsScraperLocalPassword             = "Local URL Password"
-	ToolsScraperLocalPasswordDesc         = "Password for embedded scraper service"
-	ToolsScraperMaxConcurrentSessions     = "Max Concurrent Sessions"
-	ToolsScraperMaxConcurrentSessionsDesc = "Maximum number of concurrent scraping sessions"
-	ToolsScraperEmbeddedHelp              = "Embedded mode runs a local scraper container that can access both public and private resources. The default configuration uses https://someuser:somepass@scraper/."
-	ToolsScraperExternalHelp              = "External mode uses separate scraper services. Configure different URLs for public and private access as needed."
-	ToolsScraperDisabledHelp              = "Scraper is disabled. Web content extraction and analysis capabilities will not be available."
+	ToolsScraperPrivateUsernameDesc       = "访问内网抓取服务所用的用户名"
+	ToolsScraperPrivatePassword           = "内网地址密码"
+	ToolsScraperPrivatePasswordDesc       = "访问内网抓取服务所用的密码"
+	ToolsScraperLocalUsername             = "本地地址用户名"
+	ToolsScraperLocalUsernameDesc         = "内置抓取服务所用的用户名"
+	ToolsScraperLocalPassword             = "本地地址密码"
+	ToolsScraperLocalPasswordDesc         = "内置抓取服务所用的密码"
+	ToolsScraperMaxConcurrentSessions     = "最大并发会话数"
+	ToolsScraperMaxConcurrentSessionsDesc = "抓取会话的最大并发数量"
+	ToolsScraperEmbeddedHelp              = "内置模式会运行一个本地抓取容器，可同时访问公网与内网资源。默认配置使用 https://someuser:somepass@scraper/。"
+	ToolsScraperExternalHelp              = "外部模式使用独立的抓取服务。可按需为公网访问和内网访问分别配置不同的地址。"
+	ToolsScraperDisabledHelp              = "抓取服务已禁用。网页内容提取与分析功能将不可用。"
 )
 
 // Docker Environment screen strings
 const (
-	ToolsDockerFormTitle       = "Docker Environment Configuration"
-	ToolsDockerFormDescription = "Configure Docker environment for worker containers"
-	ToolsDockerFormName        = "Docker Environment"
-	ToolsDockerFormOverview    = `• Worker Isolation - Containers provide security boundaries for tasks
-• Network Capabilities - Enable privileged network operations for pentesting
-• Container Management - Control how workers access Docker daemon
-• Storage Configuration - Define workspace and artifact storage
-• Image Selection - Set default images for different task types
+	ToolsDockerFormTitle       = "Docker 环境配置"
+	ToolsDockerFormDescription = "配置工作容器所使用的 Docker 环境"
+	ToolsDockerFormName        = "Docker 环境"
+	ToolsDockerFormOverview    = `• 工作容器隔离 —— 容器为任务提供安全边界
+• 网络能力 —— 为渗透测试启用特权网络操作
+• 容器管理 —— 控制工作容器如何访问 Docker 守护进程
+• 存储配置 —— 定义工作区与产物的存储位置
+• 镜像选择 —— 为不同类型的任务设置默认镜像
 
-Critical for penetration testing workflows requiring network scanning, custom tools, and secure task isolation.`
+对于需要网络扫描、自定义工具和安全任务隔离的渗透测试流程，这些配置至关重要。`
 
 	// General help text
-	ToolsDockerGeneralHelp = `Each AI agent task runs in an isolated Docker container with two ports (28000-32000 range) automatically allocated per flow. Worker containers are created on-demand from default images or agent-selected ones.
+	ToolsDockerGeneralHelp = `每个 AI 智能体任务都运行在独立的 Docker 容器中，每个任务流会自动分配两个端口（28000-32000 范围）。工作容器按需创建，使用默认镜像或由智能体选定的镜像。
 
-Basic setup requires enabling capabilities: Docker Access allows spawning additional containers for specialized tools, while Network Admin grants low-level network permissions essential for scanning tools like nmap.
+基础配置需要启用相应能力：Docker 访问权限允许创建额外容器以运行专用工具；网络管理权限则授予底层网络操作权限，这是 nmap 等扫描工具所必需的。
 
-Storage operates via Docker volumes by default, or host directories when Work Directory is specified. Connection settings control the Docker daemon location - local socket for standard setups, or remote TCP with TLS for distributed environments.
+存储默认通过 Docker 卷实现；若指定了工作目录，则改用主机目录。连接设置决定 Docker 守护进程的位置 —— 标准部署使用本地套接字，分布式环境则可使用带 TLS 的远程 TCP 连接。
 
-Default images serve as fallbacks: general tasks use standard images, while security testing defaults to pentesting-focused containers. Public IP enables reverse shell attacks by providing workers with a reachable address for target callbacks. Usually it's a local interface address of the host machine with Docker daemon running for the workers containers.
+默认镜像作为回退选项：通用任务使用标准镜像，安全测试则默认使用渗透测试专用容器。公网 IP 通过为工作容器提供可达地址来支持反弹 shell 攻击，便于目标回连。通常填写运行工作容器的 Docker 守护进程所在主机的本地接口地址。
 
-Configuration combines based on scenario: enable both capabilities for full pentesting, use Work Directory for persistent artifacts, or configure remote connection for isolated Docker environments.`
+可根据场景组合配置：完整渗透测试需同时启用两项能力；需要保留产物文件时使用工作目录；面向隔离的 Docker 环境时配置远程连接。`
 
 	// Container capabilities
-	ToolsDockerInside       = "Docker Access"
-	ToolsDockerInsideDesc   = "Allow workers to manage Docker containers"
-	ToolsDockerNetAdmin     = "Network Admin"
-	ToolsDockerNetAdminDesc = "Grant NET_ADMIN capability for network scanning tools like nmap"
+	ToolsDockerInside       = "Docker 访问权限"
+	ToolsDockerInsideDesc   = "允许工作容器管理 Docker 容器"
+	ToolsDockerNetAdmin     = "网络管理权限"
+	ToolsDockerNetAdminDesc = "授予 NET_ADMIN 能力，供 nmap 等网络扫描工具使用"
 
 	// Connection settings
-	ToolsDockerSocket       = "Docker Socket"
-	ToolsDockerSocketDesc   = "Path to Docker socket on host filesystem"
-	ToolsDockerNetwork      = "Docker Network"
-	ToolsDockerNetworkDesc  = "Custom network name for worker containers, or 'host' for direct host network access"
-	ToolsDockerPublicIP     = "Public IP Address"
-	ToolsDockerPublicIPDesc = "Public IP for reverse connections in OOB attacks"
+	ToolsDockerSocket       = "Docker 套接字"
+	ToolsDockerSocketDesc   = "主机文件系统上 Docker 套接字的路径"
+	ToolsDockerNetwork      = "Docker 网络"
+	ToolsDockerNetworkDesc  = "工作容器使用的自定义网络名称，或填 'host' 以直接使用主机网络"
+	ToolsDockerPublicIP     = "公网 IP 地址"
+	ToolsDockerPublicIPDesc = "用于带外（OOB）攻击中反向连接的公网 IP"
 
 	// Storage configuration
-	ToolsDockerWorkDir     = "Work Directory"
-	ToolsDockerWorkDirDesc = "Host directory for worker filesystems (default: Docker volumes)"
+	ToolsDockerWorkDir     = "工作目录"
+	ToolsDockerWorkDirDesc = "工作容器文件系统所在的主机目录（默认使用 Docker 卷）"
 
 	// Default images
-	ToolsDockerDefaultImage               = "Default Image"
-	ToolsDockerDefaultImageDesc           = "Default Docker image for general tasks"
-	ToolsDockerDefaultImageForPentest     = "Pentesting Image"
-	ToolsDockerDefaultImageForPentestDesc = "Default Docker image for security testing tasks"
+	ToolsDockerDefaultImage               = "默认镜像"
+	ToolsDockerDefaultImageDesc           = "通用任务使用的默认 Docker 镜像"
+	ToolsDockerDefaultImageForPentest     = "渗透测试镜像"
+	ToolsDockerDefaultImageForPentestDesc = "安全测试任务使用的默认 Docker 镜像"
 
 	// TLS connection settings (optional)
-	ToolsDockerHost          = "Docker Host"
-	ToolsDockerHostDesc      = "Docker daemon connection (unix:// or tcp://)"
-	ToolsDockerTLSVerify     = "TLS Verification"
-	ToolsDockerTLSVerifyDesc = "Enable TLS verification for Docker connection"
-	ToolsDockerCertPath      = "TLS Certificates"
-	ToolsDockerCertPathDesc  = "Directory containing ca.pem, cert.pem, key.pem files"
+	ToolsDockerHost          = "Docker 主机"
+	ToolsDockerHostDesc      = "Docker 守护进程连接地址（unix:// 或 tcp://）"
+	ToolsDockerTLSVerify     = "TLS 验证"
+	ToolsDockerTLSVerifyDesc = "为 Docker 连接启用 TLS 验证"
+	ToolsDockerCertPath      = "TLS 证书"
+	ToolsDockerCertPathDesc  = "包含 ca.pem、cert.pem、key.pem 文件的目录"
 
 	// Help content for specific configurations
 	ToolsDockerInsideHelp = `Docker Access enables workers to spawn additional containers for specialized tools and environments. Required when tasks need custom software not available in default images.
 
 When enabled, workers can pull and run any Docker image, providing maximum flexibility for complex testing scenarios.`
 
-	ToolsDockerNetAdminHelp = `Network Admin capability allows workers to perform low-level network operations essential for penetration testing.
+	ToolsDockerNetAdminHelp = `网络管理权限允许工作容器执行渗透测试所必需的底层网络操作。
 
-Required for:
-• Network scanning with nmap, masscan
-• Custom packet crafting
-• Network interface manipulation
-• Raw socket operations
+以下场景需要该权限：
+• 使用 nmap、masscan 进行网络扫描
+• 自定义数据包构造
+• 网络接口操作
+• 原始套接字操作
 
-Critical for comprehensive security assessments.`
+对全面的安全评估至关重要。`
 
-	ToolsDockerSocketHelp = `Docker Socket path defines how workers access the Docker daemon. Use only file path to the socket file. Used with Docker Access to enable container management.
+	ToolsDockerSocketHelp = `Docker 套接字路径决定工作容器如何访问 Docker 守护进程。此处只填套接字文件的路径。需与「Docker 访问权限」配合使用才能管理容器。
 
-For enhanced security, consider using docker-in-docker (DinD) instead of exposing the main Docker daemon directly to workers.
-When using DinD, use the path to the Docker socket file of the DinD container which binded to the host filesystem.
+为提升安全性，建议使用 docker-in-docker（DinD），而不是把主 Docker 守护进程直接暴露给工作容器。
+使用 DinD 时，请填写 DinD 容器中已绑定到主机文件系统的 Docker 套接字文件路径。
 
-Example: /var/run/docker.sock`
+示例：/var/run/docker.sock`
 
-	ToolsDockerNetworkHelp = `Docker Network controls network isolation mode for worker containers:
+	ToolsDockerNetworkHelp = `Docker Network 控制工作容器的网络隔离模式：
 
-Bridge Mode (custom network name):
-• Isolated communication between containers
-• Port forwarding from container to host
-• Enhanced security boundaries
-• Network-based monitoring and filtering
-• Recommended for most use cases
+桥接模式（自定义网络名）：
+• 容器之间隔离通信
+• 从容器到主机的端口转发
+• 更强的安全边界
+• 支持基于网络的监控与过滤
+• 推荐用于大多数场景
 
 主机模式（值为 'host'）：
 • 直接访问主机网络接口
@@ -1703,16 +1699,16 @@ const (
 	EmbedderURLPlaceholderMistral     = "https://api.mistral.ai/v1"
 	EmbedderURLPlaceholderJina        = "https://api.jina.ai/v1"
 	EmbedderURLPlaceholderHuggingFace = "https://api-inference.huggingface.co"
-	EmbedderURLPlaceholderGoogleAI    = "Not supported - uses default endpoint"
-	EmbedderURLPlaceholderVoyageAI    = "Not supported - uses default endpoint"
+	EmbedderURLPlaceholderGoogleAI    = "不支持自定义，使用默认端点"
+	EmbedderURLPlaceholderVoyageAI    = "不支持自定义，使用默认端点"
 
-	EmbedderAPIKeyPlaceholderOllama      = "Not required for local models"
-	EmbedderAPIKeyPlaceholderMistral     = "Mistral API key"
-	EmbedderAPIKeyPlaceholderJina        = "Jina API key"
-	EmbedderAPIKeyPlaceholderHuggingFace = "HuggingFace API key"
-	EmbedderAPIKeyPlaceholderGoogleAI    = "Google AI API key"
-	EmbedderAPIKeyPlaceholderVoyageAI    = "VoyageAI API key"
-	EmbedderAPIKeyPlaceholderDefault     = "API key for the provider"
+	EmbedderAPIKeyPlaceholderOllama      = "本地模型无需填写"
+	EmbedderAPIKeyPlaceholderMistral     = "Mistral API 密钥"
+	EmbedderAPIKeyPlaceholderJina        = "Jina API 密钥"
+	EmbedderAPIKeyPlaceholderHuggingFace = "HuggingFace API 密钥"
+	EmbedderAPIKeyPlaceholderGoogleAI    = "Google AI API 密钥"
+	EmbedderAPIKeyPlaceholderVoyageAI    = "VoyageAI API 密钥"
+	EmbedderAPIKeyPlaceholderDefault     = "该提供商的 API 密钥"
 
 	EmbedderModelPlaceholderOpenAI      = "text-embedding-3-small"
 	EmbedderModelPlaceholderOllama      = "nomic-embed-text"
@@ -1721,7 +1717,7 @@ const (
 	EmbedderModelPlaceholderHuggingFace = "sentence-transformers/all-MiniLM-L6-v2"
 	EmbedderModelPlaceholderGoogleAI    = "gemini-embedding-001"
 	EmbedderModelPlaceholderVoyageAI    = "voyage-2"
-	EmbedderModelPlaceholderDefault     = "Model name"
+	EmbedderModelPlaceholderDefault     = "模型名称"
 
 	// Provider IDs for internal use
 	EmbedderProviderIDDefault     = "default"
@@ -1734,112 +1730,112 @@ const (
 	EmbedderProviderIDVoyageAI    = "voyageai"
 	EmbedderProviderIDDisabled    = "none"
 
-	EmbedderHelpGeneral = `Embeddings convert text into vectors for semantic search and knowledge storage. This enables PentAGI to understand meaning rather than just keywords, making search results more relevant and intelligent.
+	EmbedderHelpGeneral = `嵌入会将文本转换为向量，用于语义检索与知识存储。这让 PentAGI 能够理解语义而不只是匹配关键词，使检索结果更贴切、更智能。
 
-Key benefits:
-• Find documents by meaning, not exact words
-• Build a smart knowledge base from pentesting results
-• Enable AI agents to locate relevant information quickly
-• Support advanced reasoning with contextual data
+主要收益：
+• 按语义查找文档，而非精确词匹配
+• 基于渗透测试结果构建智能知识库
+• 让 AI 智能体快速定位相关信息
+• 借助上下文数据支撑更深入的推理
 
-Choose Ollama for completely local processing - your data never leaves your infrastructure. Other providers offer cloud-based processing with different model capabilities and pricing.
+若希望完全本地处理，请选择 Ollama —— 数据不会离开你的基础设施。其他提供商提供云端处理，模型能力与价格各不相同。
 
-Configure carefully as changing providers requires rebuilding the entire knowledge base.`
+请谨慎配置，更换提供商需要重建整个知识库。`
 
-	EmbedderHelpAttentionPrefix = "Important:"
-	EmbedderHelpAttention       = `Different embedding providers create incompatible vectors. Changing providers or models will break existing semantic search.
+	EmbedderHelpAttentionPrefix = "重要提示："
+	EmbedderHelpAttention       = `不同嵌入提供商生成的向量互不兼容。更换提供商或模型会破坏现有的语义检索。
 
-You must flush or reindex your entire knowledge base using the etester utility:
-• Run 'etester flush' to clear old embeddings
-• Run 'etester reindex' to rebuild with new provider
-• This process can take significant time for large datasets`
+你必须使用 etester 工具清空或重建整个知识库：
+• 执行 'etester flush' 清除旧的嵌入数据
+• 执行 'etester reindex' 使用新提供商重建索引
+• 数据量较大时，该过程可能耗时较长`
 
-	EmbedderHelpAttentionSuffix = `Only change providers if absolutely necessary.`
+	EmbedderHelpAttentionSuffix = `除非确有必要，否则不要更换提供商。`
 
 	// Provider help texts
-	EmbedderHelpDefault = `Default mode uses OpenAI embeddings with the API key configured in LLM Providers.
+	EmbedderHelpDefault = `默认模式使用 OpenAI 嵌入，并采用在 LLM 提供商中配置的 API 密钥。
 
-This is the recommended option for most users as it requires no additional configuration if you already have OpenAI set up.`
+若你已配置好 OpenAI，这是大多数用户的推荐选项，无需额外配置。`
 
-	EmbedderHelpOpenAI = `Direct OpenAI API access for embedding generation.
+	EmbedderHelpOpenAI = `直接通过 OpenAI API 生成嵌入。
 
-Get your API key from:
+在此获取 API 密钥：
 https://platform.openai.com/api-keys
 
-Recommended models:
-• text-embedding-3-small (cost-effective, 1536 dimensions)
-• text-embedding-3-large (highest quality, 3072 dimensions)
-• text-embedding-ada-002 (legacy, still supported)`
+推荐模型：
+• text-embedding-3-small（性价比高，1536 维）
+• text-embedding-3-large（质量最高，3072 维）
+• text-embedding-ada-002（旧版，仍受支持）`
 
-	EmbedderHelpOllama = `Local Ollama server for open-source embedding models.
+	EmbedderHelpOllama = `使用本地 Ollama 服务器运行开源嵌入模型。
 
-Popular embedding models:
-• nomic-embed-text (recommended, 768 dimensions)
-• mxbai-embed-large (large model, 1024 dimensions)
-• snowflake-arctic-embed (multilingual support)
+常用嵌入模型：
+• nomic-embed-text（推荐，768 维）
+• mxbai-embed-large（大模型，1024 维）
+• snowflake-arctic-embed（支持多语言）
 
-Install Ollama from:
+在此安装 Ollama：
 https://ollama.com/
 
-Start with: ollama pull nomic-embed-text`
+从这条命令开始：ollama pull nomic-embed-text`
 
-	EmbedderHelpMistral = `Mistral AI embedding models via API.
+	EmbedderHelpMistral = `通过 API 使用 Mistral AI 嵌入模型。
 
-Get your API key from:
+在此获取 API 密钥：
 https://console.mistral.ai/
 
-Uses Mistral's embedding model with fixed configuration.
-No model selection required - uses the default embedding model.`
+使用 Mistral 的嵌入模型，配置固定。
+无需选择模型 —— 直接使用默认嵌入模型。`
 
-	EmbedderHelpJina = `Jina AI embedding API with specialized models.
+	EmbedderHelpJina = `Jina AI 嵌入 API，提供多种专用模型。
 
-Get your API key from:
+在此获取 API 密钥：
 https://jina.ai/
 
-Recommended models:
-• jina-embeddings-v2-base-en (general purpose, 768 dimensions)
-• jina-embeddings-v2-small-en (lightweight, 512 dimensions)
-• jina-embeddings-v2-base-code (code-specific embeddings)`
+推荐模型：
+• jina-embeddings-v2-base-en（通用，768 维）
+• jina-embeddings-v2-small-en（轻量，512 维）
+• jina-embeddings-v2-base-code（代码专用嵌入）`
 
-	EmbedderHelpHuggingFace = `HuggingFace Inference API for open-source models.
+	EmbedderHelpHuggingFace = `HuggingFace 推理 API，可使用开源模型。
 
-Get your API key from:
+在此获取 API 密钥：
 https://huggingface.co/settings/tokens
 
-Popular models:
-• sentence-transformers/all-MiniLM-L6-v2 (384 dimensions)
-• sentence-transformers/all-mpnet-base-v2 (768 dimensions)
-• intfloat/e5-large-v2 (1024 dimensions)`
+常用模型：
+• sentence-transformers/all-MiniLM-L6-v2（384 维）
+• sentence-transformers/all-mpnet-base-v2（768 维）
+• intfloat/e5-large-v2（1024 维）`
 
-	EmbedderHelpGoogleAI = `Google AI embedding models (Gemini).
+	EmbedderHelpGoogleAI = `Google AI 嵌入模型（Gemini）。
 
-Get your API key from:
+在此获取 API 密钥：
 https://aistudio.google.com/app/apikey
 
-Available models:
-• gemini-embedding-001 (latest model, 768 dimensions)
-• text-embedding-004 (legacy Vertex AI model)
+可用模型：
+• gemini-embedding-001（最新模型，768 维）
+• text-embedding-004（旧版 Vertex AI 模型）
 
-Uses Google's fixed endpoint - URL configuration not supported.`
+使用 Google 固定的接口地址 —— 不支持自定义 URL。`
 
-	EmbedderHelpVoyageAI = `VoyageAI embedding API optimized for retrieval.
+	EmbedderHelpVoyageAI = `VoyageAI 嵌入 API，针对检索场景做了优化。
 
-Get your API key from:
+在此获取 API 密钥：
 https://www.voyageai.com/
 
-Recommended models:
-• voyage-2 (general purpose, 1024 dimensions)
-• voyage-large-2 (highest quality, 1536 dimensions)
-• voyage-code-2 (code embeddings, 1536 dimensions)`
+推荐模型：
+• voyage-2（通用，1024 维）
+• voyage-large-2（质量最高，1536 维）
+• voyage-code-2（代码嵌入，1536 维）`
 
-	EmbedderHelpDisabled = `Disables all embedding functionality.
+	EmbedderHelpDisabled = `禁用全部嵌入功能。
 
-This will:
-• Disable semantic search capabilities
-• Turn off knowledge storage vectorization
-• Reduce memory and computational requirements
+这会：
+• 关闭语义检索能力
+• 停止知识存储的向量化
+• 降低内存与计算资源需求
 
-Only recommended if embeddings are not needed for your use case.`
+仅当你的使用场景不需要嵌入时才建议选择。`
 )
 
 // Development and Mock Screen constants
@@ -1931,44 +1927,44 @@ const (
 
 // Maintenance Screen constants
 const (
-	MaintenanceTitle       = "System Maintenance"
-	MaintenanceDescription = "Manage PentAGI services and perform maintenance operations"
-	MaintenanceName        = "Maintenance"
-	MaintenanceOverview    = `Perform system maintenance operations for PentAGI.
+	MaintenanceTitle       = "系统维护"
+	MaintenanceDescription = "管理 PentAGI 服务并执行维护操作"
+	MaintenanceName        = "维护"
+	MaintenanceOverview    = `对 PentAGI 执行系统维护操作。
 
-Available operations depend on the current system state and will only be shown when applicable.
+可用操作取决于当前系统状态，只有适用时才会显示。
 
-Operations include:
-• Service lifecycle management (Start/Stop/Restart)
-• Component updates and downloads
-• System reset and cleanup
-• Container and image management
+包含的操作：
+• 服务生命周期管理（启动/停止/重启）
+• 组件更新与下载
+• 系统重置与清理
+• 容器与镜像管理
 
-Each operation will provide real-time status updates and confirmation when required.`
+每项操作都会实时反馈状态，并在需要时请求确认。`
 
 	// Maintenance menu items
-	MaintenanceStartPentagi            = "Start PentAGI"
-	MaintenanceStartPentagiDesc        = "Start all configured PentAGI services"
-	MaintenanceStopPentagi             = "Stop PentAGI"
-	MaintenanceStopPentagiDesc         = "Stop all running PentAGI services"
-	MaintenanceRestartPentagi          = "Restart PentAGI"
-	MaintenanceRestartPentagiDesc      = "Restart all PentAGI services"
-	MaintenanceDownloadWorkerImage     = "Download Worker Image"
-	MaintenanceDownloadWorkerImageDesc = "Download pentesting container image for worker tasks"
-	MaintenanceUpdateWorkerImage       = "Update Worker Image"
-	MaintenanceUpdateWorkerImageDesc   = "Update pentesting container image to latest version"
-	MaintenanceUpdatePentagi           = "Update PentAGI"
-	MaintenanceUpdatePentagiDesc       = "Update PentAGI to the latest version"
-	MaintenanceUpdateInstaller         = "Update Installer"
-	MaintenanceUpdateInstallerDesc     = "Update this installer to the latest version"
-	MaintenanceFactoryReset            = "Factory Reset"
-	MaintenanceFactoryResetDesc        = "Reset PentAGI to factory defaults"
-	MaintenanceRemovePentagi           = "Remove PentAGI"
-	MaintenanceRemovePentagiDesc       = "Remove PentAGI containers but keep data"
-	MaintenancePurgePentagi            = "Purge PentAGI"
-	MaintenancePurgePentagiDesc        = "Completely remove PentAGI including all data"
-	MaintenanceResetPassword           = "Reset Admin Password"
-	MaintenanceResetPasswordDesc       = "Reset the administrator password for PentAGI"
+	MaintenanceStartPentagi            = "启动 PentAGI"
+	MaintenanceStartPentagiDesc        = "启动所有已配置的 PentAGI 服务"
+	MaintenanceStopPentagi             = "停止 PentAGI"
+	MaintenanceStopPentagiDesc         = "停止所有正在运行的 PentAGI 服务"
+	MaintenanceRestartPentagi          = "重启 PentAGI"
+	MaintenanceRestartPentagiDesc      = "重启所有 PentAGI 服务"
+	MaintenanceDownloadWorkerImage     = "下载工作容器镜像"
+	MaintenanceDownloadWorkerImageDesc = "下载用于工作任务的渗透测试容器镜像"
+	MaintenanceUpdateWorkerImage       = "更新工作容器镜像"
+	MaintenanceUpdateWorkerImageDesc   = "将渗透测试容器镜像更新到最新版本"
+	MaintenanceUpdatePentagi           = "更新 PentAGI"
+	MaintenanceUpdatePentagiDesc       = "将 PentAGI 更新到最新版本"
+	MaintenanceUpdateInstaller         = "更新安装程序"
+	MaintenanceUpdateInstallerDesc     = "将本安装程序更新到最新版本"
+	MaintenanceFactoryReset            = "恢复出厂设置"
+	MaintenanceFactoryResetDesc        = "将 PentAGI 重置为出厂默认状态"
+	MaintenanceRemovePentagi           = "移除 PentAGI"
+	MaintenanceRemovePentagiDesc       = "移除 PentAGI 容器但保留数据"
+	MaintenancePurgePentagi            = "彻底清除 PentAGI"
+	MaintenancePurgePentagiDesc        = "完全移除 PentAGI，包括所有数据"
+	MaintenanceResetPassword           = "重置管理员密码"
+	MaintenanceResetPasswordDesc       = "重置 PentAGI 的管理员密码"
 )
 
 // Reset Password Screen constants
@@ -2381,15 +2377,15 @@ const (
 	PlannedWillRestore  = "将还原："
 
 	// effect notes per operation (concise and practical)
-	EffectsStart           = "PentAGI web UI becomes available. Background services are brought online in the required order."
-	EffectsStop            = "Web UI becomes unavailable. In-progress flows pause safely. When you start PentAGI again, flows resume automatically. A small portion of the current agent step may be lost."
-	EffectsRestart         = "Services stop and start again with a clean state. Brief downtime is expected. Flows resume automatically afterwards."
-	EffectsUpdateAll       = "Images are pulled and services are recreated where needed. External or disabled components are skipped. Temporary downtime is expected."
-	EffectsDownloadWorker  = "Running worker containers are not touched. New flows will use the downloaded image. To switch an existing flow to the new image, finish the flow and start a new task or create a new assistant."
-	EffectsUpdateWorker    = "Pulls latest worker image. Running worker containers keep using the old image; new containers will use the updated one."
-	EffectsUpdateInstaller = "The installer binary will be updated and the app will exit. Start the installer again to continue."
-	EffectsFactoryReset    = "Removes containers, volumes and networks, restores default .env and embedded files. Produces a clean baseline. This action cannot be undone."
-	EffectsRemove          = "Stops and removes containers but keeps volumes and images. Data is preserved. Web UI becomes unavailable until you start again."
-	EffectsPurge           = "Complete cleanup: containers, images, volumes and configuration files are deleted. Irreversible."
-	EffectsInstall         = "Required files are created and services are started. External components are detected and skipped."
+	EffectsStart           = "PentAGI 网页界面将变为可用。后台服务会按所需顺序依次启动。"
+	EffectsStop            = "网页界面将不可用。进行中的任务流会安全暂停。再次启动 PentAGI 后，任务流会自动恢复，但当前智能体步骤的少量进度可能会丢失。"
+	EffectsRestart         = "服务将停止并以干净状态重新启动。预计会有短暂的服务中断，之后任务流会自动恢复。"
+	EffectsUpdateAll       = "将拉取镜像，并在需要时重建服务。外部或已禁用的组件会被跳过。预计会有临时的服务中断。"
+	EffectsDownloadWorker  = "不会影响正在运行的工作容器。新建的任务流将使用已下载的镜像。若要让现有任务流改用新镜像，请先结束该任务流，然后新建任务或新建助手。"
+	EffectsUpdateWorker    = "拉取最新的工作容器镜像。正在运行的工作容器仍使用旧镜像，新建的容器将使用更新后的镜像。"
+	EffectsUpdateInstaller = "安装程序二进制文件将被更新，随后程序会退出。请重新启动安装程序以继续。"
+	EffectsFactoryReset    = "移除容器、数据卷和网络，恢复默认的 .env 与内置文件，得到一个干净的初始状态。此操作无法撤销。"
+	EffectsRemove          = "停止并移除容器，但保留数据卷和镜像。数据不会丢失。在再次启动之前，网页界面将不可用。"
+	EffectsPurge           = "彻底清理：删除容器、镜像、数据卷和配置文件。不可恢复。"
+	EffectsInstall         = "创建所需文件并启动服务。已检测到的外部组件会被跳过。"
 )

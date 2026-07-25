@@ -1,6 +1,10 @@
 import type { QueryHookOptions, QueryResult } from '@apollo/client/react';
 import type { ComponentType } from 'react';
 
+import type { Translate } from '@/lib/i18n';
+
+import { useLocale } from '@/hooks/use-locale';
+
 import { renderTitle, type RouteParams } from './render-title';
 
 // Apollo codegen hook signature — `useXxxQuery({ variables, skip? })` or
@@ -15,9 +19,10 @@ type ApolloQueryHook<TData, TVars extends Record<string, unknown>> = (
 interface ApolloTitleOpts<TData, TVars extends Record<string, unknown>> {
     /**
      * Compute the label from the cached data and route params. Receives
-     * `undefined` when the query is skipped or the cache is empty.
+     * `undefined` when the query is skipped or the cache is empty. `t` lets a
+     * fallback label ("Flow", "New provider") follow the active locale.
      */
-    select: (data: null | TData | undefined, params: RouteParams) => string;
+    select: (data: null | TData | undefined, params: RouteParams, t: Translate) => string;
     /**
      * Apollo codegen hook for the target query.
      */
@@ -62,6 +67,7 @@ export function apolloTitle<TData, TVars extends Record<string, unknown>>(
     opts: ApolloTitleOpts<TData, TVars>,
 ): ApolloTitleComponent {
     function ApolloTitle({ params }: { params: RouteParams }) {
+        const { t } = useLocale();
         const vars = opts.variables(params);
         const { data } = opts.useQuery(
             vars === null
@@ -69,7 +75,7 @@ export function apolloTitle<TData, TVars extends Record<string, unknown>>(
                 : { fetchPolicy: 'cache-only', skip: false, variables: vars },
         );
 
-        return renderTitle(opts.select(data, params));
+        return renderTitle(opts.select(data, params, t));
     }
 
     return Object.assign(ApolloTitle, { [APOLLO_TITLE_MARKER]: true as const });

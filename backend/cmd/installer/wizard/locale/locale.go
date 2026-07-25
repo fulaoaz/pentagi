@@ -263,65 +263,65 @@ Docker Desktop 用户：
 
 // System Checks constants
 const (
-	ChecksTitle               = "System Checks"
-	ChecksWarningFailed       = "⚠ Some checks failed"
-	CheckEnvironmentFile      = "Environment file"
-	CheckWritePermissions     = "Write permissions"
+	ChecksTitle               = "系统检查"
+	ChecksWarningFailed       = "⚠ 部分检查未通过"
+	CheckEnvironmentFile      = "环境配置文件"
+	CheckWritePermissions     = "写入权限"
 	CheckDockerAPI            = "Docker API"
-	CheckDockerVersion        = "Docker version"
+	CheckDockerVersion        = "Docker 版本"
 	CheckDockerCompose        = "Docker Compose"
-	CheckDockerComposeVersion = "Docker Compose version"
-	CheckWorkerEnvironment    = "Worker environment"
-	CheckSystemResources      = "System resources"
-	CheckNetworkConnectivity  = "Network connectivity"
+	CheckDockerComposeVersion = "Docker Compose 版本"
+	CheckWorkerEnvironment    = "工作容器环境"
+	CheckSystemResources      = "系统资源"
+	CheckNetworkConnectivity  = "网络连通性"
 )
 
 // EULA Screen constants
 const (
 	// Form interface implementation
-	EULAFormDescription = "Legal terms and conditions for PentAGI usage"
+	EULAFormDescription = "PentAGI 使用的法律条款与条件"
 	EULAFormName        = "EULA"
-	EULAFormOverview    = `Review and accept the End User License Agreement to proceed with PentAGI installation.
+	EULAFormOverview    = `请阅读并接受最终用户许可协议（EULA），以继续安装 PentAGI。
 
-The EULA contains:
-• Software license terms and usage rights
-• Limitation of liability and warranties
-• Data collection and privacy policies
-• Compliance requirements and restrictions
-• Support and maintenance terms
+EULA 包含以下内容：
+• 软件许可条款与使用权利
+• 责任限制与担保声明
+• 数据收集与隐私政策
+• 合规要求与使用限制
+• 支持与维护条款
 
-You must scroll through the entire document and accept the terms to continue with the installation process.
+您必须完整浏览整份文档并接受条款，才能继续安装流程。
 
-Use arrow keys, page up/down, or home/end keys to navigate through the document.`
+可使用方向键、PgUp/PgDn 或 Home/End 键浏览文档。`
 
 	// Error and status messages
-	EULAErrorLoadingTitle     = "# Error Loading EULA\n\nFailed to load EULA: %v"
-	EULAContentFallback       = "# EULA Content\n\n%s\n\n---\n\n*Note: Markdown rendering failed: %v*"
-	EULAConfigurationRead     = "✓ EULA reviewed"
-	EULAConfigurationAccepted = "✓ EULA accepted"
-	EULAConfigurationPending  = "⚠ EULA not reviewed"
-	EULALoading               = "Loading EULA..."
-	EULAProgress              = "Progress: %d%%"
-	EULAProgressComplete      = " • Complete"
+	EULAErrorLoadingTitle     = "# 加载 EULA 出错\n\n加载 EULA 失败：%v"
+	EULAContentFallback       = "# EULA 内容\n\n%s\n\n---\n\n*注意：Markdown 渲染失败：%v*"
+	EULAConfigurationRead     = "✓ EULA 已阅读"
+	EULAConfigurationAccepted = "✓ EULA 已接受"
+	EULAConfigurationPending  = "⚠ EULA 尚未阅读"
+	EULALoading               = "正在加载 EULA..."
+	EULAProgress              = "进度：%d%%"
+	EULAProgressComplete      = " • 已完成"
 )
 
 // Main Menu Screen constants
 const (
-	MainMenuTitle       = "PentAGI Configuration"
-	MainMenuDescription = "Configure all PentAGI components and settings"
-	MainMenuName        = "Main Menu"
-	MainMenuOverview    = `Welcome to PentAGI Configuration Center.
+	MainMenuTitle       = "PentAGI 配置"
+	MainMenuDescription = "配置 PentAGI 的全部组件与设置"
+	MainMenuName        = "主菜单"
+	MainMenuOverview    = `欢迎使用 PentAGI 配置中心。
 
-Configure essential components:
-• LLM Providers - AI language models for autonomous testing
-• Monitoring - Observability and analytics platforms
-• Tools - Additional capabilities for enhanced testing
-• System Settings - Environment and deployment options
+需要配置的核心组件：
+• LLM Providers（模型提供商）—— 用于自主测试的 AI 语言模型
+• Monitoring（监控）—— 可观测性与分析平台
+• Tools（工具）—— 增强测试能力的附加功能
+• System Settings（系统设置）—— 环境与部署选项
 
-Navigate through each section to complete your PentAGI setup.`
+依次完成各个部分，即可完成 PentAGI 的安装配置。`
 
-	MenuTitle        = "Configuration Menu"
-	MenuSystemStatus = "System Status"
+	MenuTitle        = "配置菜单"
+	MenuSystemStatus = "系统状态"
 )
 
 // Main Menu Status Labels (not used)
@@ -1311,91 +1311,91 @@ When enabled, all certificate validation is bypassed, making connections vulnera
 // Human-in-the-loop screen strings
 const (
 	// AI Agents Settings screen strings
-	ToolsAIAgentsSettingsFormTitle       = "AI Agents Settings"
-	ToolsAIAgentsSettingsFormDescription = "Configure global behavior for AI agents"
-	ToolsAIAgentsSettingsFormName        = "AI Agents Settings"
-	ToolsAIAgentsSettingsFormOverview    = `This section configures global behavior of AI agents across PentAGI.
+	ToolsAIAgentsSettingsFormTitle       = "AI 智能体设置"
+	ToolsAIAgentsSettingsFormDescription = "配置 AI 智能体的全局行为"
+	ToolsAIAgentsSettingsFormName        = "AI 智能体设置"
+	ToolsAIAgentsSettingsFormOverview    = `本节配置 PentAGI 中 AI 智能体的全局行为。
 
-Basic Settings:
-• Enable User Interaction: allow agents to request user input when needed
-• Use Multi-Agent Mode: enable assistant to orchestrate multiple specialized agents
+基础设置：
+• 启用用户交互：允许智能体在需要时请求用户输入
+• 启用多智能体模式：允许助手调度多个专职智能体
 
-Execution Monitoring (⚠️  BETA):
-• Enable Execution Monitoring: automatic mentor supervision for pattern analysis
-• Same Tool Call Threshold: consecutive identical tool calls before mentor review
-• Total Tool Call Threshold: total tool calls before mentor review
+执行监控（⚠️  测试版）：
+• 启用执行监控：由导师智能体自动监督并分析执行模式
+• 相同工具调用阈值：触发导师复查前允许的连续相同工具调用次数
+• 累计工具调用阈值：触发导师复查前允许的累计工具调用次数
 
-Tool Call Limits:
-• Max Tool Calls (General Agents): prevent runaway executions for Assistant, Primary Agent, Pentester, Coder, Installer
-• Max Tool Calls (Limited Agents): prevent runaway executions for Searcher, Enricher, Memorist, etc.
+工具调用上限：
+• 最大工具调用数（通用智能体）：防止 Assistant、Primary Agent、Pentester、Coder、Installer 失控执行
+• 最大工具调用数（受限智能体）：防止 Searcher、Enricher、Memorist 等失控执行
 
-Task Planning (⚠️  BETA):
-• Enable Task Planning: generate structured execution plans for specialist agents
+任务规划（⚠️  测试版）：
+• 启用任务规划：为专职智能体生成结构化执行计划
 
-⚠️  BETA features are under active development. Enable for testing only.`
+⚠️  测试版功能仍在积极开发中，建议仅用于测试。`
 
 	// field labels and descriptions
-	ToolsAIAgentsSettingHumanInTheLoop          = "Enable User Interaction"
-	ToolsAIAgentsSettingHumanInTheLoopDesc      = "Allow agents to ask for user input when needed"
-	ToolsAIAgentsSettingUseAgents               = "Use Multi-Agent Mode"
-	ToolsAIAgentsSettingUseAgentsDesc           = "Enable assistant to orchestrate multiple specialized agents"
-	ToolsAIAgentsSettingExecutionMonitor        = "Enable Execution Monitoring (beta)"
-	ToolsAIAgentsSettingExecutionMonitorDesc    = "Automatically invoke mentor for execution pattern analysis"
-	ToolsAIAgentsSettingSameToolLimit           = "Same Tool Call Threshold"
-	ToolsAIAgentsSettingSameToolLimitDesc       = "Consecutive identical tool calls before mentor review"
-	ToolsAIAgentsSettingTotalToolLimit          = "Total Tool Call Threshold"
-	ToolsAIAgentsSettingTotalToolLimitDesc      = "Total tool calls before mentor review"
-	ToolsAIAgentsSettingMaxGeneralToolCalls     = "Max Tool Calls (General Agents)"
-	ToolsAIAgentsSettingMaxGeneralToolCallsDesc = "Maximum tool calls for Assistant, Primary Agent, Pentester, Coder, Installer"
-	ToolsAIAgentsSettingMaxLimitedToolCalls     = "Max Tool Calls (Limited Agents)"
-	ToolsAIAgentsSettingMaxLimitedToolCallsDesc = "Maximum tool calls for Searcher, Enricher, Memorist, etc."
-	ToolsAIAgentsSettingTaskPlanning            = "Enable Task Planning (beta)"
-	ToolsAIAgentsSettingTaskPlanningDesc        = "Generate structured execution plans for specialist agents"
+	ToolsAIAgentsSettingHumanInTheLoop          = "启用用户交互"
+	ToolsAIAgentsSettingHumanInTheLoopDesc      = "允许智能体在需要时请求用户输入"
+	ToolsAIAgentsSettingUseAgents               = "启用多智能体模式"
+	ToolsAIAgentsSettingUseAgentsDesc           = "允许助手调度多个专职智能体"
+	ToolsAIAgentsSettingExecutionMonitor        = "启用执行监控（测试版）"
+	ToolsAIAgentsSettingExecutionMonitorDesc    = "自动调用导师智能体分析执行模式"
+	ToolsAIAgentsSettingSameToolLimit           = "相同工具调用阈值"
+	ToolsAIAgentsSettingSameToolLimitDesc       = "触发导师复查前允许的连续相同工具调用次数"
+	ToolsAIAgentsSettingTotalToolLimit          = "累计工具调用阈值"
+	ToolsAIAgentsSettingTotalToolLimitDesc      = "触发导师复查前允许的累计工具调用次数"
+	ToolsAIAgentsSettingMaxGeneralToolCalls     = "最大工具调用数（通用智能体）"
+	ToolsAIAgentsSettingMaxGeneralToolCallsDesc = "Assistant、Primary Agent、Pentester、Coder、Installer 的最大工具调用次数"
+	ToolsAIAgentsSettingMaxLimitedToolCalls     = "最大工具调用数（受限智能体）"
+	ToolsAIAgentsSettingMaxLimitedToolCallsDesc = "Searcher、Enricher、Memorist 等的最大工具调用次数"
+	ToolsAIAgentsSettingTaskPlanning            = "启用任务规划（测试版）"
+	ToolsAIAgentsSettingTaskPlanningDesc        = "为专职智能体生成结构化执行计划"
 
 	// help content
-	ToolsAIAgentsSettingsHelp = `AI Agents Settings define how agents collaborate, interact with users, and handle execution control.
+	ToolsAIAgentsSettingsHelp = `AI 智能体设置决定智能体如何协作、如何与用户交互以及如何进行执行控制。
 
-Basic Settings:
-• Enable User Interaction: allow agents to ask for user input when needed
-• Use Multi-Agent Mode: enable assistant to orchestrate specialized agents for complex tasks
+基础设置：
+• 启用用户交互：允许智能体在需要时请求用户输入
+• 启用多智能体模式：允许助手针对复杂任务调度专职智能体
 
-Execution Monitoring (⚠️  BETA):
-Automatically invokes adviser (mentor) to analyze execution patterns, detect loops, suggest alternative strategies, and prevent agents from fixating on single approach. Thresholds: consecutive identical calls (default: 5) and total calls (default: 10).
+执行监控（⚠️  测试版）：
+自动调用 adviser（导师）分析执行模式、检测循环、提出替代策略，避免智能体死守单一思路。阈值：连续相同调用次数（默认 5）与累计调用次数（默认 10）。
 
-Task Planning (⚠️  BETA):
-Generates 3-7 step execution plans before specialist agents begin work. Prevents scope creep and improves success rates. Works best when adviser uses enhanced configuration (stronger model or maximum reasoning mode).
+任务规划（⚠️  测试版）：
+在专职智能体开始工作前生成 3-7 步执行计划，可抑制范围蔓延并提升成功率。当 adviser 采用增强配置（更强模型或最高推理档位）时效果最佳。
 
-Tool Call Limits (always active):
-Hard limits prevent infinite loops: General agents default 100, Limited agents default 20. Works independently from beta features.
+工具调用上限（始终生效）：
+硬性上限用于防止无限循环：通用智能体默认 100，受限智能体默认 20。该限制独立于测试版功能。
 
-OPEN SOURCE MODELS < 32B (Qwen3.5-27B, DeepSeek-V3, Llama-3.1-70B):
-✓ ENABLE both beta features - ESSENTIAL for quality results
-✓ Testing shows 2x improvement in result quality vs. baseline
-✓ Configure adviser with enhanced settings for best performance
-✓ Ideal for air-gapped deployments with local LLM inference
+参数量低于 32B 的开源模型（Qwen3.5-27B、DeepSeek-V3、Llama-3.1-70B）：
+✓ 建议同时启用两项测试版功能——这对结果质量至关重要
+✓ 实测结果质量相比基线提升约 2 倍
+✓ 为 adviser 配置增强设置可获得最佳表现
+✓ 非常适合使用本地 LLM 推理的隔离网络部署
 
-Performance: 2-3x increase in tokens/time, 2x improvement in quality for models < 32B.
+性能影响：token 消耗与耗时增加 2-3 倍；对低于 32B 的模型质量提升约 2 倍。
 
-⚠️  BETA WARNING: Features under active development. Recommended for open source models < 32B despite beta status. For cloud APIs with larger models, keep disabled.
+⚠️  测试版提醒：功能仍在积极开发中。尽管处于测试阶段，仍推荐参数量低于 32B 的开源模型启用；若使用云端大模型 API，建议保持关闭。
 
-Note: Changes require service restart.`
+注意：修改后需重启服务生效。`
 )
 
 // Search Engines screen strings
 const (
-	ToolsSearchEnginesFormTitle       = "Search Engines Configuration"
-	ToolsSearchEnginesFormDescription = "Configure search engines for AI agents to gather intelligence during testing"
-	ToolsSearchEnginesFormName        = "Search Engines"
-	ToolsSearchEnginesFormOverview    = `Available search engines:
-• DuckDuckGo - Free search engine (no API key required)
-• Sploitus - Security exploits and vulnerabilities database (no API key required)
-• Perplexity - AI-powered search with reasoning
-• Tavily - Search API for AI applications
-• Traversaal - Web scraping and search
-• Google Search - Requires API key and Custom Search Engine ID
-• Searxng - Internet metasearch engine
+	ToolsSearchEnginesFormTitle       = "搜索引擎配置"
+	ToolsSearchEnginesFormDescription = "配置搜索引擎，供 AI 智能体在测试过程中收集情报"
+	ToolsSearchEnginesFormName        = "搜索引擎"
+	ToolsSearchEnginesFormOverview    = `可用的搜索引擎：
+• DuckDuckGo —— 免费搜索引擎（无需 API 密钥）
+• Sploitus —— 漏洞利用与漏洞情报库（无需 API 密钥）
+• Perplexity —— 带推理能力的 AI 搜索
+• Tavily —— 面向 AI 应用的搜索 API
+• Traversaal —— 网页抓取与搜索
+• Google Search —— 需要 API 密钥和自定义搜索引擎 ID
+• Searxng —— 互联网聚合搜索引擎
 
-Get API keys from:
+API 密钥获取地址：
 • Perplexity: https://www.perplexity.ai/
 • Tavily: https://tavily.com/
 • Traversaal: https://traversaal.ai/
@@ -1573,129 +1573,129 @@ Bridge Mode (custom network name):
 • Network-based monitoring and filtering
 • Recommended for most use cases
 
-Host Mode (value: 'host'):
-• Direct access to host network interfaces
-• No port forwarding - ports bind directly to host
-• Required for raw packet manipulation
-• Advanced network testing capabilities
-• Lower isolation - use with caution
+主机模式（值为 'host'）：
+• 直接访问主机网络接口
+• 无端口转发，端口直接绑定到主机
+• 原始数据包操作所必需
+• 支持高级网络测试能力
+• 隔离性较低，请谨慎使用
 
-Examples:
-• 'pentagi-network' - creates isolated bridge network
-• 'host' - enables direct host network access
+示例：
+• 'pentagi-network' —— 创建隔离的桥接网络
+• 'host' —— 启用直接的主机网络访问
 
-Security Note: Host network mode reduces container isolation. Only use when necessary for advanced penetration testing tasks requiring direct network stack access.`
+安全提示：主机网络模式会降低容器隔离性。仅在高级渗透测试任务确实需要直接访问网络栈时使用。`
 
-	ToolsDockerPublicIPHelp = `Public IP Address enables out-of-band (OOB) attack techniques by providing workers with a reachable address for reverse connections.
+	ToolsDockerPublicIPHelp = `公网 IP 地址用于启用带外（OOB）攻击技术，为工作容器提供可供反向连接的可达地址。
 
-Workers automatically receive two random ports (28000-32000 range) mapped to this IP for receiving callbacks from exploited targets.
+工作容器会自动获得两个映射到该 IP 的随机端口（28000-32000 范围），用于接收来自被利用目标的回连。
 
-By default agents will try to get public address from the services api.ipify.org, ipinfo.io/ip or ifconfig.me.`
+默认情况下，智能体会尝试通过 api.ipify.org、ipinfo.io/ip 或 ifconfig.me 服务获取公网地址。`
 
-	ToolsDockerWorkDirHelp = `Work Directory specifies host filesystem location for worker storage. When set, replaces default Docker volumes with host directory mounts.
+	ToolsDockerWorkDirHelp = `工作目录指定工作容器存储所在的主机文件系统位置。设置后将以主机目录挂载替代默认的 Docker 卷。
 
-Benefits:
-• Persistent storage across restarts
-• Direct file system access
-• Easier artifact management
-• Custom backup strategies
+优势：
+• 重启后数据仍然保留
+• 可直接访问文件系统
+• 更便于管理产物文件
+• 可自定义备份策略
 
-By default uses Docker dedicated volume per worker container.
+默认情况下为每个工作容器使用独立的 Docker 卷。
 
-Example: /path/to/workdir/`
+示例：/path/to/workdir/`
 
-	ToolsDockerDefaultImageHelp = `Default Image provides fallback for workers when task requirements don't specify a particular container image.
+	ToolsDockerDefaultImageHelp = `当任务需求未指定特定容器镜像时，默认镜像作为工作容器的回退选项。
 
-Should contain basic utilities and tools for general-purpose tasks. Default: debian:latest`
+应包含通用任务所需的基础工具与实用程序。默认值：debian:latest`
 
-	ToolsDockerDefaultImageForPentestHelp = `Pentesting Image serves as default for security testing tasks. Should include comprehensive security tools and utilities.
+	ToolsDockerDefaultImageForPentestHelp = `渗透测试镜像作为安全测试任务的默认镜像，应包含完备的安全工具与实用程序。
 
-Recommended images include Kali Linux, Parrot Security, or custom security-focused containers. Default: vxcontrol/kali-linux`
+推荐使用 Kali Linux、Parrot Security 或自定义的安全专用容器。默认值：vxcontrol/kali-linux`
 
-	ToolsDockerHostHelp = `Docker Host uses for start primary worker containers and overrides default Docker daemon connection. Supports Unix sockets and TCP connections.
+	ToolsDockerHostHelp = `Docker Host 用于启动主工作容器，并覆盖默认的 Docker 守护进程连接。支持 Unix 套接字和 TCP 连接。
 
-Examples:
-• unix:///var/run/docker.sock (local)
-• tcp://docker-host:2376 (remote)
+示例：
+• unix:///var/run/docker.sock（本地）
+• tcp://docker-host:2376（远程）
 
-Enable TLS for remote connections.`
+远程连接请启用 TLS。`
 
-	ToolsDockerTLSVerifyHelp = `TLS Verification secures Docker daemon connections over TCP. Strongly recommended for remote Docker hosts.
+	ToolsDockerTLSVerifyHelp = `TLS 验证用于保护通过 TCP 建立的 Docker 守护进程连接。强烈建议对远程 Docker 主机启用。
 
-Requires valid certificates in the specified certificate directory.`
+需要在指定的证书目录中提供有效证书。`
 
-	ToolsDockerCertPathHelp = `TLS Certificates directory must contain:
-• ca.pem - Certificate Authority
-• cert.pem - Client certificate
-• key.pem - Private key
+	ToolsDockerCertPathHelp = `TLS 证书目录必须包含：
+• ca.pem —— 证书颁发机构证书
+• cert.pem —— 客户端证书
+• key.pem —— 私钥
 
-Required for secure remote Docker connections when using TLS to manage worker containers.
+使用 TLS 管理工作容器时，安全的远程 Docker 连接需要这些文件。
 
-Example: /path/to/certs`
+示例：/path/to/certs`
 )
 
 // Embedder form strings
 const (
-	EmbedderFormTitle       = "Embedder Configuration"
-	EmbedderFormDescription = "Configure text vectorization for semantic search and knowledge storage"
-	EmbedderFormName        = "Embedder"
-	EmbedderFormOverview    = `Text embeddings convert documents into vectors for semantic search and knowledge storage.
-Different providers offer various models with different capabilities and pricing.
+	EmbedderFormTitle       = "嵌入模型配置"
+	EmbedderFormDescription = "配置用于语义搜索和知识存储的文本向量化"
+	EmbedderFormName        = "嵌入模型"
+	EmbedderFormOverview    = `文本嵌入将文档转换为向量，用于语义搜索和知识存储。
+不同提供商提供的模型在能力和价格上各有差异。
 
-Choose carefully as changing providers requires reindexing all stored data.`
+请谨慎选择：更换提供商需要对所有已存储数据重新建立索引。`
 
-	EmbedderFormProvider     = "Embedding Provider"
-	EmbedderFormProviderDesc = "Select the provider for text vectorization. Embeddings are used for semantic search and knowledge storage."
+	EmbedderFormProvider     = "嵌入提供商"
+	EmbedderFormProviderDesc = "选择用于文本向量化的提供商。嵌入用于语义搜索和知识存储。"
 
-	EmbedderFormURL     = "API Endpoint URL"
-	EmbedderFormURLDesc = "Custom API endpoint (leave empty to use default)"
+	EmbedderFormURL     = "API 端点地址"
+	EmbedderFormURLDesc = "自定义 API 端点（留空则使用默认值）"
 
-	EmbedderFormAPIKey     = "API Key"
-	EmbedderFormAPIKeyDesc = "Authentication key for the provider (not required for Ollama)"
+	EmbedderFormAPIKey     = "API 密钥"
+	EmbedderFormAPIKeyDesc = "提供商的身份验证密钥（Ollama 无需填写）"
 
-	EmbedderFormModel     = "Model Name"
-	EmbedderFormModelDesc = "Specific embedding model to use (leave empty for provider default)"
+	EmbedderFormModel     = "模型名称"
+	EmbedderFormModelDesc = "要使用的具体嵌入模型（留空则使用提供商默认值）"
 
-	EmbedderFormBatchSize     = "Batch Size"
-	EmbedderFormBatchSizeDesc = "Number of documents to process in a single batch (1-1000)"
+	EmbedderFormBatchSize     = "批处理大小"
+	EmbedderFormBatchSizeDesc = "单批处理的文档数量（1-1000）"
 
-	EmbedderFormStripNewLines     = "Strip New Lines"
-	EmbedderFormStripNewLinesDesc = "Remove line breaks from text before embedding (true/false)"
+	EmbedderFormStripNewLines     = "去除换行符"
+	EmbedderFormStripNewLinesDesc = "嵌入前移除文本中的换行符（true/false）"
 
-	EmbedderFormMaxTextBytes     = "Max Text Bytes"
-	EmbedderFormMaxTextBytesDesc = "Maximum number of bytes per text chunk sent to the embedding API (e.g. 8192)"
+	EmbedderFormMaxTextBytes     = "文本字节上限"
+	EmbedderFormMaxTextBytesDesc = "发送到嵌入 API 的每个文本块的最大字节数（例如 8192）"
 
-	EmbedderFormHelpTitle   = "Embedding Configuration"
-	EmbedderFormHelpContent = `Configure text vectorization for semantic search and knowledge storage.
+	EmbedderFormHelpTitle   = "嵌入配置"
+	EmbedderFormHelpContent = `配置用于语义搜索和知识存储的文本向量化。
 
-If no specific embedding settings are configured, the system will use OpenAI embeddings with the API key from LLM Providers.
+若未配置具体的嵌入设置，系统将使用 OpenAI 嵌入，并采用 LLM 提供商中配置的 API 密钥。
 
-Change providers carefully - different embedders produce incompatible vectors requiring database reindexing.`
+更换提供商需谨慎：不同嵌入模型生成的向量互不兼容，需要重建数据库索引。`
 
-	EmbedderFormHelpOpenAI      = "OpenAI: Most reliable option with excellent quality. Requires API key from LLM Providers if not set here."
-	EmbedderFormHelpOllama      = "Ollama: Local embeddings, no API key needed. Requires Ollama server running."
-	EmbedderFormHelpHuggingFace = "HuggingFace: Open source models with API key required."
-	EmbedderFormHelpGoogleAI    = "Google AI: Quality embeddings, requires API key."
+	EmbedderFormHelpOpenAI      = "OpenAI：最可靠的选择，质量优异。若此处未填写，将使用 LLM 提供商中的 API 密钥。"
+	EmbedderFormHelpOllama      = "Ollama：本地嵌入，无需 API 密钥。需要运行 Ollama 服务器。"
+	EmbedderFormHelpHuggingFace = "HuggingFace：开源模型，需要 API 密钥。"
+	EmbedderFormHelpGoogleAI    = "Google AI：高质量嵌入，需要 API 密钥。"
 
 	// Provider names and descriptions
-	EmbedderProviderDefault         = "Default (OpenAI)"
-	EmbedderProviderDefaultDesc     = "Use OpenAI embeddings with API key from LLM Providers configuration"
+	EmbedderProviderDefault         = "默认（OpenAI）"
+	EmbedderProviderDefaultDesc     = "使用 OpenAI 嵌入，并采用 LLM 提供商配置中的 API 密钥"
 	EmbedderProviderOpenAI          = "OpenAI"
-	EmbedderProviderOpenAIDesc      = "OpenAI text embeddings API (text-embedding-3-small, ada-002)"
+	EmbedderProviderOpenAIDesc      = "OpenAI 文本嵌入 API（text-embedding-3-small、ada-002）"
 	EmbedderProviderOllama          = "Ollama"
-	EmbedderProviderOllamaDesc      = "Local Ollama server for open-source embedding models"
+	EmbedderProviderOllamaDesc      = "本地 Ollama 服务器，运行开源嵌入模型"
 	EmbedderProviderMistral         = "Mistral"
-	EmbedderProviderMistralDesc     = "Mistral AI embedding models"
+	EmbedderProviderMistralDesc     = "Mistral AI 嵌入模型"
 	EmbedderProviderJina            = "Jina"
-	EmbedderProviderJinaDesc        = "Jina AI embedding API"
+	EmbedderProviderJinaDesc        = "Jina AI 嵌入 API"
 	EmbedderProviderHuggingFace     = "HuggingFace"
-	EmbedderProviderHuggingFaceDesc = "HuggingFace inference API for embedding models"
+	EmbedderProviderHuggingFaceDesc = "HuggingFace 推理 API，用于嵌入模型"
 	EmbedderProviderGoogleAI        = "Google AI"
-	EmbedderProviderGoogleAIDesc    = "Google AI embedding models (embedding-001)"
+	EmbedderProviderGoogleAIDesc    = "Google AI 嵌入模型（embedding-001）"
 	EmbedderProviderVoyageAI        = "VoyageAI"
-	EmbedderProviderVoyageAIDesc    = "VoyageAI embedding API"
-	EmbedderProviderDisabled        = "Disabled"
-	EmbedderProviderDisabledDesc    = "Disable embeddings functionality completely"
+	EmbedderProviderVoyageAIDesc    = "VoyageAI 嵌入 API"
+	EmbedderProviderDisabled        = "已禁用"
+	EmbedderProviderDisabledDesc    = "完全禁用嵌入功能"
 
 	// Provider-specific placeholders and help
 	EmbedderURLPlaceholderOpenAI      = "https://api.openai.com/v1"
@@ -1844,89 +1844,89 @@ Only recommended if embeddings are not needed for your use case.`
 
 // Development and Mock Screen constants
 const (
-	MockScreenTitle       = "Development Screen"
-	MockScreenDescription = "This screen is under development"
+	MockScreenTitle       = "开发中界面"
+	MockScreenDescription = "此界面尚在开发中"
 )
 
 // Apply Changes screen constants
 const (
-	ApplyChangesFormTitle       = "Apply Configuration Changes"
-	ApplyChangesFormName        = "Apply Changes"
-	ApplyChangesFormDescription = "Review and apply your configuration changes"
+	ApplyChangesFormTitle       = "应用配置更改"
+	ApplyChangesFormName        = "应用更改"
+	ApplyChangesFormDescription = "检查并应用你的配置更改"
 
 	// Apply Changes overview and help
-	ApplyChangesFormOverview = `This screen allows you to review all pending configuration changes and apply them to your PentAGI installation.
+	ApplyChangesFormOverview = `在此界面可以查看所有待应用的配置更改，并将它们应用到你的 PentAGI 安装中。
 
-When you apply changes, the system will:
-• Save all modified environment variables to the .env file
-• Restart affected services with the new configuration
-• Install additional components if needed`
+应用更改时，系统将：
+• 把所有修改过的环境变量保存到 .env 文件
+• 使用新配置重启受影响的服务
+• 按需安装额外组件`
 
 	// Apply Changes status messages
-	ApplyChangesNotStarted     = "Configuration changes are ready to be applied"
-	ApplyChangesInProgress     = "Applying configuration changes...\n"
-	ApplyChangesCompleted      = "Configuration changes have been successfully applied\n"
-	ApplyChangesFailed         = "Failed to perform configuration changes"
-	ApplyChangesResetCompleted = "Configuration changes have been successfully reset\n"
+	ApplyChangesNotStarted     = "配置更改已准备就绪，可以应用"
+	ApplyChangesInProgress     = "正在应用配置更改...\n"
+	ApplyChangesCompleted      = "配置更改已成功应用\n"
+	ApplyChangesFailed         = "配置更改执行失败"
+	ApplyChangesResetCompleted = "配置更改已成功重置\n"
 
-	ApplyChangesTerminalIsNotInitialized = "Terminal is not initialized"
+	ApplyChangesTerminalIsNotInitialized = "终端尚未初始化"
 
 	// Apply Changes instructions
-	ApplyChangesInstructions = `Press Enter to begin applying the configuration changes.`
+	ApplyChangesInstructions = `按 Enter 开始应用配置更改。`
 
-	ApplyChangesNoChanges = "No configuration changes are pending"
+	ApplyChangesNoChanges = "没有待应用的配置更改"
 
 	// Apply Changes installation status
-	ApplyChangesInstallNotFound = `PentAGI is not currently installed on this system.
+	ApplyChangesInstallNotFound = `本系统当前尚未安装 PentAGI。
 
-The following actions will be performed:
-• Docker environment setup and validation
-• Creation of docker-compose.yml file
-• Installation and startup of PentAGI core services`
+将执行以下操作：
+• 设置并校验 Docker 环境
+• 创建 docker-compose.yml 文件
+• 安装并启动 PentAGI 核心服务`
 
-	ApplyChangesInstallFoundLangfuse      = `• Installation of Langfuse observability stack (docker-compose-langfuse.yml)`
-	ApplyChangesInstallFoundObservability = `• Installation of comprehensive observability stack with Grafana, VictoriaMetrics, and Jaeger (docker-compose-observability.yml)`
+	ApplyChangesInstallFoundLangfuse      = `• 安装 Langfuse 可观测性组件栈（docker-compose-langfuse.yml）`
+	ApplyChangesInstallFoundObservability = `• 安装包含 Grafana、VictoriaMetrics 和 Jaeger 的完整可观测性组件栈（docker-compose-observability.yml）`
 
-	ApplyChangesUpdateFound = `PentAGI is currently installed on this system.
+	ApplyChangesUpdateFound = `本系统当前已安装 PentAGI。
 
-The following actions will be performed:
-• Update environment variables in .env file
-• Recreate and restart affected Docker containers
-• Apply new configuration to running services`
+将执行以下操作：
+• 更新 .env 文件中的环境变量
+• 重建并重启受影响的 Docker 容器
+• 将新配置应用到正在运行的服务`
 
 	// Apply Changes warnings and notes
-	ApplyChangesWarningCritical = "⚠️  Critical changes detected - services will be restarted"
-	ApplyChangesWarningSecrets  = "🔒 Secret values detected - they will be securely stored"
-	ApplyChangesNoteBackup      = "💾 Current configuration will be backed up before changes"
-	ApplyChangesNoteTime        = "⏱️  This process may take less than a minute depending on selected components"
+	ApplyChangesWarningCritical = "⚠️  检测到关键更改 —— 服务将被重启"
+	ApplyChangesWarningSecrets  = "🔒 检测到敏感信息 —— 将以安全方式存储"
+	ApplyChangesNoteBackup      = "💾 更改前会先备份当前配置"
+	ApplyChangesNoteTime        = "⏱️  视所选组件而定，此过程通常不超过一分钟"
 
 	// Apply Changes progress messages
-	ApplyChangesStageValidation = "Validating environment and dependencies..."
-	ApplyChangesStageBackup     = "Creating configuration backup..."
-	ApplyChangesStageEnvFile    = "Updating environment file..."
-	ApplyChangesStageCompose    = "Generating Docker Compose files..."
-	ApplyChangesStageDocker     = "Managing Docker containers..."
-	ApplyChangesStageServices   = "Starting services..."
-	ApplyChangesStageComplete   = "Configuration changes applied successfully"
+	ApplyChangesStageValidation = "正在校验环境与依赖..."
+	ApplyChangesStageBackup     = "正在创建配置备份..."
+	ApplyChangesStageEnvFile    = "正在更新环境配置文件..."
+	ApplyChangesStageCompose    = "正在生成 Docker Compose 文件..."
+	ApplyChangesStageDocker     = "正在管理 Docker 容器..."
+	ApplyChangesStageServices   = "正在启动服务..."
+	ApplyChangesStageComplete   = "配置更改已成功应用"
 
 	// Apply Changes change list headers
-	ApplyChangesChangesTitle  = "Pending Configuration Changes"
-	ApplyChangesChangesCount  = "Total changes: %d"
-	ApplyChangesChangesMasked = "(hidden for security)"
-	ApplyChangesChangesEmpty  = "No changes to apply"
+	ApplyChangesChangesTitle  = "待应用的配置更改"
+	ApplyChangesChangesCount  = "更改总数：%d"
+	ApplyChangesChangesMasked = "（出于安全已隐藏）"
+	ApplyChangesChangesEmpty  = "没有需要应用的更改"
 
 	// Apply Changes help content
-	ApplyChangesHelpTitle   = "Applying Configuration Changes"
-	ApplyChangesHelpContent = `Be sure to check the current configuration before applying changes.`
+	ApplyChangesHelpTitle   = "应用配置更改"
+	ApplyChangesHelpContent = `应用更改前请务必确认当前配置。`
 )
 
 // apply changes integrity prompt
 const (
-	ApplyChangesIntegrityPromptTitle   = "File integrity check"
-	ApplyChangesIntegrityPromptMessage = "Out-of-date files were detected.\nDo you want to update them to the latest version?"
-	ApplyChangesIntegrityOutdatedList  = "Out-of-date files:\n%s\nConfirm update? (y/n)"
-	ApplyChangesIntegrityChecking      = "Collecting file integrity information..."
-	ApplyChangesIntegrityNoOutdated    = "No out-of-date files found. Proceeding with apply."
+	ApplyChangesIntegrityPromptTitle   = "文件完整性检查"
+	ApplyChangesIntegrityPromptMessage = "检测到过期文件。\n是否将它们更新到最新版本？"
+	ApplyChangesIntegrityOutdatedList  = "过期文件：\n%s\n确认更新？(y/n)"
+	ApplyChangesIntegrityChecking      = "正在收集文件完整性信息..."
+	ApplyChangesIntegrityNoOutdated    = "未发现过期文件，继续应用更改。"
 )
 
 // Maintenance Screen constants

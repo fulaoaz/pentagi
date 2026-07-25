@@ -3,262 +3,262 @@ package locale
 // Common status and UI strings
 const (
 	// Common status and UI strings
-	UIStatistics       = "Statistics"
-	UIStatus           = "Status: "
-	UIMode             = "Mode: "
-	UINoConfigSelected = "No configuration selected"
-	UILoading          = "Loading..."
-	UINotImplemented   = "Not implemented yet"
-	UIUnsavedChanges   = "Unsaved changes"
-	UIConfigSaved      = "Configuration saved"
+	UIStatistics       = "统计信息"
+	UIStatus           = "状态："
+	UIMode             = "模式："
+	UINoConfigSelected = "未选择任何配置"
+	UILoading          = "加载中..."
+	UINotImplemented   = "功能尚未实现"
+	UIUnsavedChanges   = "有未保存的更改"
+	UIConfigSaved      = "配置已保存"
 
 	// Status labels
-	StatusEnabled       = "Enabled"
-	StatusDisabled      = "Disabled"
-	StatusConfigured    = "Configured"
-	StatusNotConfigured = "Not configured"
-	StatusEmbedded      = "Embedded"
-	StatusExternal      = "External"
+	StatusEnabled       = "已启用"
+	StatusDisabled      = "已禁用"
+	StatusConfigured    = "已配置"
+	StatusNotConfigured = "未配置"
+	StatusEmbedded      = "内置"
+	StatusExternal      = "外部"
 
 	// Success/Warning messages
-	MessageSearchEnginesNone       = "⚠ No search engines configured"
-	MessageSearchEnginesConfigured = "✓ %d search engines configured"
-	MessageDockerConfigured        = "✓ Docker environment configured"
-	MessageDockerNotConfigured     = "⚠ Docker environment not configured"
+	MessageSearchEnginesNone       = "⚠ 未配置搜索引擎"
+	MessageSearchEnginesConfigured = "✓ 已配置 %d 个搜索引擎"
+	MessageDockerConfigured        = "✓ Docker 环境已配置"
+	MessageDockerNotConfigured     = "⚠ Docker 环境未配置"
 )
 
 // Legend constants
 const (
-	LegendConfigured    = "✓ Configured"
-	LegendNotConfigured = "✗ Not configured"
+	LegendConfigured    = "✓ 已配置"
+	LegendNotConfigured = "✗ 未配置"
 )
 
 // Common Navigation Actions (always available)
 const (
-	NavBack       = "Esc: Back"
-	NavExit       = "Ctrl+Q: Exit"
-	NavUpDown     = "↑/↓: Scroll/Select"
-	NavLeftRight  = "←/→: Move"
-	NavPgUpPgDown = "PgUp/PgDn: Page"
-	NavHomeEnd    = "Home/End: Start/End"
-	NavEnter      = "Enter: Continue"
-	NavYn         = "Y/N: Accept/Reject"
-	NavCtrlC      = "Ctrl+C: Cancel"
-	NavCtrlS      = "Ctrl+S: Save"
-	NavCtrlR      = "Ctrl+R: Reset"
-	NavCtrlH      = "Ctrl+H: Show/Hide"
-	NavTab        = "Tab: Complete"
+	NavBack       = "Esc: 返回"
+	NavExit       = "Ctrl+Q: 退出"
+	NavUpDown     = "↑/↓: 滚动/选择"
+	NavLeftRight  = "←/→: 移动"
+	NavPgUpPgDown = "PgUp/PgDn: 翻页"
+	NavHomeEnd    = "Home/End: 首/末"
+	NavEnter      = "Enter: 继续"
+	NavYn         = "Y/N: 接受/拒绝"
+	NavCtrlC      = "Ctrl+C: 取消"
+	NavCtrlS      = "Ctrl+S: 保存"
+	NavCtrlR      = "Ctrl+R: 重置"
+	NavCtrlH      = "Ctrl+H: 显示/隐藏"
+	NavTab        = "Tab: 补全"
 	NavSeparator  = " • "
 )
 
 // Welcome Screen constants
 const (
 	// Form interface implementation
-	WelcomeFormTitle       = "Welcome to PentAGI"
-	WelcomeFormDescription = "PentAGI is an autonomous penetration testing platform that leverages AI technologies to perform comprehensive security assessments."
-	WelcomeFormName        = "Welcome"
-	WelcomeFormOverview    = `System checks verify:
-• Environment configuration file presence
-• Docker API accessibility and version compatibility
-• Worker environment readiness
-• System resources (CPU, memory, disk space)
-• Network connectivity for external dependencies
+	WelcomeFormTitle       = "欢迎使用 PentAGI"
+	WelcomeFormDescription = "PentAGI 是一个自主渗透测试平台，利用 AI 技术执行全面的安全评估。"
+	WelcomeFormName        = "欢迎"
+	WelcomeFormOverview    = `系统检查项：
+• 环境配置文件是否存在
+• Docker API 可访问性与版本兼容性
+• Worker 环境就绪状态
+• 系统资源（CPU、内存、磁盘空间）
+• 外部依赖所需的网络连通性
 
-Once all checks pass, proceed through the configuration wizard to set up LLM providers, monitoring, and security tools.
+所有检查通过后，即可进入配置向导，设置 LLM 提供商、监控与安全工具。
 
-The installer guides you through each component setup with recommendations for different deployment scenarios.`
+安装程序会逐个组件引导你完成配置，并针对不同部署场景给出建议。`
 
 	// Configuration status messages
-	WelcomeConfigurationFailed = "⚠ Failed checks: %s"
-	WelcomeConfigurationPassed = "✓ All system checks passed"
+	WelcomeConfigurationFailed = "⚠ 未通过的检查：%s"
+	WelcomeConfigurationPassed = "✓ 所有系统检查均已通过"
 
 	// Workflow steps
-	WelcomeWorkflowTitle = "Installation Workflow:"
-	WelcomeWorkflowStep1 = "1. Accept End User License Agreement"
-	WelcomeWorkflowStep2 = "2. Configure LLM providers (OpenAI, Anthropic, etc.)"
-	WelcomeWorkflowStep3 = "3. Set up integrations (Langfuse, Observability)"
-	WelcomeWorkflowStep4 = "4. Configure security settings"
-	WelcomeWorkflowStep5 = "5. Deploy and start PentAGI services"
-	WelcomeSystemReady   = "✓ System ready - Press Enter to continue"
+	WelcomeWorkflowTitle = "安装流程："
+	WelcomeWorkflowStep1 = "1. 接受最终用户许可协议"
+	WelcomeWorkflowStep2 = "2. 配置 LLM 提供商（OpenAI、Anthropic 等）"
+	WelcomeWorkflowStep3 = "3. 设置集成组件（Langfuse、可观测性）"
+	WelcomeWorkflowStep4 = "4. 配置安全选项"
+	WelcomeWorkflowStep5 = "5. 部署并启动 PentAGI 服务"
+	WelcomeSystemReady   = "✓ 系统就绪 —— 按 Enter 继续"
 )
 
 // Troubleshooting on welcome screen constants
 const (
-	TroubleshootTitle = "System Requirements Not Met"
+	TroubleshootTitle = "系统要求未满足"
 
 	// Environment file issues
-	TroubleshootEnvFileTitle = "Environment Configuration Missing"
-	TroubleshootEnvFileDesc  = "The .env file is required for PentAGI configuration but was not found or is not readable."
-	TroubleshootEnvFileFix   = `To fix:
-1. Copy .env.example to .env in your installation directory
-2. Edit .env and configure at least one LLM provider API key
-3. Ensure the file has read permissions (chmod 644 .env)
+	TroubleshootEnvFileTitle = "缺少环境配置文件"
+	TroubleshootEnvFileDesc  = "PentAGI 配置需要 .env 文件，但未找到该文件或文件不可读。"
+	TroubleshootEnvFileFix   = `解决方法：
+1. 在安装目录中将 .env.example 复制为 .env
+2. 编辑 .env，至少配置一个 LLM 提供商的 API 密钥
+3. 确保文件具有读取权限（chmod 644 .env）
 
-Quick fix:
+快速修复：
 cp .env.example .env && chmod 644 .env`
 
 	// Write permissions
-	TroubleshootWritePermTitle = "Write Permissions Required"
-	TroubleshootWritePermDesc  = "The installer needs write access to the configuration directory to save settings and deploy services."
-	TroubleshootWritePermFix   = `To fix:
-1. Check directory permissions: ls -la
-2. Grant write access: chmod 755 .
-3. Or run installer from a writable location
-4. Ensure sufficient disk space is available`
+	TroubleshootWritePermTitle = "需要写入权限"
+	TroubleshootWritePermDesc  = "安装程序需要对配置目录的写入权限，以保存设置并部署服务。"
+	TroubleshootWritePermFix   = `解决方法：
+1. 检查目录权限：ls -la
+2. 授予写入权限：chmod 755 .
+3. 或在具有写入权限的位置运行安装程序
+4. 确保有足够的磁盘空间`
 
 	// Docker not installed
-	TroubleshootDockerNotInstalledTitle = "Docker Not Installed"
-	TroubleshootDockerNotInstalledDesc  = "Docker is not installed on this system. PentAGI requires Docker to run containers."
-	TroubleshootDockerNotInstalledFix   = `To fix:
-1. Install Docker Desktop: https://docs.docker.com/get-docker/
-2. For Linux: Follow distribution-specific instructions
-3. Verify installation: docker --version
-4. Ensure docker command is in your PATH`
+	TroubleshootDockerNotInstalledTitle = "未安装 Docker"
+	TroubleshootDockerNotInstalledDesc  = "本系统未安装 Docker。PentAGI 需要 Docker 来运行容器。"
+	TroubleshootDockerNotInstalledFix   = `解决方法：
+1. 安装 Docker Desktop：https://docs.docker.com/get-docker/
+2. Linux 用户：按发行版对应的说明安装
+3. 验证安装：docker --version
+4. 确保 docker 命令在 PATH 中`
 
 	// Docker not running
-	TroubleshootDockerNotRunningTitle = "Docker Daemon Not Running"
-	TroubleshootDockerNotRunningDesc  = "Docker is installed but the daemon is not running. The Docker service must be active."
-	TroubleshootDockerNotRunningFix   = `To fix:
-1. Start Docker Desktop (Windows/Mac)
-2. Linux: sudo systemctl start docker
-3. Check status: docker ps
-4. If using DOCKER_HOST, verify the remote daemon is accessible`
+	TroubleshootDockerNotRunningTitle = "Docker 守护进程未运行"
+	TroubleshootDockerNotRunningDesc  = "已安装 Docker，但守护进程未运行。Docker 服务必须处于活动状态。"
+	TroubleshootDockerNotRunningFix   = `解决方法：
+1. 启动 Docker Desktop（Windows/Mac）
+2. Linux：sudo systemctl start docker
+3. 检查状态：docker ps
+4. 若使用 DOCKER_HOST，请确认远程守护进程可访问`
 
 	// Docker permission issues
-	TroubleshootDockerPermissionTitle = "Docker Permission Denied"
-	TroubleshootDockerPermissionDesc  = "Your user account lacks permission to access Docker. This is common on Linux systems."
-	TroubleshootDockerPermissionFix   = `To fix:
-1. Add user to docker group: sudo usermod -aG docker $USER
-2. Log out and back in for changes to take effect
-3. Or run with sudo (not recommended for production)
-4. Verify: docker ps (should work without sudo)`
+	TroubleshootDockerPermissionTitle = "Docker 权限被拒绝"
+	TroubleshootDockerPermissionDesc  = "当前用户账号没有访问 Docker 的权限。这在 Linux 系统上很常见。"
+	TroubleshootDockerPermissionFix   = `解决方法：
+1. 将用户加入 docker 组：sudo usermod -aG docker $USER
+2. 注销并重新登录使变更生效
+3. 或使用 sudo 运行（不建议用于生产环境）
+4. 验证：docker ps（应无需 sudo 即可执行）`
 
 	// Generic Docker API issues
-	TroubleshootDockerAPITitle = "Docker API Connection Failed"
-	TroubleshootDockerAPIDesc  = "Cannot establish connection to Docker API. This may be due to configuration or network issues."
-	TroubleshootDockerAPIFix   = `To fix:
-1. Check DOCKER_HOST environment variable
-2. Verify Docker is running: docker version
-3. For remote Docker: ensure network connectivity
-4. Check firewall settings if using TCP connection
-5. Try: export DOCKER_HOST=unix:///var/run/docker.sock`
+	TroubleshootDockerAPITitle = "Docker API 连接失败"
+	TroubleshootDockerAPIDesc  = "无法建立与 Docker API 的连接。可能是配置或网络问题导致。"
+	TroubleshootDockerAPIFix   = `解决方法：
+1. 检查 DOCKER_HOST 环境变量
+2. 确认 Docker 正在运行：docker version
+3. 远程 Docker：确保网络连通
+4. 若使用 TCP 连接，请检查防火墙设置
+5. 可尝试：export DOCKER_HOST=unix:///var/run/docker.sock`
 
 	// Docker version issues
-	TroubleshootDockerVersionTitle = "Docker Version Too Old"
-	TroubleshootDockerVersionDesc  = "Your Docker version is incompatible. PentAGI requires Docker 20.0.0 or newer."
-	TroubleshootDockerVersionFix   = `To fix:
-1. Update Docker to version 20.0.0 or newer
-2. Visit https://docs.docker.com/engine/install/
+	TroubleshootDockerVersionTitle = "Docker 版本过低"
+	TroubleshootDockerVersionDesc  = "当前 Docker 版本不兼容。PentAGI 需要 Docker 20.0.0 或更高版本。"
+	TroubleshootDockerVersionFix   = `解决方法：
+1. 将 Docker 升级到 20.0.0 或更高版本
+2. 访问 https://docs.docker.com/engine/install/
 
-Current version: %s
-Required: 20.0.0+`
+当前版本：%s
+要求版本：20.0.0+`
 
 	// Docker Compose issues
-	TroubleshootComposeTitle = "Docker Compose Not Found"
-	TroubleshootComposeDesc  = "The Docker Compose v2 plugin is required, but `docker compose` is not available."
-	TroubleshootComposeFix   = `To fix:
-1. Install or update Docker Desktop, or install the Docker Compose v2 plugin for Docker Engine
-2. Verify the plugin is available: docker compose version
-3. If only legacy docker-compose is installed, install the Docker Compose v2 plugin as well
+	TroubleshootComposeTitle = "未找到 Docker Compose"
+	TroubleshootComposeDesc  = "需要 Docker Compose v2 插件，但 `docker compose` 不可用。"
+	TroubleshootComposeFix   = `解决方法：
+1. 安装或升级 Docker Desktop，或为 Docker Engine 安装 Docker Compose v2 插件
+2. 确认插件可用：docker compose version
+3. 若仅安装了旧版 docker-compose，请同时安装 Docker Compose v2 插件
 
-PentAGI executes "docker compose", so legacy "docker-compose" alone is not sufficient.
-Documentation: https://docs.docker.com/compose/install/`
+PentAGI 执行的是 "docker compose"，因此仅有旧版 "docker-compose" 并不足够。
+文档：https://docs.docker.com/compose/install/`
 
 	// Docker Compose version issues
-	TroubleshootComposeVersionTitle = "Docker Compose Version Too Old"
-	TroubleshootComposeVersionDesc  = "Your `docker compose` version is incompatible. PentAGI requires Docker Compose 1.25.0 or newer."
-	TroubleshootComposeVersionFix   = `Current version: %s
-Required: 1.25.0+
+	TroubleshootComposeVersionTitle = "Docker Compose 版本过低"
+	TroubleshootComposeVersionDesc  = "当前 `docker compose` 版本不兼容。PentAGI 需要 Docker Compose 1.25.0 或更高版本。"
+	TroubleshootComposeVersionFix   = `当前版本：%s
+要求版本：1.25.0+
 
-To fix:
-1. Update Docker Desktop or the Docker Compose v2 plugin to a newer version
-2. Verify the result with: docker compose version
+解决方法：
+1. 将 Docker Desktop 或 Docker Compose v2 插件升级到更高版本
+2. 用以下命令验证结果：docker compose version
 
-Documentation: https://docs.docker.com/compose/install/`
+文档：https://docs.docker.com/compose/install/`
 
 	// Worker environment issues
-	TroubleshootWorkerTitle = "Worker Docker Environment Not Accessible"
-	TroubleshootWorkerDesc  = "Cannot connect to the Docker environment for worker containers. This may be a remote or local Docker setup issue."
-	TroubleshootWorkerFix   = `To fix:
-1. For remote Docker, set env vars before installer:
+	TroubleshootWorkerTitle = "无法访问 Worker 的 Docker 环境"
+	TroubleshootWorkerDesc  = "无法连接到用于 worker 容器的 Docker 环境。可能是远程或本地 Docker 配置问题。"
+	TroubleshootWorkerFix   = `解决方法：
+1. 使用远程 Docker 时，在运行安装程序前设置环境变量：
    export DOCKER_HOST=tcp://remote:2376
    export DOCKER_CERT_PATH=/path/to/certs
    export DOCKER_TLS_VERIFY=1
-2. Verify connection: docker -H $DOCKER_HOST ps
-3. For local Docker, leave these vars unset
-4. Check firewall allows Docker port (2375/2376)
-5. Ensure certificates are valid if using TLS`
+2. 验证连接：docker -H $DOCKER_HOST ps
+3. 使用本地 Docker 时，请不要设置这些变量
+4. 检查防火墙是否放通 Docker 端口（2375/2376）
+5. 若使用 TLS，请确保证书有效`
 
 	// CPU issues
-	TroubleshootCPUTitle = "Insufficient CPU Cores"
-	TroubleshootCPUDesc  = "PentAGI requires at least 2 CPU cores for proper operation."
-	TroubleshootCPUFix   = `Your system has %d CPU core(s), but 2+ are required.
+	TroubleshootCPUTitle = "CPU 核心数不足"
+	TroubleshootCPUDesc  = "PentAGI 至少需要 2 个 CPU 核心才能正常运行。"
+	TroubleshootCPUFix   = `当前系统有 %d 个 CPU 核心，但至少需要 2 个。
 
-For virtual machines:
-1. Increase CPU allocation in VM settings
-2. Ensure host has sufficient resources
+虚拟机用户：
+1. 在虚拟机设置中增加 CPU 分配
+2. 确保宿主机有足够资源
 
-Docker Desktop users:
-Settings → Resources → CPUs: Set to 2 or more`
+Docker Desktop 用户：
+设置 → 资源 → CPUs：设置为 2 或更多`
 
 	// Memory issues
-	TroubleshootMemoryTitle = "Insufficient Memory"
-	TroubleshootMemoryDesc  = "Not enough free memory for selected components."
-	TroubleshootMemoryFix   = `Memory requirements:
-• Base system: 0.5 GB
-• PentAGI core: +0.5 GB
-• Langfuse (if enabled): +1.5 GB
-• Observability (if enabled): +1.5 GB
+	TroubleshootMemoryTitle = "内存不足"
+	TroubleshootMemoryDesc  = "可用内存不足以运行所选组件。"
+	TroubleshootMemoryFix   = `内存需求：
+• 基础系统：0.5 GB
+• PentAGI 核心：+0.5 GB
+• Langfuse（如启用）：+1.5 GB
+• Observability（如启用）：+1.5 GB
 
-Total needed: %.1f GB
-Available: %.1f GB
+共需：%.1f GB
+可用：%.1f GB
 
-To fix:
-1. Close unnecessary applications
-2. Increase Docker memory limit
-3. Disable optional components (Langfuse/Observability)`
+解决方法：
+1. 关闭不必要的应用程序
+2. 提高 Docker 内存上限
+3. 禁用可选组件（Langfuse/Observability）`
 
 	// Disk space issues
-	TroubleshootDiskTitle = "Insufficient Disk Space"
-	TroubleshootDiskDesc  = "Not enough free disk space for installation and operation."
-	TroubleshootDiskFix   = `Disk requirements:
-• Base installation: 5 GB minimum
-• With components: 10 GB + 2 GB per component
-• Worker images: 25 GB (includes 6GB+ Kali image)
+	TroubleshootDiskTitle = "磁盘空间不足"
+	TroubleshootDiskDesc  = "可用磁盘空间不足以完成安装和运行。"
+	TroubleshootDiskFix   = `磁盘需求：
+• 基础安装：至少 5 GB
+• 启用组件后：10 GB + 每个组件 2 GB
+• Worker 镜像：25 GB（含 6GB+ 的 Kali 镜像）
 
-Required: %.1f GB
-Available: %.1f GB
+需要：%.1f GB
+可用：%.1f GB
 
-To fix:
-1. Free up disk space
-2. Use external storage for Docker
-3. Prune unused Docker resources:
+解决方法：
+1. 释放磁盘空间
+2. 为 Docker 使用外部存储
+3. 清理未使用的 Docker 资源：
    docker system prune -a`
 
 	// Network issues
-	TroubleshootNetworkTitle = "Network Connectivity Failed"
-	TroubleshootNetworkDesc  = "Cannot reach required external services. This prevents downloading Docker images and updates."
-	TroubleshootNetworkFix   = `Failed checks:
+	TroubleshootNetworkTitle = "网络连接失败"
+	TroubleshootNetworkDesc  = "无法访问必需的外部服务，这会导致无法下载 Docker 镜像和更新。"
+	TroubleshootNetworkFix   = `失败的检查项：
 %s
 
-To fix:
-1. Verify internet connection: ping docker.io
-2. Check DNS resolution: nslookup docker.io
-3. If behind proxy, set before running installer:
+解决方法：
+1. 验证网络连接：ping docker.io
+2. 检查 DNS 解析：nslookup docker.io
+3. 如使用代理，请在运行安装程序前设置：
    export HTTP_PROXY=http://proxy:port
    export HTTPS_PROXY=http://proxy:port
-4. For persistent proxy, add to .env:
+4. 如需长期使用代理，请写入 .env：
    PROXY_URL=http://proxy:port
-5. Check firewall allows outbound HTTPS (port 443)
-6. Try alternative DNS servers if DNS fails`
+5. 检查防火墙是否放通出站 HTTPS（443 端口）
+6. 若 DNS 解析失败，可尝试更换 DNS 服务器`
 
 	// Generic hint at the bottom
-	TroubleshootFixHint = "\nResolve the issues above and run the installer again."
+	TroubleshootFixHint = "\n请解决上述问题后重新运行安装程序。"
 
 	// Network failure messages (used in checker/helpers.go)
-	NetworkFailureDNS        = "• DNS resolution failed for docker.io"
-	NetworkFailureHTTPS      = "• Cannot reach external services via HTTPS"
-	NetworkFailureDockerPull = "• Cannot pull Docker images from registry"
+	NetworkFailureDNS        = "• docker.io 的 DNS 解析失败"
+	NetworkFailureHTTPS      = "• 无法通过 HTTPS 访问外部服务"
+	NetworkFailureDockerPull = "• 无法从镜像仓库拉取 Docker 镜像"
 )
 
 // System Checks constants
@@ -326,33 +326,33 @@ Navigate through each section to complete your PentAGI setup.`
 
 // Main Menu Status Labels (not used)
 const (
-	MainMenuStatusPentagiRunning     = "PentAGI is already running"
-	MainMenuStatusPentagiNotRunning  = "Ready to start PentAGI services"
-	MainMenuStatusUpToDate           = "PentAGI is up to date"
-	MainMenuStatusUpdatesAvailable   = "Updates are available"
-	MainMenuStatusReadyToStart       = "Ready to start"
-	MainMenuStatusAllServicesRunning = "All services are running"
-	MainMenuStatusNoUpdatesAvailable = "No updates available"
+	MainMenuStatusPentagiRunning     = "PentAGI 已在运行"
+	MainMenuStatusPentagiNotRunning  = "可以启动 PentAGI 服务"
+	MainMenuStatusUpToDate           = "PentAGI 已是最新版本"
+	MainMenuStatusUpdatesAvailable   = "有可用更新"
+	MainMenuStatusReadyToStart       = "准备启动"
+	MainMenuStatusAllServicesRunning = "所有服务均在运行"
+	MainMenuStatusNoUpdatesAvailable = "暂无可用更新"
 )
 
 // LLM Providers Screen constants
 const (
-	LLMProvidersTitle       = "LLM Providers Configuration"
-	LLMProvidersDescription = "Configure Large Language Model providers for AI agents"
-	LLMProvidersName        = "LLM Providers"
-	LLMProvidersOverview    = `PentAGI uses specialized AI agents (researcher, developer, executor, pentester) that require different LLM capabilities for optimal penetration testing results.
+	LLMProvidersTitle       = "LLM 提供商配置"
+	LLMProvidersDescription = "为 AI 智能体配置大语言模型提供商"
+	LLMProvidersName        = "LLM 提供商"
+	LLMProvidersOverview    = `PentAGI 使用多个专职 AI 智能体（研究员、开发者、执行器、渗透测试员），它们需要不同的 LLM 能力才能取得最佳渗透测试效果。
 
-Why multiple providers matter:
-• Agent Specialization: Different agents benefit from models optimized for reasoning, coding, or analysis
-• Cost Efficiency: Mix expensive reasoning models (o3, grok-4, claude-sonnet-4, gemini-2.5-pro) for complex tasks with cheaper models for simple operations
-• Performance Optimization: Each provider excels in different areas - OpenAI for medium tasks, Anthropic for complex tasks, Gemini for saving costs
+为什么要配置多个提供商：
+• 智能体专职化：不同智能体分别受益于擅长推理、编码或分析的模型
+• 成本优化：复杂任务使用高价推理模型（o3、grok-4、claude-sonnet-4、gemini-2.5-pro），简单操作使用低价模型
+• 性能优化：各提供商各有所长 — OpenAI 适合中等任务，Anthropic 适合复杂任务，Gemini 更省成本
 
-Provider Selection Guide:
-• Cloud Production: OpenAI + Anthropic + Gemini for industry-leading performance and reliability
-• Enterprise/Compliance: AWS Bedrock for SOC2, HIPAA, and access to multiple model families
-• Privacy/On-premises: Ollama or vLLM with Llama 3.1, Qwen3, or other open models for complete data control
+提供商选择建议：
+• 云端生产环境：OpenAI + Anthropic + Gemini，性能与可靠性业界领先
+• 企业/合规场景：AWS Bedrock，满足 SOC2、HIPAA 要求，并可访问多个模型家族
+• 隐私/本地部署：Ollama 或 vLLM 搭配 Llama 3.1、Qwen3 等开源模型，数据完全自主可控
 
-Ready-to-use configurations for OpenRouter, DeepInfra, vLLM, Ollama, and other providers are available in the /opt/pentagi/conf/ directory inside the container`
+OpenRouter、DeepInfra、vLLM、Ollama 等提供商的开箱即用配置位于容器内的 /opt/pentagi/conf/ 目录`
 )
 
 // LLM Provider titles and descriptions
@@ -367,264 +367,264 @@ const (
 	LLMProviderKimi          = "Kimi Moonshot AI"
 	LLMProviderQwen          = "Qwen Alibaba Cloud"
 	LLMProviderCustom        = "Custom"
-	LLMProviderOpenAIDesc    = "Industry-leading GPT models with excellent general performance"
-	LLMProviderAnthropicDesc = "Claude models with superior reasoning and safety features"
-	LLMProviderGeminiDesc    = "Google's advanced multimodal models with broad knowledge"
-	LLMProviderBedrockDesc   = "Enterprise AWS access to multiple foundation model providers"
-	LLMProviderOllamaDesc    = "Local and cloud open-source models for privacy and flexibility"
-	LLMProviderDeepSeekDesc  = "Advanced Chinese AI models with strong reasoning and multilingual capabilities"
-	LLMProviderGLMDesc       = "Zhipu AI's GLM models for Chinese and English tasks"
-	LLMProviderKimiDesc      = "Moonshot AI's long-context models for document analysis"
-	LLMProviderQwenDesc      = "Alibaba Cloud's Qwen models for multilingual tasks"
-	LLMProviderCustomDesc    = "Custom OpenAI-compatible endpoint for maximum flexibility"
+	LLMProviderOpenAIDesc    = "业界领先的 GPT 模型，综合表现出色"
+	LLMProviderAnthropicDesc = "Claude 模型，推理能力与安全特性更强"
+	LLMProviderGeminiDesc    = "Google 的先进多模态模型，知识覆盖面广"
+	LLMProviderBedrockDesc   = "通过 AWS 企业级服务访问多家基础模型提供商"
+	LLMProviderOllamaDesc    = "本地与云端开源模型，兼顾隐私与灵活性"
+	LLMProviderDeepSeekDesc  = "国产先进模型，推理与多语言能力强"
+	LLMProviderGLMDesc       = "智谱 AI 的 GLM 模型，擅长中英文任务"
+	LLMProviderKimiDesc      = "月之暗面的长上下文模型，适合文档分析"
+	LLMProviderQwenDesc      = "阿里云通义千问模型，适合多语言任务"
+	LLMProviderCustomDesc    = "自定义 OpenAI 兼容端点，灵活性最高"
 )
 
 // Provider-specific help text
 const (
-	LLMFormOpenAIHelp = `OpenAI delivers industry-leading models with cutting-edge reasoning capabilities perfect for sophisticated penetration testing.
+	LLMFormOpenAIHelp = `OpenAI 提供业界领先的模型，其前沿推理能力非常适合复杂的渗透测试场景。
 
-Default PentAGI Models:
-• o1, o4-mini: Advanced reasoning models for complex vulnerability analysis and strategic planning
-• GPT-4.1, GPT-4.1-mini: Flagship models optimized for exploit development and code generation
-• Automatic model selection based on agent type and task complexity
+PentAGI 默认模型：
+• o1、o4-mini：高级推理模型，用于复杂漏洞分析与策略规划
+• GPT-4.1、GPT-4.1-mini：旗舰模型，针对漏洞利用开发与代码生成优化
+• 根据智能体类型和任务复杂度自动选择模型
 
-Key Advantages:
-• Most advanced reasoning capabilities with step-by-step analysis (o-series models)
-• Excellent coding abilities for custom exploit development and payload generation
-• Reliable performance with consistent uptime and extensive API documentation
-• Proven track record in security research and penetration testing scenarios
+主要优势：
+• 最先进的推理能力，支持逐步分析（o 系列模型）
+• 出色的编码能力，适合自定义漏洞利用开发与载荷生成
+• 性能可靠，服务稳定，API 文档完善
+• 在安全研究与渗透测试场景中久经验证
 
-Best for: Production environments requiring cutting-edge AI capabilities, teams prioritizing performance over cost
-Cost: Premium pricing, but optimized configurations balance cost with quality
+适用场景：需要前沿 AI 能力的生产环境，以及性能优先于成本的团队
+成本：定价偏高，但经过优化的配置能在成本与质量之间取得平衡
 
-Setup: Get your API key from https://platform.openai.com/api-keys`
+配置方式：在 https://platform.openai.com/api-keys 获取 API 密钥`
 
-	LLMFormAnthropicHelp = `Anthropic Claude models excel in safety-conscious penetration testing with superior reasoning and analytical capabilities.
+	LLMFormAnthropicHelp = `Anthropic Claude 模型在注重安全合规的渗透测试中表现优异，具备出色的推理与分析能力。
 
-Default PentAGI Models:
-• Claude Sonnet-4: Premium reasoning model for complex security analysis and strategic vulnerability assessment
-• Claude 3.5 Haiku: High-speed model optimized for rapid information gathering and simple parsing tasks
-• Balanced cost-performance ratio across all security testing scenarios
+PentAGI 默认模型：
+• Claude Sonnet-4：高端推理模型，用于复杂安全分析与策略性漏洞评估
+• Claude 3.5 Haiku：高速模型，针对快速信息收集与简单解析任务优化
+• 在各类安全测试场景中兼顾成本与性能
 
-Key Advantages:
-• Exceptional safety and ethics focus - reduces harmful output while maintaining security testing effectiveness
-• Superior reasoning for methodical vulnerability analysis and systematic penetration testing approaches
-• Large context windows ideal for analyzing extensive codebases and configuration files
-• Excellent at understanding complex security contexts and regulatory compliance requirements
+主要优势：
+• 高度重视安全与伦理，在保持安全测试效果的同时减少有害输出
+• 推理能力出色，适合系统化的漏洞分析与渗透测试方法
+• 上下文窗口大，非常适合分析大型代码库与配置文件
+• 善于理解复杂的安全场景与合规要求
 
-Best for: Security teams prioritizing responsible testing practices, compliance-focused environments, detailed analysis
-Cost: Mid-range pricing with excellent value for reasoning-heavy security workflows
+适用场景：重视负责任测试实践的安全团队、注重合规的环境、需要深入分析的场景
+成本：中等定价，在推理密集型安全工作流中性价比出色
 
-Setup: Get your API key from https://console.anthropic.com/`
+配置方式：在 https://console.anthropic.com/ 获取 API 密钥`
 
-	LLMFormGeminiHelp = `Google Gemini combines multimodal capabilities with advanced reasoning, perfect for comprehensive security assessments.
+	LLMFormGeminiHelp = `Google Gemini 兼具多模态能力与高级推理能力，非常适合全面的安全评估。
 
-Default PentAGI Models:
-• Gemini 2.5 Pro: Advanced reasoning model for deep vulnerability analysis and complex exploit development
-• Gemini 2.5 Flash: High-performance model balancing speed and intelligence for most security testing tasks
-• Gemini 2.0 Flash Lite: Cost-effective model for rapid scanning and information gathering operations
-• Reasoning capabilities with step-by-step analysis for thorough penetration testing
+PentAGI 默认模型：
+• Gemini 2.5 Pro：高级推理模型，用于深度漏洞分析和复杂漏洞利用开发
+• Gemini 2.5 Flash：高性能模型，在速度与智能之间取得平衡，适用于大多数安全测试任务
+• Gemini 2.0 Flash Lite：高性价比模型，用于快速扫描和信息收集
+• 具备逐步分析的推理能力，可支撑深入的渗透测试
 
-Key Advantages:
-• Multimodal support enables analysis of screenshots, network diagrams, and security documentation
-• Competitive pricing with generous rate limits for development and testing environments
-• Large context windows (up to 2M tokens) for analyzing massive codebases and system configurations
-• Strong performance in code analysis and vulnerability identification across multiple programming languages
+主要优势：
+• 支持多模态，可分析截图、网络拓扑图和安全文档
+• 价格有竞争力，开发和测试环境的速率限制较为宽松
+• 上下文窗口大（最高 200 万 tokens），可分析超大代码库和系统配置
+• 在多种编程语言的代码分析与漏洞识别方面表现出色
 
-Best for: Budget-conscious teams, development environments, scenarios requiring image/document analysis
-Cost: Most cost-effective option among major cloud providers with excellent performance/price ratio
+适用场景：预算敏感的团队、开发环境，以及需要分析图片/文档的场景
+成本：主流云厂商中性价比最高，性能与价格比出色
 
-Setup: Get your API key from https://aistudio.google.com/app/apikey`
+配置方式：在 https://aistudio.google.com/app/apikey 获取 API 密钥`
 
-	LLMFormBedrockHelp = `AWS Bedrock provides enterprise-grade access to 20+ foundation models with multiple authentication methods and enhanced security.
+	LLMFormBedrockHelp = `AWS Bedrock 提供企业级的 20 多种基础模型访问能力，支持多种认证方式并具备增强的安全特性。
 
-Default PentAGI Models:
-• Claude Sonnet-4.5 (via Bedrock): Premium reasoning model with AWS enterprise security and extended thinking capabilities
-• OpenAI GPT OSS 120B: Strong reasoning model for scientific analysis and complex security tasks
-• Claude Haiku-4.5, DeepSeek V3.2, Qwen3-32B: Efficient models for specific agent roles and cost optimization
-• Access to Amazon Nova (multimodal), Mistral, Moonshot, and more through single unified interface
+PentAGI 默认模型：
+• Claude Sonnet-4.5（通过 Bedrock）：高端推理模型，具备 AWS 企业级安全和扩展思考能力
+• OpenAI GPT OSS 120B：推理能力强，适合科学分析和复杂安全任务
+• Claude Haiku-4.5、DeepSeek V3.2、Qwen3-32B：高效模型，用于特定智能体角色和成本优化
+• 通过统一接口访问 Amazon Nova（多模态）、Mistral、Moonshot 等更多模型
 
-Authentication Methods (priority order):
-1. Default AWS Auth (BEDROCK_DEFAULT_AUTH=true): Use AWS SDK credential chain - recommended for EC2/ECS/Lambda
-2. Bearer Token (BEDROCK_BEARER_TOKEN): Token-based authentication for custom auth scenarios
-3. Static Credentials (ACCESS_KEY + SECRET_KEY): Traditional IAM credentials for development and testing
+认证方式（按优先级）：
+1. AWS 默认认证（BEDROCK_DEFAULT_AUTH=true）：使用 AWS SDK 凭证链，推荐用于 EC2/ECS/Lambda
+2. Bearer 令牌（BEDROCK_BEARER_TOKEN）：基于令牌的认证，适用于自定义认证场景
+3. 静态凭证（ACCESS_KEY + SECRET_KEY）：传统 IAM 凭证，适用于开发和测试
 
-Key Advantages:
-• Enterprise compliance: SOC2, HIPAA, FedRAMP certifications with data residency and governance controls
-• Multi-provider access: 20+ models from Anthropic, Amazon, OpenAI, Qwen, DeepSeek, Cohere, Mistral, Moonshot
-• Flexible authentication: Three methods to suit different deployment scenarios and security requirements
-• Enhanced security: VPC integration, CloudTrail logging, IAM controls, private endpoints for complete isolation
-• Regional deployment: Deploy in preferred AWS regions for latency optimization and data sovereignty
+主要优势：
+• 企业合规：具备 SOC2、HIPAA、FedRAMP 认证，支持数据驻留和治理控制
+• 多提供商接入：来自 Anthropic、Amazon、OpenAI、Qwen、DeepSeek、Cohere、Mistral、Moonshot 的 20 多种模型
+• 灵活认证：三种方式适配不同部署场景和安全要求
+• 增强安全：VPC 集成、CloudTrail 日志、IAM 控制、私有端点实现完全隔离
+• 区域化部署：可部署在指定 AWS 区域，优化延迟并满足数据主权要求
 
-Best for: Enterprise environments, regulated industries, teams requiring compliance controls and flexible authentication
-Cost: Competitive pricing with provisioned throughput options, but new accounts have restrictive rate limits (2-20 req/min)
-Important: Request quota increases through AWS Service Quotas console for production penetration testing workflows
+适用场景：企业环境、受监管行业，以及需要合规控制和灵活认证的团队
+成本：价格有竞争力并提供预置吞吐量选项，但新账号的速率限制较严（每分钟 2-20 次请求）
+重要提示：用于生产渗透测试流程时，请通过 AWS Service Quotas 控制台申请提升配额
 
-Setup: Choose authentication method and configure credentials. Verify rate limits at https://docs.aws.amazon.com/bedrock/`
+配置方式：选择认证方式并配置凭证。速率限制详见 https://docs.aws.amazon.com/bedrock/`
 
-	LLMFormOllamaHelp = `Ollama supports two deployment scenarios for complete flexibility.
+	LLMFormOllamaHelp = `Ollama 支持两种部署方式，灵活性极高。
 
-Scenario 1: Local Ollama Server (Self-Hosted)
-• Run Ollama on your own hardware (8GB+ RAM recommended, GPU optional but beneficial)
-• Complete data privacy - all processing happens locally
-• Zero ongoing costs - only infrastructure
-• No API key needed - authentication handled by network access
-• Setup: Install from https://ollama.ai/ and configure OLLAMA_SERVER_URL=http://ollama-server:11434
+方式一：本地 Ollama 服务器（自托管）
+• 在自有硬件上运行 Ollama（建议 8GB 以上内存，GPU 可选但有帮助）
+• 数据完全私有 —— 所有处理都在本地完成
+• 无持续费用 —— 仅需承担基础设施成本
+• 无需 API 密钥 —— 通过网络访问控制来鉴权
+• 配置方式：从 https://ollama.ai/ 安装，并设置 OLLAMA_SERVER_URL=http://ollama-server:11434
 
-Scenario 2: Ollama Cloud (Managed Service)
-• Cloud-hosted models without local infrastructure requirements
-• No hardware needed - models run on Ollama's infrastructure
-• Pay-per-use pricing with free tier available
-• API key required - generate at https://ollama.com/settings/keys
-• Setup: Register at https://ollama.com, configure OLLAMA_SERVER_URL=https://ollama.com + OLLAMA_SERVER_API_KEY=your_key
+方式二：Ollama Cloud（托管服务）
+• 云端托管模型，无需本地基础设施
+• 无需硬件 —— 模型运行在 Ollama 的基础设施上
+• 按量计费，并提供免费额度
+• 需要 API 密钥 —— 在 https://ollama.com/settings/keys 生成
+• 配置方式：在 https://ollama.com 注册，设置 OLLAMA_SERVER_URL=https://ollama.com 和 OLLAMA_SERVER_API_KEY=你的密钥
 
-Default PentAGI Models:
-• Llama 3.1:8b, Qwen3:32b, and other open models
-• Customizable - switch between 100+ available models
-• Model auto-download and loading options for convenience
+PentAGI 默认模型：
+• Llama 3.1:8b、Qwen3:32b 等开源模型
+• 可自由定制 —— 可在 100 多个可用模型间切换
+• 支持模型自动下载与加载，使用便捷
 
-Key Advantages:
-• Dual deployment options: Choose between privacy (local) and convenience (cloud)
-• Cost flexibility: Zero ongoing costs for local, pay-per-use for cloud
-• Extensive model library: Access to latest open-source models (Llama, Qwen, Mistral, Gemma, and more)
-• Air-gapped support: Local deployment works in isolated networks
+主要优势：
+• 双部署方式：可在隐私性（本地）与便捷性（云端）之间自由选择
+• 成本灵活：本地部署无持续费用，云端按量计费
+• 模型库丰富：可使用最新的开源模型（Llama、Qwen、Mistral、Gemma 等）
+• 支持离网环境：本地部署可在隔离网络中运行
 
-Best for: Privacy-focused teams (local), budget-conscious deployments (cloud), organizations with data sovereignty requirements
-Setup options: Local installation from https://10.10.10.10:11434 or cloud registration at https://ollama.com`
+适用场景：注重隐私的团队（本地）、预算有限的部署（云端）、有数据主权要求的组织
+配置选项：从 https://10.10.10.10:11434 本地安装，或在 https://ollama.com 注册云服务`
 
-	LLMFormDeepSeekHelp = `DeepSeek provides advanced AI models with strong reasoning capabilities and multilingual support.
+	LLMFormDeepSeekHelp = `DeepSeek 提供推理能力出色、多语言支持良好的先进 AI 模型。
 
-Default PentAGI Models:
-• deepseek-v4-flash: Cost-efficient general-purpose model for dialogue, code generation, and tool calling
-• deepseek-v4-pro: Higher-tier reasoning model for complex logic, mathematical reasoning, and security analysis
-• Cost-effective pricing with competitive performance compared to leading models
+PentAGI 默认模型：
+• deepseek-v4-flash：性价比高的通用模型，适用于对话、代码生成和工具调用
+• deepseek-v4-pro：更高阶的推理模型，适用于复杂逻辑、数学推理和安全分析
+• 定价经济，性能可与主流模型竞争
 
-Key Advantages:
-• Strong coding and reasoning capabilities for security analysis and exploit development
-• Multilingual support (Chinese and English) for international penetration testing scenarios
-• Competitive pricing with excellent performance-to-cost ratio
-• OpenAI-compatible API for seamless integration
+核心优势：
+• 编码与推理能力强，适合安全分析和漏洞利用开发
+• 支持中英双语，适用于跨国渗透测试场景
+• 定价有竞争力，性价比出色
+• 兼容 OpenAI 接口，可无缝集成
 
-LiteLLM Integration:
-• Set Provider Name to 'deepseek' when using LiteLLM proxy
-• Enables model prefix (e.g., deepseek/deepseek-v4-flash) without modifying config.yml
-• Optional for direct DeepSeek API usage
+LiteLLM 集成（多provider 统一网关）：
+• 使用 LiteLLM 代理时，将 Provider Name 设为 'deepseek'
+• 无需修改 config.yml 即可启用模型前缀（如 deepseek/deepseek-v4-flash）
+• 直连 DeepSeek API 时此项为可选
 
-Best for: Teams requiring multilingual support, cost-conscious deployments, Chinese language security testing
-Cost: Highly competitive pricing with strong performance characteristics
+适用场景：需要多语言支持的团队、注重成本的部署、中文安全测试
+成本：定价极具竞争力，性能表现优秀
 
-Setup: Get your API key from https://platform.deepseek.com/`
+配置方式：在 https://platform.deepseek.com/ 获取 API 密钥`
 
-	LLMFormGLMHelp = `GLM from Zhipu AI provides advanced language models with strong NLP and reasoning capabilities developed by Tsinghua University.
+	LLMFormGLMHelp = `GLM 由智谱 AI（源自清华大学）研发，具备出色的自然语言处理与推理能力。
 
-Default PentAGI Models:
-• GLM-4-Air: High performance general dialogue model optimized for regular tasks and tool calling
-• GLM-4-Plus: Flagship model with strong reasoning and code generation capabilities
-• GLM-Z1-Plus: Advanced reasoning model with deep analysis capabilities for security research
+PentAGI 默认模型：
+• GLM-4-Air：高性能通用对话模型，针对常规任务和工具调用优化
+• GLM-4-Plus：旗舰模型，推理与代码生成能力强
+• GLM-Z1-Plus：高阶推理模型，具备面向安全研究的深度分析能力
 
-Key Advantages:
-• Exceptional Chinese and English NLP capabilities
-• Strong performance in multilingual security testing and analysis scenarios
-• GLM-4 and GLM-Z1 model families with enhanced reasoning and coding
-• OpenAI-compatible API for easy integration
+核心优势：
+• 中英文自然语言处理能力突出
+• 在多语言安全测试与分析场景中表现优异
+• GLM-4 与 GLM-Z1 系列在推理和编码方面均有增强
+• 兼容 OpenAI 接口，易于集成
 
-Alternative API Endpoints:
-• International: https://api.z.ai/api/paas/v4 (default)
-• China: https://open.bigmodel.cn/api/paas/v4
-• Coding-specific: https://api.z.ai/api/coding/paas/v4
+可选 API 端点：
+• 国际站：https://api.z.ai/api/paas/v4（默认）
+• 中国站：https://open.bigmodel.cn/api/paas/v4
+• 编码专用：https://api.z.ai/api/coding/paas/v4
 
-LiteLLM Integration:
-• Set Provider Name to 'zai' when using LiteLLM proxy
-• Enables model prefix (e.g., zai/glm-4) without modifying config.yml
-• Optional for direct GLM API usage
+LiteLLM 集成（多 provider 统一网关）：
+• 使用 LiteLLM 代理时，将 Provider Name 设为 'zai'
+• 无需修改 config.yml 即可启用模型前缀（如 zai/glm-4）
+• 直连 GLM API 时此项为可选
 
-Best for: Chinese and English multilingual penetration testing, teams operating in Asian markets
-Cost: Competitive pricing with good performance for multilingual tasks
+适用场景：中英双语渗透测试、在亚洲市场运营的团队
+成本：定价有竞争力，多语言任务性能良好
 
-Setup: Get your API key from https://open.bigmodel.cn/`
+配置方式：在 https://open.bigmodel.cn/ 获取 API 密钥`
 
-	LLMFormKimiHelp = `Kimi from Moonshot AI provides ultra-long context models perfect for analyzing extensive codebases and documentation.
+	LLMFormKimiHelp = `Kimi（Moonshot AI 出品）提供超长上下文模型，非常适合分析大型代码库和文档。
 
-Default PentAGI Models:
-• Moonshot-v1-8k: Long-context model supporting up to 8K tokens for general dialogue
-• Kimi-k2.5: Advanced model with strong reasoning and document understanding
-• Optimized for processing large volumes of text and code
+PentAGI 默认模型：
+• Moonshot-v1-8k：长上下文模型，支持最多 8K tokens，用于常规对话
+• Kimi-k2.5：进阶模型，推理与文档理解能力强
+• 针对处理大量文本和代码做过优化
 
-Key Advantages:
-• Ultra-long context windows (up to 1M tokens) for comprehensive codebase analysis
-• Strong Chinese and English language support for multilingual penetration testing
-• Cost-effective for document-heavy security assessments and threat intelligence analysis
-• Excellent at understanding complex system architectures and long-form technical documentation
+主要优势：
+• 超长上下文窗口（最多 1M tokens），可完整分析整个代码库
+• 中英文支持出色，适合多语言渗透测试
+• 文档密集型安全评估和威胁情报分析的性价比高
+• 擅长理解复杂系统架构和长篇技术文档
 
-Alternative API Endpoints:
-• International: https://api.moonshot.ai/v1 (default)
-• China: https://api.moonshot.cn/v1
+可选 API 端点：
+• 国际站：https://api.moonshot.ai/v1（默认）
+• 中国站：https://api.moonshot.cn/v1
 
-LiteLLM Integration:
-• Set Provider Name to 'moonshot' when using LiteLLM proxy
-• Enables model prefix (e.g., moonshot/kimi-k2.5) without modifying config.yml
-• Optional for direct Kimi API usage
+LiteLLM 集成：
+• 使用 LiteLLM 代理时，将 Provider Name 设为 'moonshot'
+• 无需修改 config.yml 即可启用模型前缀（如 moonshot/kimi-k2.5）
+• 直接调用 Kimi API 时可不填
 
-Best for: Large codebase analysis, document-heavy assessments, teams needing extended context for security research
-Cost: Competitive pricing with excellent value for long-context use cases
+适用场景：大型代码库分析、文档密集型评估、安全研究中需要超长上下文的团队
+成本：定价有竞争力，长上下文场景性价比突出
 
-Setup: Get your API key from https://platform.moonshot.ai/`
+配置方式：在 https://platform.moonshot.ai/ 获取 API 密钥`
 
-	LLMFormQwenHelp = `Qwen from Alibaba Cloud Model Studio (DashScope) provides powerful multilingual models with multimodal capabilities.
+	LLMFormQwenHelp = `Qwen（阿里云百炼 / DashScope 出品）提供强大的多语言模型，并具备多模态能力。
 
-Default PentAGI Models:
-• Qwen-Turbo: Fastest lightweight model for high-frequency tasks and real-time response scenarios
-• Qwen-Plus: Balanced performance model for general dialogue, code generation, and tool calling
-• Qwen-Max: Flagship reasoning model with strong instruction following and complex task handling
-• QwQ-Plus: Deep reasoning model with extended chain-of-thought for complex logic analysis
+PentAGI 默认模型：
+• Qwen-Turbo：最快的轻量模型，适合高频任务和实时响应场景
+• Qwen-Plus：性能均衡，适合常规对话、代码生成和工具调用
+• Qwen-Max：旗舰推理模型，指令遵循能力强，可处理复杂任务
+• QwQ-Plus：深度推理模型，支持长链思考，适合复杂逻辑分析
 
-Key Advantages:
-• Strong multilingual support (Chinese, English, and multiple other languages)
-• Multimodal capabilities with Qwen-VL for visual security analysis
-• Alibaba Cloud integration for enterprise deployments
-• DashScope ecosystem with additional AI services and tools
-• Qwen2.5, Qwen3, and QwQ model families with various sizes and specializations
+主要优势：
+• 多语言支持出色（中文、英文及多种其他语言）
+• 借助 Qwen-VL 具备多模态能力，可做视觉化安全分析
+• 可与阿里云集成，便于企业级部署
+• DashScope 生态提供额外的 AI 服务和工具
+• Qwen2.5、Qwen3、QwQ 系列涵盖多种规模和专长
 
-Alternative API Endpoints:
-• US: https://dashscope-us.aliyuncs.com/compatible-mode/v1 (default)
-• Singapore: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
-• China: https://dashscope.aliyuncs.com/compatible-mode/v1
+可选 API 端点：
+• 美国：https://dashscope-us.aliyuncs.com/compatible-mode/v1（默认）
+• 新加坡：https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+• 中国：https://dashscope.aliyuncs.com/compatible-mode/v1
 
-LiteLLM Integration:
-• Set Provider Name to 'dashscope' when using LiteLLM proxy
-• Enables model prefix (e.g., dashscope/qwen-plus) without modifying config.yml
-• Optional for direct Qwen API usage
+LiteLLM 集成：
+• 使用 LiteLLM 代理时，将 Provider Name 设为 'dashscope'
+• 无需修改 config.yml 即可启用模型前缀（如 dashscope/qwen-plus）
+• 直接调用 Qwen API 时可不填
 
-Best for: Teams operating in Asian markets, multilingual security testing, visual analysis with Qwen-VL, Alibaba Cloud ecosystem integration
-Cost: Competitive pricing with flexible tiers for different use cases
+适用场景：亚洲市场的团队、多语言安全测试、用 Qwen-VL 做视觉分析、已接入阿里云生态
+成本：定价有竞争力，分层灵活，可匹配不同使用场景
 
-Setup: Get your API key from https://dashscope.console.aliyun.com/`
+配置方式：在 https://dashscope.console.aliyun.com/ 获取 API 密钥`
 
-	LLMFormCustomHelp = `Configure any OpenAI-compatible API endpoint for maximum flexibility and integration with existing infrastructure.
+	LLMFormCustomHelp = `可配置任意兼容 OpenAI 协议的 API 端点，灵活性最高，便于对接既有基础设施。
 
-Ready-to-use Configurations:
-• vLLM deployments: High-throughput on-premises inference with optimal GPU utilization
-• OpenRouter: Access 200+ models from multiple providers through single API with competitive pricing
-• DeepInfra: Serverless inference for popular open models with pay-per-use pricing
-• Together AI, Groq, Fireworks: Alternative cloud providers with specialized performance optimizations
-• LiteLLM Proxy: Universal gateway to 100+ providers with load balancing and unified interface (use LLM_SERVER_PROVIDER for model prefixing)
-• Some reasoning models and LLM providers may require preserving reasoning content while using tool calls (LLM_SERVER_PRESERVE_REASONING=true)
+开箱可用的配置：
+• vLLM 部署：本地高吞吐推理，GPU 利用率最优
+• OpenRouter：通过单一 API 访问 200 多个模型，价格有竞争力
+• DeepInfra：面向主流开源模型的 Serverless 推理，按量计费
+• Together AI、Groq、Fireworks：可选云服务商，各有专门的性能优化
+• LiteLLM Proxy：通用网关，接入 100 多家服务商，支持负载均衡和统一接口（用 LLM_SERVER_PROVIDER 指定模型前缀）
+• 部分推理模型和服务商在使用工具调用时需要保留推理内容（LLM_SERVER_PRESERVE_REASONING=true）
 
-Popular On-Premises Options:
-• vLLM: Production-grade serving for Qwen, Llama, Mistral models with batching and GPU optimization
-• LocalAI: OpenAI-compatible API wrapper for various local models and embedding services
-• Text Generation WebUI: Community-favorite interface with extensive model support and fine-tuning capabilities
-• Hugging Face TGI: Enterprise text generation inference with auto-scaling and monitoring
+常见本地部署方案：
+• vLLM：生产级服务，支持 Qwen、Llama、Mistral，具备批处理和 GPU 优化
+• LocalAI：兼容 OpenAI 协议的封装层，支持多种本地模型和向量化服务
+• Text Generation WebUI：社区热门界面，模型支持广泛，可做微调
+• Hugging Face TGI：企业级文本生成推理，支持自动扩缩容和监控
 
-Key Advantages:
-• Unlimited flexibility: Use any OpenAI-compatible endpoint or service
-• Cost optimization: Choose providers with competitive pricing or deploy models on your own infrastructure
-• Vendor independence: Avoid lock-in with ability to switch between providers and models seamlessly
-• Custom fine-tuning: Deploy specialized models trained on your security testing scenarios
+主要优势：
+• 灵活度无上限：可对接任意兼容 OpenAI 协议的端点或服务
+• 成本优化：可选择价格更优的服务商，或在自有设施上部署模型
+• 摆脱厂商锁定：可在服务商和模型之间无缝切换
+• 自定义微调：可部署针对自身安全测试场景训练的专用模型
 
-Best for: Teams with specific model requirements, cost optimization needs, or existing LLM infrastructure
-LiteLLM Integration: Set LLM_SERVER_PROVIDER to match your provider name (e.g., "openrouter", "moonshot") to use the same config files with both direct API access and LiteLLM proxy
-Examples available: Pre-configured setups for major providers in /opt/pentagi/conf/ directory inside the container`
+适用场景：对模型有特定要求、需要控制成本，或已有 LLM 基础设施的团队
+LiteLLM 集成：将 LLM_SERVER_PROVIDER 设为对应的服务商名称（如 "openrouter"、"moonshot"），即可让同一套配置文件同时用于直连 API 和 LiteLLM 代理
+配置示例：容器内 /opt/pentagi/conf/ 目录下提供了主流服务商的预置配置`
 )
 
 // LLM Provider Form field labels and descriptions

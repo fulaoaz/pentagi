@@ -630,38 +630,38 @@ LiteLLM 集成：将 LLM_SERVER_PROVIDER 设为对应的服务商名称（如 "o
 // LLM Provider Form field labels and descriptions
 const (
 	LLMFormFieldBaseURL           = "Base URL"
-	LLMFormFieldAPIKey            = "API Key"
-	LLMFormFieldDefaultAuth       = "Use Default AWS Auth"
+	LLMFormFieldAPIKey            = "API 密钥"
+	LLMFormFieldDefaultAuth       = "使用 AWS 默认认证"
 	LLMFormFieldBearerToken       = "Bearer Token"
 	LLMFormFieldAccessKey         = "Access Key ID"
 	LLMFormFieldSecretKey         = "Secret Access Key"
 	LLMFormFieldSessionToken      = "Session Token"
-	LLMFormFieldRegion            = "Region"
-	LLMFormFieldModel             = "Model"
-	LLMFormFieldConfigPath        = "Config Path"
-	LLMFormFieldLegacyReasoning   = "Legacy Reasoning"
-	LLMFormFieldPreserveReasoning = "Preserve Reasoning"
-	LLMFormFieldProviderName      = "Provider Name"
-	LLMFormFieldPullTimeout       = "Model Pull Timeout"
-	LLMFormFieldPullEnabled       = "Auto-pull Models"
-	LLMFormFieldLoadModelsEnabled = "Load Models from Server"
-	LLMFormBaseURLDesc            = "API endpoint URL for the provider"
-	LLMFormAPIKeyDesc             = "Your API key for authentication"
-	LLMFormDefaultAuthDesc        = "Use AWS SDK default credential chain (environment, EC2 role, ~/.aws/credentials) - highest priority"
-	LLMFormBearerTokenDesc        = "Bearer token for authentication - takes priority over static credentials"
-	LLMFormAccessKeyDesc          = "AWS Access Key ID for static credentials authentication"
-	LLMFormSecretKeyDesc          = "AWS Secret Access Key for static credentials authentication"
-	LLMFormSessionTokenDesc       = "AWS Session Token for temporary credentials (optional, used with static credentials)"
-	LLMFormRegionDesc             = "AWS region for Bedrock service"
-	LLMFormModelDesc              = "Default model to use for this provider"
-	LLMFormConfigPathDesc         = "Path to configuration file (optional)"
-	LLMFormLegacyReasoningDesc    = "Enable legacy reasoning mode (true/false)"
-	LLMFormPreserveReasoningDesc  = "Preserve reasoning content in multi-turn conversations (required by some providers)"
-	LLMFormProviderNameDesc       = "Provider name prefix for model names (useful for LiteLLM proxy)"
-	LLMFormPullTimeoutDesc        = "Timeout in seconds for downloading models (default: 600)"
-	LLMFormPullEnabledDesc        = "Automatically download required models on startup"
-	LLMFormLoadModelsEnabledDesc  = "Load available models list from Ollama server"
-	LLMFormOllamaAPIKeyDesc       = "Ollama Cloud API key (optional, leave empty for local Ollama server)"
+	LLMFormFieldRegion            = "区域"
+	LLMFormFieldModel             = "模型"
+	LLMFormFieldConfigPath        = "配置文件路径"
+	LLMFormFieldLegacyReasoning   = "旧版推理模式"
+	LLMFormFieldPreserveReasoning = "保留推理内容"
+	LLMFormFieldProviderName      = "提供商名称"
+	LLMFormFieldPullTimeout       = "模型下载超时"
+	LLMFormFieldPullEnabled       = "自动拉取模型"
+	LLMFormFieldLoadModelsEnabled = "从服务端加载模型列表"
+	LLMFormBaseURLDesc            = "该提供商的 API 端点地址"
+	LLMFormAPIKeyDesc             = "用于身份验证的 API 密钥"
+	LLMFormDefaultAuthDesc        = "使用 AWS SDK 默认凭证链（环境变量、EC2 角色、~/.aws/credentials），优先级最高"
+	LLMFormBearerTokenDesc        = "用于身份验证的 Bearer Token，优先级高于静态凭证"
+	LLMFormAccessKeyDesc          = "静态凭证认证所用的 AWS Access Key ID"
+	LLMFormSecretKeyDesc          = "静态凭证认证所用的 AWS Secret Access Key"
+	LLMFormSessionTokenDesc       = "临时凭证所用的 AWS Session Token（可选，与静态凭证配合使用）"
+	LLMFormRegionDesc             = "Bedrock 服务所在的 AWS 区域"
+	LLMFormModelDesc              = "该提供商默认使用的模型"
+	LLMFormConfigPathDesc         = "配置文件路径（可选）"
+	LLMFormLegacyReasoningDesc    = "启用旧版推理模式（true/false）"
+	LLMFormPreserveReasoningDesc  = "在多轮对话中保留推理内容（部分提供商必需）"
+	LLMFormProviderNameDesc       = "模型名称的提供商前缀（用于 LiteLLM 代理时有用）"
+	LLMFormPullTimeoutDesc        = "下载模型的超时秒数（默认：600）"
+	LLMFormPullEnabledDesc        = "启动时自动下载所需模型"
+	LLMFormLoadModelsEnabledDesc  = "从 Ollama 服务端加载可用模型列表"
+	LLMFormOllamaAPIKeyDesc       = "Ollama Cloud API 密钥（可选，使用本地 Ollama 服务端时留空）"
 )
 
 // LLM Provider Form status messages
@@ -722,124 +722,124 @@ const (
 Choose between embedded instance or external connection.`
 
 	// Deployment types
-	MonitoringLangfuseEmbedded = "Embedded Server"
-	MonitoringLangfuseExternal = "External Server"
-	MonitoringLangfuseDisabled = "Disabled"
+	MonitoringLangfuseEmbedded = "内置服务"
+	MonitoringLangfuseExternal = "外部服务"
+	MonitoringLangfuseDisabled = "已禁用"
 
 	// Form fields
-	MonitoringLangfuseDeploymentType     = "Deployment Type"
-	MonitoringLangfuseDeploymentTypeDesc = "Select the deployment type for Langfuse"
-	MonitoringLangfuseBaseURL            = "Server URL"
-	MonitoringLangfuseBaseURLDesc        = "Address of the Langfuse server (e.g., https://cloud.langfuse.com)"
-	MonitoringLangfuseProjectID          = "Project ID"
-	MonitoringLangfuseProjectIDDesc      = "Project identifier in Langfuse"
-	MonitoringLangfusePublicKey          = "Public Key"
-	MonitoringLangfusePublicKeyDesc      = "Public API key for project access"
-	MonitoringLangfuseSecretKey          = "Secret Key"
-	MonitoringLangfuseSecretKeyDesc      = "Secret API key for project access"
-	MonitoringLangfuseListenIP           = "Listen IP"
-	MonitoringLangfuseListenIPDesc       = "Bind address used by Docker port mapping (e.g., 0.0.0.0 to expose on all interfaces)"
-	MonitoringLangfuseListenPort         = "Listen Port"
-	MonitoringLangfuseListenPortDesc     = "External TCP port exposed by Docker for Langfuse web UI"
+	MonitoringLangfuseDeploymentType     = "部署方式"
+	MonitoringLangfuseDeploymentTypeDesc = "选择 Langfuse 的部署方式"
+	MonitoringLangfuseBaseURL            = "服务地址"
+	MonitoringLangfuseBaseURLDesc        = "Langfuse 服务器地址（例如 https://cloud.langfuse.com）"
+	MonitoringLangfuseProjectID          = "项目 ID"
+	MonitoringLangfuseProjectIDDesc      = "Langfuse 中的项目标识符"
+	MonitoringLangfusePublicKey          = "公钥"
+	MonitoringLangfusePublicKeyDesc      = "用于访问项目的公开 API 密钥"
+	MonitoringLangfuseSecretKey          = "私钥"
+	MonitoringLangfuseSecretKeyDesc      = "用于访问项目的私密 API 密钥"
+	MonitoringLangfuseListenIP           = "监听 IP"
+	MonitoringLangfuseListenIPDesc       = "Docker 端口映射使用的绑定地址（例如 0.0.0.0 表示监听所有网卡）"
+	MonitoringLangfuseListenPort         = "监听端口"
+	MonitoringLangfuseListenPortDesc     = "Docker 为 Langfuse Web 界面暴露的外部 TCP 端口"
 
 	// Admin settings for embedded
-	MonitoringLangfuseAdminEmail        = "Admin Email"
-	MonitoringLangfuseAdminEmailDesc    = "Email for accessing the Langfuse admin panel"
-	MonitoringLangfuseAdminPassword     = "Admin Password"
-	MonitoringLangfuseAdminPasswordDesc = "Password for accessing the Langfuse admin panel"
-	MonitoringLangfuseAdminName         = "Admin Username"
-	MonitoringLangfuseAdminNameDesc     = "Administrator username in Langfuse"
-	MonitoringLangfuseLicenseKey        = "Enterprise License Key"
-	MonitoringLangfuseLicenseKeyDesc    = "Langfuse Enterprise license key (optional)"
+	MonitoringLangfuseAdminEmail        = "管理员邮箱"
+	MonitoringLangfuseAdminEmailDesc    = "用于登录 Langfuse 管理后台的邮箱"
+	MonitoringLangfuseAdminPassword     = "管理员密码"
+	MonitoringLangfuseAdminPasswordDesc = "用于登录 Langfuse 管理后台的密码"
+	MonitoringLangfuseAdminName         = "管理员用户名"
+	MonitoringLangfuseAdminNameDesc     = "Langfuse 中的管理员用户名"
+	MonitoringLangfuseLicenseKey        = "企业版许可证密钥"
+	MonitoringLangfuseLicenseKeyDesc    = "Langfuse 企业版许可证密钥（可选）"
 
 	// Help text
-	MonitoringLangfuseModeGuide    = "Choose deployment: Embedded (local control), External (cloud/existing), Disabled (no analytics)"
-	MonitoringLangfuseEmbeddedHelp = `Embedded deploys complete Langfuse stack:
-• PostgreSQL + ClickHouse databases
-• MinIO S3 storage + Redis cache
-• Full LLM conversation tracking
-• Cost analysis and performance metrics
-• Private data stays on your server
+	MonitoringLangfuseModeGuide    = "选择部署方式：内置（本地自主管理）、外部（云端/已有实例）、禁用（不启用分析）"
+	MonitoringLangfuseEmbeddedHelp = `内置模式会部署完整的 Langfuse 组件栈：
+• PostgreSQL + ClickHouse 数据库
+• MinIO S3 存储 + Redis 缓存
+• 完整的 LLM 会话追踪
+• 成本分析与性能指标
+• 数据全部保留在你自己的服务器上
 
-Resource requirements:
-• ~2GB RAM, 5GB disk space minimum
-• Additional storage for conversation logs
-• Automatic setup and maintenance
+资源需求：
+• 至少约 2GB 内存、5GB 磁盘空间
+• 会话日志需要额外存储空间
+• 自动完成部署与维护
 
-Best for: Teams wanting data privacy, custom configurations, or no external dependencies. All analytics data stored locally with full administrative control.
+适用场景：注重数据隐私、需要自定义配置或不希望依赖外部服务的团队。所有分析数据存储在本地，并拥有完整的管理权限。
 
-Default admin access:
-• Web UI: http://localhost:4000
-• Login: admin@pentagi.com
-• Password: password (change required)`
-	MonitoringLangfuseExternalHelp = `External connects to cloud.langfuse.com or your existing Langfuse server:
+默认管理员访问方式：
+• Web 界面：http://localhost:4000
+• 登录账号：admin@pentagi.com
+• 密码：password（首次登录需修改）`
+	MonitoringLangfuseExternalHelp = `外部模式连接 cloud.langfuse.com 或你已有的 Langfuse 服务器：
 
-• No local infrastructure needed
-• Managed updates and maintenance
-• Shared analytics across teams
-• Enterprise features available
-• Data stored on external provider
+• 无需本地基础设施
+• 由服务方负责升级与维护
+• 可在团队间共享分析数据
+• 可使用企业版功能
+• 数据存储在外部服务方
 
-Setup requirements:
-• Langfuse account and API keys
-• Internet connectivity required
-• Project ID and authentication keys
+配置前提：
+• 拥有 Langfuse 账号及 API 密钥
+• 需要可用的互联网连接
+• 需要项目 ID 与认证密钥
 
-Best for: Teams using cloud services, wanting managed infrastructure, or integrating with existing Langfuse deployments across organizations.`
-	MonitoringLangfuseDisabledHelp = `Langfuse is disabled. Without LLM observability you will not have:
+适用场景：使用云服务、希望免运维，或需要与组织内已有 Langfuse 部署集成的团队。`
+	MonitoringLangfuseDisabledHelp = `Langfuse 已禁用。缺少 LLM 可观测性后，你将无法获得：
 
-• Conversation history tracking
-• Token usage and cost analysis
-• Model performance metrics
-• Debug traces for AI interactions
-• User behavior analytics
-• Prompt engineering insights
+• 会话历史追踪
+• Token 用量与成本分析
+• 模型性能指标
+• AI 交互的调试链路
+• 用户行为分析
+• 提示词优化洞察
 
-Consider enabling for production use
-to monitor AI agent performance and
-optimize costs effectively.`
+建议在生产环境中启用，
+以便监控 AI 智能体表现
+并有效优化成本。`
 )
 
 // Graphiti Integration constants
 const (
-	MonitoringGraphitiFormTitle       = "Graphiti Configuration (beta)"
-	MonitoringGraphitiFormDescription = "Configuration of Graphiti knowledge graph integration"
-	MonitoringGraphitiFormName        = "Graphiti (beta)"
-	MonitoringGraphitiFormOverview    = `⚠️  BETA FEATURE: This functionality is currently under active development. Please monitor updates for improvements and stability fixes.
+	MonitoringGraphitiFormTitle       = "Graphiti 配置（测试版）"
+	MonitoringGraphitiFormDescription = "配置 Graphiti 知识图谱集成"
+	MonitoringGraphitiFormName        = "Graphiti（测试版）"
+	MonitoringGraphitiFormOverview    = `⚠️  测试功能：该功能仍在积极开发中，请关注后续更新以获取功能改进与稳定性修复。
 
-Graphiti provides temporal knowledge graph capabilities:
-• Entity and relationship extraction
-• Semantic memory for AI agents
-• Temporal context tracking
-• Knowledge reuse across flows
+Graphiti 提供时序知识图谱能力：
+• 实体与关系抽取
+• 面向 AI 智能体的语义记忆
+• 时序上下文追踪
+• 跨任务流复用已有知识
 
-⚠️  REQUIREMENT: Graphiti requires configured OpenAI provider (LLM Providers → OpenAI) for entity extraction.
+⚠️  前置要求：Graphiti 需要已配置的 OpenAI 提供商（LLM 提供商 → OpenAI）来完成实体抽取。
 
-Choose between embedded instance or external connection.`
+请选择使用内置实例还是连接外部服务。`
 
 	// Deployment types
-	MonitoringGraphitiEmbedded = "Embedded Stack"
-	MonitoringGraphitiExternal = "External Service"
-	MonitoringGraphitiDisabled = "Disabled"
+	MonitoringGraphitiEmbedded = "内置组件栈"
+	MonitoringGraphitiExternal = "外部服务"
+	MonitoringGraphitiDisabled = "已禁用"
 
 	// Form fields
-	MonitoringGraphitiDeploymentType     = "Deployment Type"
-	MonitoringGraphitiDeploymentTypeDesc = "Select the deployment type for Graphiti"
-	MonitoringGraphitiURL                = "Graphiti Server URL"
-	MonitoringGraphitiURLDesc            = "Address of the Graphiti API server"
-	MonitoringGraphitiTimeout            = "Request Timeout"
-	MonitoringGraphitiTimeoutDesc        = "Timeout in seconds for Graphiti operations"
-	MonitoringGraphitiModelName          = "Extraction Model"
-	MonitoringGraphitiModelNameDesc      = "LLM model for entity extraction (uses OpenAI provider from LLM Providers configuration)"
-	MonitoringGraphitiNeo4jUser          = "Neo4j Username"
-	MonitoringGraphitiNeo4jUserDesc      = "Username for Neo4j database access"
-	MonitoringGraphitiNeo4jPassword      = "Neo4j Password"
-	MonitoringGraphitiNeo4jPasswordDesc  = "Password for Neo4j database access"
-	MonitoringGraphitiNeo4jDatabase      = "Neo4j Database"
-	MonitoringGraphitiNeo4jDatabaseDesc  = "Neo4j database name"
+	MonitoringGraphitiDeploymentType     = "部署方式"
+	MonitoringGraphitiDeploymentTypeDesc = "选择 Graphiti 的部署方式"
+	MonitoringGraphitiURL                = "Graphiti 服务地址"
+	MonitoringGraphitiURLDesc            = "Graphiti API 服务器地址"
+	MonitoringGraphitiTimeout            = "请求超时"
+	MonitoringGraphitiTimeoutDesc        = "Graphiti 操作的超时时间（秒）"
+	MonitoringGraphitiModelName          = "抽取模型"
+	MonitoringGraphitiModelNameDesc      = "用于实体抽取的 LLM 模型（使用 LLM 提供商配置中的 OpenAI 提供商）"
+	MonitoringGraphitiNeo4jUser          = "Neo4j 用户名"
+	MonitoringGraphitiNeo4jUserDesc      = "访问 Neo4j 数据库的用户名"
+	MonitoringGraphitiNeo4jPassword      = "Neo4j 密码"
+	MonitoringGraphitiNeo4jPasswordDesc  = "访问 Neo4j 数据库的密码"
+	MonitoringGraphitiNeo4jDatabase      = "Neo4j 数据库"
+	MonitoringGraphitiNeo4jDatabaseDesc  = "Neo4j 数据库名称"
 
 	// Help text
-	MonitoringGraphitiModeGuide    = "Choose deployment: Embedded (local Neo4j), External (existing Graphiti), Disabled (no knowledge graph)"
+	MonitoringGraphitiModeGuide    = "选择部署方式：内置（本地 Neo4j）、外部（已有 Graphiti）、禁用（不启用知识图谱）"
 	MonitoringGraphitiEmbeddedHelp = `⚠️  BETA: This feature is under active development. Monitor updates for improvements.
 
 Embedded deploys complete Graphiti stack:
@@ -988,128 +988,128 @@ and optimize performance effectively.`
 
 // Summarizer Screen
 const (
-	SummarizerTitle       = "Summarizer Configuration"
-	SummarizerDescription = "Enable conversation summarization to reduce LLM costs and improve context management"
-	SummarizerName        = "Summarizer"
-	SummarizerOverview    = `Optimize context usage, reduce LLM costs, and match your model capabilities.
+	SummarizerTitle       = "摘要器配置"
+	SummarizerDescription = "启用对话摘要，以降低 LLM 成本并改善上下文管理"
+	SummarizerName        = "摘要器"
+	SummarizerOverview    = `优化上下文占用、降低 LLM 成本，并与模型能力相匹配。
 
-When to adjust summarization:
-• High token costs: Reduce context size (4K-12K vs 22K+ tokens)
-• "Context too long" errors: Configure for your model's limits
-• Poor conversation flow: Increase context retention for quality
-• Different model types: Short-context vs long-context model tuning
+何时需要调整摘要设置：
+• Token 成本偏高：缩减上下文规模（4K-12K，而非 22K+ tokens）
+• 出现"上下文过长"错误：按模型的上限进行配置
+• 对话连贯性差：提升上下文保留量以改善质量
+• 模型类型不同：针对短上下文与长上下文模型分别调优
 
-General Summarization: Maximum cost control and precision tuning for research/analysis tasks
-Assistant Summarization: Optimal conversation quality with intelligent context management for interactive sessions
+General（通用摘要）：成本控制力最强、参数可精细调节，适合研究与分析类任务
+Assistant（助手摘要）：对话质量最佳，具备智能上下文管理，适合交互式会话
 
-Quick wins:
-• Cost reduction: Use General, reduce Recent Sections to 1-2
-• Context errors: Match limits to your model (8K/32K/128K)
-• Quality priority: Use Assistant with increased limits`
+快速见效的做法：
+• 降低成本：使用 General，将"保留最近分段数"减至 1-2
+• 上下文报错：将各项上限与你的模型对齐（8K/32K/128K）
+• 优先保质量：使用 Assistant 并适当提高上限`
 
-	SummarizerTypeGeneralName = "General Summarization"
-	SummarizerTypeGeneralDesc = "Global summarization settings for conversation context management"
+	SummarizerTypeGeneralName = "通用摘要（General）"
+	SummarizerTypeGeneralDesc = "用于对话上下文管理的全局摘要设置"
 
-	SummarizerTypeGeneralInfo = `Choose this for maximum cost control and short-context model compatibility.
+	SummarizerTypeGeneralInfo = `适用于追求最强成本控制、并需兼容短上下文模型的场景。
 
-Perfect when you need:
-• Aggressive cost reduction: Fine-tune every parameter for minimal token usage
-• Short-context models (8K-32K): Precise limits to avoid overflow errors
-• Research/analysis tasks: Controlled compression without losing key data
-• Custom QA handling: Full control over question-answer pair processing
+在以下情况下最为合适：
+• 需要大幅降低成本：可精调每个参数，将 token 用量压到最低
+• 短上下文模型（8K-32K）：通过精确上限避免溢出错误
+• 研究/分析类任务：在不丢失关键数据的前提下受控压缩
+• 自定义问答处理：完全掌控问答对的处理方式
 
-Typical results:
-• 40-70% cost reduction vs default settings
-• 4K-12K token contexts (vs 22K+ in Assistant mode)
-• Better performance on GPT-3.5, Claude Instant, smaller models
-• Precise control over conversation memory vs fresh context balance
+典型效果：
+• 相比默认设置可降低 40-70% 成本
+• 上下文规模 4K-12K tokens（Assistant 模式为 22K+）
+• 在 GPT-3.5、Claude Instant 等较小模型上表现更好
+• 可精确权衡"保留对话记忆"与"重置上下文"
 
-Best practices:
-• Start with 1-2 Recent Sections for maximum savings
-• Enable Size Management for automatic overflow protection
-• Disable QA compression only for critical reasoning tasks`
+最佳实践：
+• 从 1-2 个"保留最近分段数"开始，以获得最大成本节省
+• 启用"尺寸管理"以自动防止溢出
+• 仅在关键推理任务中才关闭问答压缩`
 
-	SummarizerTypeAssistantName = "Assistant Summarization"
-	SummarizerTypeAssistantDesc = "Specialized summarization settings for AI assistant contexts"
+	SummarizerTypeAssistantName = "助手摘要（Assistant）"
+	SummarizerTypeAssistantDesc = "面向 AI 助手场景的专用摘要设置"
 
-	SummarizerTypeAssistantInfo = `Choose this for optimal conversation quality and dialogue continuity.
+	SummarizerTypeAssistantInfo = `适用于追求最佳对话质量与连贯性的场景。
 
-Perfect when you need:
-• Extended reasoning chains: Maintain context for complex multi-step thinking
-• High-quality conversations: Preserve dialogue flow and assistant personality
-• Long-context models (64K+): Leverage full model capabilities efficiently
-• Interactive sessions: Better memory of user preferences and conversation history
+在以下情况下最为合适：
+• 长推理链路：为复杂的多步思考维持上下文
+• 高质量对话：保留对话流程与助手的表达风格
+• 长上下文模型（64K+）：高效发挥模型的完整能力
+• 交互式会话：更好地记住用户偏好与历史对话
 
-Typical results:
-• 8K-40K token contexts with intelligent compression
-• Superior conversation continuity vs manual settings
-• Automatic context optimization for reasoning tasks
-• Balanced cost vs quality (3x more context than General mode)
+典型效果：
+• 上下文规模 8K-40K tokens，并具备智能压缩
+• 对话连贯性显著优于手工设置
+• 针对推理任务自动优化上下文
+• 成本与质量兼顾（上下文约为 General 模式的 3 倍）
 
-Best practices:
-• Use default settings for most scenarios - they're pre-optimized
-• Increase Recent Sections only for very complex tasks
-• Monitor context usage - costs scale with token count
-• Perfect for GPT-4, Claude, and other large context models`
+最佳实践：
+• 多数场景直接使用默认值即可，它们已经过预优化
+• 仅在任务非常复杂时才增加"保留最近分段数"
+• 关注上下文用量，成本随 token 数线性增长
+• 非常适合 GPT-4、Claude 等大上下文模型`
 )
 
 // Summarizer Form Screen
 const (
-	SummarizerFormGeneralTitle   = "General Summarizer Configuration"
-	SummarizerFormAssistantTitle = "Assistant Summarizer Configuration"
-	SummarizerFormDescription    = "Configure %s Settings"
+	SummarizerFormGeneralTitle   = "通用摘要器配置"
+	SummarizerFormAssistantTitle = "助手摘要器配置"
+	SummarizerFormDescription    = "配置 %s 设置"
 
 	// Field Labels and Descriptions
-	SummarizerFormPreserveLast     = "Size Management"
-	SummarizerFormPreserveLastDesc = "Controls last section compression. Enabled: sections fit LastSecBytes (smaller context). Disabled: sections grow freely (larger context)"
+	SummarizerFormPreserveLast     = "尺寸管理"
+	SummarizerFormPreserveLastDesc = "控制最后一个分段的压缩行为。启用：分段大小受 LastSecBytes 限制（上下文更小）。禁用：分段自由增长（上下文更大）"
 
-	SummarizerFormUseQA     = "QA Summarization"
-	SummarizerFormUseQADesc = "Enables question-answer pair compression when total QA content exceeds MaxQABytes or MaxQASections limits"
+	SummarizerFormUseQA     = "问答摘要"
+	SummarizerFormUseQADesc = "当问答内容总量超过 MaxQABytes 或 MaxQASections 上限时，启用问答对压缩"
 
-	SummarizerFormSumHumanInQA     = "Compress User Messages"
-	SummarizerFormSumHumanInQADesc = "Include user messages in QA compression. Disabled: preserves original user text (recommended for most cases)"
+	SummarizerFormSumHumanInQA     = "压缩用户消息"
+	SummarizerFormSumHumanInQADesc = "将用户消息一并纳入问答压缩。禁用：保留用户原文（多数场景推荐）"
 
-	SummarizerFormLastSecBytes     = "Section Size Limit"
-	SummarizerFormLastSecBytesDesc = "Maximum bytes per recent section when Size Management enabled. Larger: more detail per section, higher token usage"
+	SummarizerFormLastSecBytes     = "分段大小上限"
+	SummarizerFormLastSecBytesDesc = "启用尺寸管理时，每个最近分段的最大字节数。值越大：单个分段细节越多，token 用量越高"
 
-	SummarizerFormMaxBPBytes     = "Response Size Limit"
-	SummarizerFormMaxBPBytesDesc = "Maximum bytes for individual AI responses before compression. Prevents single large responses from dominating context"
+	SummarizerFormMaxBPBytes     = "回复大小上限"
+	SummarizerFormMaxBPBytesDesc = "单条 AI 回复在被压缩前的最大字节数。避免单条超长回复占据整个上下文"
 
-	SummarizerFormMaxQASections     = "QA Section Limit"
-	SummarizerFormMaxQASectionsDesc = "Maximum question-answer sections before QA compression triggers. Works with MaxQABytes to control total QA memory"
+	SummarizerFormMaxQASections     = "问答分段数上限"
+	SummarizerFormMaxQASectionsDesc = "触发问答压缩前允许的最大问答分段数。与 MaxQABytes 配合，共同控制问答记忆总量"
 
-	SummarizerFormMaxQABytes     = "Total QA Memory"
-	SummarizerFormMaxQABytesDesc = "Maximum bytes for all QA sections combined. When exceeded (with MaxQASections), triggers QA compression to fit limit"
+	SummarizerFormMaxQABytes     = "问答记忆总量"
+	SummarizerFormMaxQABytesDesc = "所有问答分段合计的最大字节数。超出后（与 MaxQASections 共同判定）触发问答压缩以压回上限内"
 
-	SummarizerFormKeepQASections     = "Recent Sections"
-	SummarizerFormKeepQASectionsDesc = "Number of most recent conversation sections preserved without compression. PRIMARY parameter affecting context size"
+	SummarizerFormKeepQASections     = "保留最近分段数"
+	SummarizerFormKeepQASectionsDesc = "不做压缩、原样保留的最近对话分段数量。影响上下文规模的首要参数"
 
 	// Enhanced Help Text - General (common principles)
-	SummarizerFormGeneralHelp = `Context estimation: 4K-22K tokens (typical), up to 94K (maximum settings).
+	SummarizerFormGeneralHelp = `上下文规模估算：常见 4K-22K tokens，参数拉满时可达 94K。
 
-Key relationships:
-• Recent Sections: Most critical - each +1 adds ~1.5-9K tokens
-• Size Management OFF: 2-3x larger context (less compression)
-• Section/Response Limits: Control individual component sizes
-• QA Memory: Manages total conversation history when limits exceeded
+关键影响因素：
+• 保留最近分段数：影响最大，每增加 1 个约增加 1.5-9K tokens
+• 关闭尺寸管理：上下文增大 2-3 倍（压缩更少）
+• 分段/回复上限：控制单个组成部分的大小
+• 问答记忆：在超出上限时管理整体对话历史
 
-Parameter interactions:
-• QA compression activates when BOTH MaxQABytes AND MaxQASections exceeded
-• Size Management disabled → sections can grow 2x larger than limits
-• Response Limit prevents single large outputs from dominating context
-• User message compression (SummHumanInQA) saves 5% but loses original phrasing
+参数之间的相互作用：
+• 只有 MaxQABytes 与 MaxQASections 同时超限，才会触发问答压缩
+• 禁用尺寸管理后，分段可增长到上限的 2 倍
+• 回复上限可避免单条超长输出占满上下文
+• 压缩用户消息（SummHumanInQA）约节省 5%，但会丢失原始措辞
 
-Reduce for smaller models:
-• Recent Sections: 1-2 (vs 3+ default)
-• Section Limit: 25-35KB (vs 50KB+)
-• Disable Size Management for simple conversations
+小上下文模型建议下调：
+• 保留最近分段数：1-2（默认为 3 以上）
+• 分段上限：25-35KB（默认 50KB 以上）
+• 简单对话可禁用尺寸管理
 
-Common mistakes:
-• Setting Recent Sections too high (main cause of context overflow)
-• Enabling Size Management with very low Section Limits (over-compression)
-• Mismatched QA limits (high bytes + low sections = ineffective)
+常见误区：
+• 保留最近分段数设置过高（上下文溢出的主要原因）
+• 启用尺寸管理的同时把分段上限设得过低（过度压缩）
+• 问答上限不匹配（字节数高但分段数低，等于无效）
 
-Current algorithm compresses older content while preserving recent context quality.`
+当前算法会压缩较早的内容，同时保持最近上下文的质量。`
 
 	// Enhanced Help Text - Assistant specific (interactive conversations)
 	SummarizerFormAssistantHelp = `Optimized for interactive conversations requiring context continuity.
@@ -1151,92 +1151,92 @@ Monitor actual token usage and adjust Recent Sections first, then limits.`
 
 // Tools screen strings
 const (
-	ToolsTitle       = "Tools Configuration"
-	ToolsDescription = "Enhance agent capabilities with additional tools and options"
-	ToolsName        = "Tools"
-	ToolsOverview    = `Configure additional tools and capabilities for AI agents.
-Each tool can be enabled and configured according to your requirements.
+	ToolsTitle       = "工具配置"
+	ToolsDescription = "通过附加工具和选项增强智能体能力"
+	ToolsName        = "工具"
+	ToolsOverview    = `为 AI 智能体配置附加工具与能力。
+每个工具都可按需启用并单独配置。
 
-Available settings:
-• Human-in-the-loop - Enable user interaction during testing
-• AI Agents Settings - Configure global behavior for AI agents
-• Search Engines - Configure external search providers
-• Scraper - Web content extraction and analysis
-• Graphiti (beta) - Temporal knowledge graph for semantic memory
-• Docker - Container environment configuration`
+可用设置：
+• Human-in-the-loop（人工介入）- 允许测试过程中由用户参与决策
+• AI Agents Settings（智能体设置）- 配置 AI 智能体的全局行为
+• Search Engines（搜索引擎）- 配置外部搜索服务商
+• Scraper（网页抓取）- 网页内容提取与分析
+• Graphiti (beta)（知识图谱）- 用于语义记忆的时序知识图谱
+• Docker（容器环境）- 容器运行环境配置`
 )
 
 // Server Settings screen strings
 const (
-	ServerSettingsFormTitle       = "Server Settings"
-	ServerSettingsFormDescription = "Configure PentAGI server network access and public routing"
-	ServerSettingsFormName        = "Server Settings"
-	ServerSettingsFormOverview    = `• Network binding - control which interface and port PentAGI listens on
-• Public URL - external address and optional base path used in redirects
-• CORS - allowed origins for browser access
-• Proxy - HTTP/HTTPS proxy for outbound traffic to LLM/search providers
-• SSL directory - custom certificates directory containing server.crt and server.key (PEM)
-• Data directory - persistent storage for agent artifacts and flow workspaces`
+	ServerSettingsFormTitle       = "服务器设置"
+	ServerSettingsFormDescription = "配置 PentAGI 服务器的网络访问与对外路由"
+	ServerSettingsFormName        = "服务器设置"
+	ServerSettingsFormOverview    = `• 网络绑定 - 控制 PentAGI 监听的网卡与端口
+• 公开 URL - 用于重定向的外部地址及可选的基础路径
+• CORS - 允许通过浏览器访问的来源
+• 代理 - 访问 LLM/搜索服务商时使用的 HTTP/HTTPS 代理
+• SSL 目录 - 存放 server.crt 与 server.key（PEM 格式）的自定义证书目录
+• 数据目录 - 智能体产物与任务流工作区的持久化存储`
 
 	// Field labels and descriptions
-	ServerSettingsLicenseKey     = "License Key"
-	ServerSettingsLicenseKeyDesc = "PentAGI License Key in format of XXXX-XXXX-XXXX-XXXX"
+	ServerSettingsLicenseKey     = "许可证密钥"
+	ServerSettingsLicenseKeyDesc = "PentAGI 许可证密钥，格式为 XXXX-XXXX-XXXX-XXXX"
 
-	ServerSettingsHost     = "Server Host (Listen IP)"
-	ServerSettingsHostDesc = "Bind address used by Docker port mapping (e.g., 0.0.0.0 to expose on all interfaces)"
+	ServerSettingsHost     = "服务器主机（监听 IP）"
+	ServerSettingsHostDesc = "Docker 端口映射使用的绑定地址（例如 0.0.0.0 表示在所有网卡上暴露）"
 
-	ServerSettingsPort     = "Server Port (Listen Port)"
-	ServerSettingsPortDesc = "External TCP port exposed by Docker for PentAGI web UI"
+	ServerSettingsPort     = "服务器端口（监听端口）"
+	ServerSettingsPortDesc = "Docker 为 PentAGI Web 界面对外暴露的 TCP 端口"
 
-	ServerSettingsPublicURL     = "Public URL"
-	ServerSettingsPublicURLDesc = "Base public URL for redirects and links (supports base path, e.g., https://example.com/pentagi/)"
+	ServerSettingsPublicURL     = "公开 URL"
+	ServerSettingsPublicURLDesc = "用于重定向和链接的公开基础 URL（支持基础路径，例如 https://example.com/pentagi/）"
 
-	ServerSettingsCORSOrigins     = "CORS Origins"
-	ServerSettingsCORSOriginsDesc = "Comma-separated list of allowed origins (e.g., https://localhost:8443,https://localhost)"
+	ServerSettingsCORSOrigins     = "CORS 允许来源"
+	ServerSettingsCORSOriginsDesc = "以逗号分隔的允许来源列表（例如 https://localhost:8443,https://localhost）"
 
-	ServerSettingsProxyURL     = "HTTP/HTTPS Proxy"
-	ServerSettingsProxyURLDesc = "Proxy for outbound requests to LLMs and external tools (not used for Docker API access)"
+	ServerSettingsProxyURL     = "HTTP/HTTPS 代理"
+	ServerSettingsProxyURLDesc = "访问 LLM 和外部工具时使用的代理（不用于 Docker API 访问）"
 
-	ServerSettingsProxyUsername     = "Proxy Username"
-	ServerSettingsProxyUsernameDesc = "Username for proxy authentication (optional)"
-	ServerSettingsProxyPassword     = "Proxy Password"
-	ServerSettingsProxyPasswordDesc = "Password for proxy authentication (optional)"
+	ServerSettingsProxyUsername     = "代理用户名"
+	ServerSettingsProxyUsernameDesc = "代理认证用户名（可选）"
+	ServerSettingsProxyPassword     = "代理密码"
+	ServerSettingsProxyPasswordDesc = "代理认证密码（可选）"
 
-	ServerSettingsHTTPClientTimeout       = "HTTP Client Timeout"
-	ServerSettingsHTTPClientTimeoutDesc   = "Timeout in seconds for external API calls (LLM providers, search engines, etc.)"
-	ServerSettingsTerminalToolTimeout     = "Terminal Tool Timeout"
-	ServerSettingsTerminalToolTimeoutDesc = "Default timeout in seconds for terminal commands (0 or negative = use 3-hour maximum)"
+	ServerSettingsHTTPClientTimeout       = "HTTP 客户端超时"
+	ServerSettingsHTTPClientTimeoutDesc   = "调用外部 API（LLM 服务商、搜索引擎等）的超时秒数"
+	ServerSettingsTerminalToolTimeout     = "终端工具超时"
+	ServerSettingsTerminalToolTimeoutDesc = "终端命令的默认超时秒数（填 0 或负数表示使用 3 小时上限）"
 
-	ServerSettingsExternalSSLCAPath     = "Custom CA Certificate Path"
-	ServerSettingsExternalSSLCAPathDesc = "Path inside container to custom root CA cert (e.g., /opt/pentagi/ssl/ca-bundle.pem)"
+	ServerSettingsExternalSSLCAPath     = "自定义 CA 证书路径"
+	ServerSettingsExternalSSLCAPathDesc = "容器内自定义根 CA 证书的路径（例如 /opt/pentagi/ssl/ca-bundle.pem）"
 
-	ServerSettingsExternalSSLInsecure     = "Skip SSL Verification"
-	ServerSettingsExternalSSLInsecureDesc = "Disable SSL/TLS certificate validation (use only for testing with self-signed certs)"
+	ServerSettingsExternalSSLInsecure     = "跳过 SSL 校验"
+	ServerSettingsExternalSSLInsecureDesc = "禁用 SSL/TLS 证书校验（仅用于自签名证书的测试场景）"
 
-	ServerSettingsSSLDir     = "SSL Directory"
-	ServerSettingsSSLDirDesc = "Directory containing server.crt and server.key in PEM format (server.crt may include fullchain)"
+	ServerSettingsSSLDir     = "SSL 目录"
+	ServerSettingsSSLDirDesc = "存放 PEM 格式 server.crt 与 server.key 的目录（server.crt 可包含完整证书链）"
 
-	ServerSettingsDataDir     = "Data Directory"
-	ServerSettingsDataDirDesc = "Directory for all agent-generated files; contains flow-N subdirectories used as /work in worker containers"
+	ServerSettingsDataDir     = "数据目录"
+	ServerSettingsDataDirDesc = "存放所有智能体生成文件的目录；其中的 flow-N 子目录会挂载为工作容器内的 /work"
 
-	ServerSettingsCookieSigningSalt     = "Cookie Signing Salt"
-	ServerSettingsCookieSigningSaltDesc = "Secret used to sign cookies (keep private)"
+	ServerSettingsCookieSigningSalt     = "Cookie 签名盐值"
+	ServerSettingsCookieSigningSaltDesc = "用于签名 Cookie 的密钥（请妥善保密）"
 
 	// Hints for fields overview
-	ServerSettingsLicenseKeyHint          = "License Key"
-	ServerSettingsHostHint                = "Listen IP"
-	ServerSettingsPortHint                = "Listen Port"
-	ServerSettingsPublicURLHint           = "Public URL"
-	ServerSettingsCORSOriginsHint         = "CORS Origins"
-	ServerSettingsProxyURLHint            = "Proxy URL"
-	ServerSettingsProxyUsernameHint       = "Proxy Username"
-	ServerSettingsProxyPasswordHint       = "Proxy Password"
-	ServerSettingsHTTPClientTimeoutHint   = "HTTP Timeout"
-	ServerSettingsTerminalToolTimeoutHint = "Terminal Timeout"
-	ServerSettingsExternalSSLCAPathHint   = "Custom CA Path"
-	ServerSettingsExternalSSLInsecureHint = "Skip SSL Verification"
-	ServerSettingsSSLDirHint              = "SSL Directory"
-	ServerSettingsDataDirHint             = "Data Directory"
+	ServerSettingsLicenseKeyHint          = "许可证密钥"
+	ServerSettingsHostHint                = "监听 IP"
+	ServerSettingsPortHint                = "监听端口"
+	ServerSettingsPublicURLHint           = "公开 URL"
+	ServerSettingsCORSOriginsHint         = "CORS 来源"
+	ServerSettingsProxyURLHint            = "代理地址"
+	ServerSettingsProxyUsernameHint       = "代理用户名"
+	ServerSettingsProxyPasswordHint       = "代理密码"
+	ServerSettingsHTTPClientTimeoutHint   = "HTTP 超时"
+	ServerSettingsTerminalToolTimeoutHint = "终端超时"
+	ServerSettingsExternalSSLCAPathHint   = "自定义 CA 路径"
+	ServerSettingsExternalSSLInsecureHint = "跳过 SSL 校验"
+	ServerSettingsSSLDirHint              = "SSL 目录"
+	ServerSettingsDataDirHint             = "数据目录"
 
 	// Help texts per-field
 	ServerSettingsGeneralHelp = `PentAGI exposes its web UI via Docker with configurable host and port.

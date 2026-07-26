@@ -1361,103 +1361,103 @@ console.log(`任务流总数：${flows.length}`);
 - 创建日期
 - 到期日期
 
-### Custom LLM Provider Configuration
+### 自定义 LLM 提供商配置
 
-When using custom LLM providers with the `LLM_SERVER_*` variables, you can fine-tune the reasoning format used in requests.
+通过 `LLM_SERVER_*` 变量使用自定义 LLM 提供商时，可以调整请求中的推理参数格式。
 
 > [!TIP]
-> For production-grade local deployments, consider using **vLLM** with **Qwen3.5-27B-FP8** for optimal performance. See our [comprehensive deployment guide](examples/guides/vllm-qwen35-27b-fp8.md) which includes hardware requirements, configuration templates ([thinking mode](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml) and [non-thinking mode](examples/configs/vllm-qwen3.5-27b-fp8-no-think.provider.yml)), and performance benchmarks showing 13K TPS prompt processing on 4× RTX 5090 GPUs.
+> 如果要搭建可用于生产环境的本地部署，建议通过 **vLLM** 运行 **Qwen3.5-27B-FP8**，以获得较好的性能。请参阅[完整部署指南](examples/guides/vllm-qwen35-27b-fp8.md)，其中包含硬件要求、[思考模式](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)与[非思考模式](examples/configs/vllm-qwen3.5-27b-fp8-no-think.provider.yml)的配置模板，以及在 4 张 RTX 5090 GPU 上提示词处理吞吐量达到 1.3 万 TPS 的性能测试结果。
 
-| Variable                        | Default | Description                                                                             |
+| 变量                            | 默认值  | 说明                                                                                    |
 | ------------------------------- | ------- | --------------------------------------------------------------------------------------- |
-| `LLM_SERVER_URL`                |         | Base URL for the custom LLM API endpoint                                                |
-| `LLM_SERVER_KEY`                |         | API key for the custom LLM provider                                                     |
-| `LLM_SERVER_MODEL`              |         | Default model to use (can be overridden in provider config)                             |
-| `LLM_SERVER_CONFIG_PATH`        |         | Path to the YAML configuration file for agent-specific models                           |
-| `LLM_SERVER_PROVIDER`           |         | Provider name prefix for model names (e.g., `openrouter`, `deepseek` for LiteLLM proxy) |
-| `LLM_SERVER_LEGACY_REASONING`   | `false` | Controls reasoning format in API requests                                               |
-| `LLM_SERVER_PRESERVE_REASONING` | `false` | Preserve reasoning content in multi-turn conversations (required by some providers)     |
+| `LLM_SERVER_URL`                |         | 自定义 LLM API 端点的基础 URL                                                           |
+| `LLM_SERVER_KEY`                |         | 自定义 LLM 提供商的 API 密钥                                                            |
+| `LLM_SERVER_MODEL`              |         | 默认模型（可在提供商配置中覆盖）                                                        |
+| `LLM_SERVER_CONFIG_PATH`        |         | 为各智能体指定模型的 YAML 配置文件路径                                                  |
+| `LLM_SERVER_PROVIDER`           |         | 模型名称中的提供商前缀（例如 LiteLLM 代理使用的 `openrouter`、`deepseek`）              |
+| `LLM_SERVER_LEGACY_REASONING`   | `false` | 控制 API 请求中的推理参数格式                                                           |
+| `LLM_SERVER_PRESERVE_REASONING` | `false` | 在多轮对话中保留推理内容（部分提供商要求开启）                                          |
 
-The `LLM_SERVER_PROVIDER` setting is particularly useful when using **LiteLLM proxy**, which adds a provider prefix to model names. For example, when connecting to Moonshot API through LiteLLM, models like `kimi-2.5` become `moonshot/kimi-2.5`. By setting `LLM_SERVER_PROVIDER=moonshot`, you can use the same provider configuration file for both direct API access and LiteLLM proxy access without modifications.
+使用 **LiteLLM 代理**时，`LLM_SERVER_PROVIDER` 很有用，因为 LiteLLM 会在模型名称前添加提供商前缀。例如，通过 LiteLLM 连接 Moonshot API 时，`kimi-2.5` 之类的模型名称会变成 `moonshot/kimi-2.5`。设置 `LLM_SERVER_PROVIDER=moonshot` 后，同一份提供商配置文件既可直连 API，也可通过 LiteLLM 代理使用，无需修改。
 
-The `LLM_SERVER_LEGACY_REASONING` setting affects how reasoning parameters are sent to the LLM:
-- `false` (default): Uses modern format where reasoning is sent as a structured object with `max_tokens` parameter
-- `true`: Uses legacy format with string-based `reasoning_effort` parameter
+`LLM_SERVER_LEGACY_REASONING` 决定如何向 LLM 发送推理参数：
+- `false`（默认）：使用新版格式，以带有 `max_tokens` 参数的结构化对象发送推理设置
+- `true`：使用旧版格式，通过字符串类型的 `reasoning_effort` 参数发送
 
-This setting is important when working with different LLM providers as they may expect different reasoning formats in their API requests. If you encounter reasoning-related errors with custom providers, try changing this setting.
+不同 LLM 提供商对 API 请求中的推理格式要求可能不同。如果自定义提供商返回与推理参数有关的错误，请尝试切换此设置。
 
-The `LLM_SERVER_PRESERVE_REASONING` setting controls whether reasoning content is preserved in multi-turn conversations:
-- `false` (default): Reasoning content is not preserved in conversation history
-- `true`: Reasoning content is preserved and sent in subsequent API calls
+`LLM_SERVER_PRESERVE_REASONING` 决定是否在多轮对话中保留推理内容：
+- `false`（默认）：不在对话历史中保留推理内容
+- `true`：保留推理内容，并在后续 API 调用中一并发送
 
-This setting is required by some LLM providers (e.g., Moonshot) that return errors like "thinking is enabled but reasoning_content is missing in assistant tool call message" when reasoning content is not included in multi-turn conversations. Enable this setting if your provider requires reasoning content to be preserved.
+Moonshot 等部分 LLM 提供商要求多轮对话包含推理内容，否则会返回 `thinking is enabled but reasoning_content is missing in assistant tool call message` 一类错误。如果所用提供商有此要求，请开启该设置。
 
-### Ollama Provider Configuration
+### Ollama 提供商配置
 
-PentAGI supports Ollama for both local LLM inference (zero-cost, enhanced privacy) and Ollama Cloud (managed service with free tier).
+PentAGI 支持通过 Ollama 在本地运行 LLM 推理（免 API 调用费，数据更私密），也支持带免费套餐的托管服务 Ollama Cloud。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable                            | Default     | Description                               |
+| 变量                                | 默认值      | 说明                                      |
 | ----------------------------------- | ----------- | ----------------------------------------- |
-| `OLLAMA_SERVER_URL`                 |             | URL of your Ollama server or Ollama Cloud |
-| `OLLAMA_SERVER_API_KEY`             |             | API key for Ollama Cloud authentication   |
-| `OLLAMA_SERVER_MODEL`               |             | Default model for inference               |
-| `OLLAMA_SERVER_CONFIG_PATH`         |             | Path to custom agent configuration file   |
-| `OLLAMA_SERVER_PULL_MODELS_TIMEOUT` | `600`       | Timeout for model downloads (seconds)     |
-| `OLLAMA_SERVER_PULL_MODELS_ENABLED` | `false`     | Auto-download models on startup           |
-| `OLLAMA_SERVER_LOAD_MODELS_ENABLED` | `false`     | Query server for available models         |
+| `OLLAMA_SERVER_URL`                 |             | Ollama 服务器或 Ollama Cloud 的 URL        |
+| `OLLAMA_SERVER_API_KEY`             |             | 用于 Ollama Cloud 认证的 API 密钥          |
+| `OLLAMA_SERVER_MODEL`               |             | 默认推理模型                              |
+| `OLLAMA_SERVER_CONFIG_PATH`         |             | 自定义智能体配置文件的路径                |
+| `OLLAMA_SERVER_PULL_MODELS_TIMEOUT` | `600`       | 模型下载超时时间（秒）                    |
+| `OLLAMA_SERVER_PULL_MODELS_ENABLED` | `false`     | 启动时自动下载模型                        |
+| `OLLAMA_SERVER_LOAD_MODELS_ENABLED` | `false`     | 向服务器查询可用模型                      |
 
-#### Ollama Cloud Configuration
+#### Ollama Cloud 配置
 
-Ollama Cloud provides managed inference with a generous free tier and scalable paid plans.
+Ollama Cloud 提供托管推理服务，可选择免费套餐或按需扩展的付费套餐。
 
-**Free Tier Setup (Single Model)**
+**免费套餐设置（单模型）**
 
 ```bash
-# Free tier allows one model at a time
+# 免费套餐一次只能使用一个模型
 OLLAMA_SERVER_URL=https://ollama.com
 OLLAMA_SERVER_API_KEY=your_ollama_cloud_api_key
-OLLAMA_SERVER_MODEL=gpt-oss:120b  # Example: OpenAI OSS 120B model
+OLLAMA_SERVER_MODEL=gpt-oss:120b  # 示例：OpenAI OSS 120B 模型
 ```
 
-**Paid Tier Setup (Multi-Model with Pre-built Configuration)**
+**付费套餐设置（多模型及预置配置）**
 
-For paid tiers supporting multiple concurrent models, use the pre-built Ollama Cloud configuration:
+付费套餐支持同时使用多个模型，可直接采用预置的 Ollama Cloud 配置：
 
 ```bash
-# Using pre-built Ollama Cloud configuration (included in Docker image)
+# 使用 Docker 镜像内置的 Ollama Cloud 配置
 OLLAMA_SERVER_URL=https://ollama.com
 OLLAMA_SERVER_API_KEY=your_ollama_cloud_api_key
 OLLAMA_SERVER_CONFIG_PATH=/opt/pentagi/conf/ollama-cloud.provider.yml
 ```
 
-The pre-built `ollama-cloud.provider.yml` configuration includes optimized model assignments for all agent types:
-- **Simple/Assistant**: `nemotron-3-super:cloud` - Fast general-purpose model
-- **Primary Agent**: `qwen3-coder-next:cloud` - Advanced reasoning with high effort mode
-- **Coder/Pentester**: `qwen3-coder-next:cloud` - Specialized coding models
-- **Searcher**: `qwen3.5:397b-cloud` - Large context for information gathering
-- **Refiner/Refactor**: `glm-5:cloud` - High-quality text refinement
-- **Adviser/Enricher**: `minimax-m2.7:cloud` - Efficient advisory tasks
-- **Installer**: `devstral-2:123b-cloud` - Installation and setup tasks
+预置的 `ollama-cloud.provider.yml` 已针对各类智能体分配模型：
+- **Simple/Assistant（简单任务/助手）**：`nemotron-3-super:cloud`，快速通用模型
+- **Primary Agent（主智能体）**：`qwen3-coder-next:cloud`，支持高强度推理
+- **Coder/Pentester（编码/渗透测试）**：`qwen3-coder-next:cloud`，面向编码任务的专用模型
+- **Searcher（搜索）**：`qwen3.5:397b-cloud`，上下文窗口较大，适合收集信息
+- **Refiner/Refactor（优化/重构）**：`glm-5:cloud`，用于高质量文本优化
+- **Adviser/Enricher（顾问/内容补充）**：`minimax-m2.7:cloud`，适合高效处理建议类任务
+- **Installer（安装）**：`devstral-2:123b-cloud`，用于安装和设置任务
 
-**Custom Configuration (Advanced)**
+**自定义配置（高级）**
 
-To create your own agent configuration, mount a custom file from your host filesystem:
+如需自行配置智能体，请从宿主机文件系统挂载自定义文件：
 
 ```bash
-# Using custom provider configuration
+# 使用自定义提供商配置
 OLLAMA_SERVER_URL=https://ollama.com
 OLLAMA_SERVER_API_KEY=your_ollama_cloud_api_key
 OLLAMA_SERVER_CONFIG_PATH=/opt/pentagi/conf/ollama.provider.yml
 
-# Mount custom configuration from host filesystem (in .env or docker-compose override)
+# 从宿主机文件系统挂载自定义配置（在 .env 或 docker-compose 覆盖文件中设置）
 PENTAGI_OLLAMA_SERVER_CONFIG_PATH=/path/on/host/my-ollama-config.yml
 ```
 
-The `PENTAGI_OLLAMA_SERVER_CONFIG_PATH` environment variable maps your host configuration file to `/opt/pentagi/conf/ollama.provider.yml` inside the container.
+环境变量 `PENTAGI_OLLAMA_SERVER_CONFIG_PATH` 会将宿主机上的配置文件映射到容器内的 `/opt/pentagi/conf/ollama.provider.yml`。
 
-**Example custom configuration** (`my-ollama-config.yml`):
+**自定义配置示例**（`my-ollama-config.yml`）：
 
 ```yaml
 primary_agent:
@@ -1474,45 +1474,45 @@ coder:
   max_tokens: 20480
 ```
 
-#### Local Ollama Configuration
+#### 本地 Ollama 配置
 
-For self-hosted Ollama instances:
+自托管 Ollama 实例的配置如下：
 
 ```bash
-# Basic local Ollama setup
+# 本地 Ollama 基本设置
 OLLAMA_SERVER_URL=http://localhost:11434
 OLLAMA_SERVER_MODEL=llama3.1:8b-instruct-q8_0
 
-# Production setup with auto-pull and model discovery
+# 生产环境设置，启用自动拉取和模型发现
 OLLAMA_SERVER_URL=http://ollama-server:11434
 OLLAMA_SERVER_PULL_MODELS_ENABLED=true
 OLLAMA_SERVER_PULL_MODELS_TIMEOUT=900
 OLLAMA_SERVER_LOAD_MODELS_ENABLED=true
 
-# Using pre-built configurations from Docker image
+# 使用 Docker 镜像中的预置配置
 OLLAMA_SERVER_CONFIG_PATH=/opt/pentagi/conf/ollama-llama318b.provider.yml
-# or
+# 或
 OLLAMA_SERVER_CONFIG_PATH=/opt/pentagi/conf/ollama-qwen332b-fp16-tc.provider.yml
-# or
+# 或
 OLLAMA_SERVER_CONFIG_PATH=/opt/pentagi/conf/ollama-qwq32b-fp16-tc.provider.yml
 ```
 
-**Performance Considerations:**
+**性能注意事项：**
 
-- **Model Discovery** (`OLLAMA_SERVER_LOAD_MODELS_ENABLED=true`): Adds 1-2s startup latency querying Ollama API
-- **Auto-pull** (`OLLAMA_SERVER_PULL_MODELS_ENABLED=true`): First startup may take several minutes downloading models
-- **Pull timeout** (`OLLAMA_SERVER_PULL_MODELS_TIMEOUT=900`): 15 minutes in seconds
-- **Static Config**: Disable both flags and specify models in config file for fastest startup
+- **模型发现**（`OLLAMA_SERVER_LOAD_MODELS_ENABLED=true`）：查询 Ollama API 会使启动时间增加 1～2 秒
+- **自动拉取**（`OLLAMA_SERVER_PULL_MODELS_ENABLED=true`）：首次启动需要下载模型，可能耗时数分钟
+- **拉取超时**（`OLLAMA_SERVER_PULL_MODELS_TIMEOUT=900`）：以秒为单位设置 15 分钟超时
+- **静态配置**：关闭上述两个开关，在配置文件中指定模型，可以缩短启动时间
 
-#### Creating Custom Ollama Models with Extended Context
+#### 创建扩展上下文的自定义 Ollama 模型
 
-PentAGI requires models with larger context windows than the default Ollama configurations. You need to create custom models with increased `num_ctx` parameter through Modelfiles. While typical agent workflows consume around 64K tokens, PentAGI uses 110K context size for safety margin and handling complex penetration testing scenarios.
+PentAGI 所需的上下文窗口大于 Ollama 默认配置。需要通过 Modelfile 增大 `num_ctx` 参数并创建自定义模型。常规智能体任务约消耗 64K 令牌，PentAGI 将上下文大小设为 110K，以便为复杂渗透测试场景预留余量。
 
-**Important**: The `num_ctx` parameter can only be set during model creation via Modelfile - it cannot be changed after model creation or overridden at runtime.
+**注意**：`num_ctx` 只能在通过 Modelfile 创建模型时设置；模型创建后无法修改，也无法在运行时覆盖。
 
-##### Example: Qwen3 32B FP16 with Extended Context
+##### 示例：扩展上下文的 Qwen3 32B FP16
 
-Create a Modelfile named `Modelfile_qwen3_32b_fp16_tc`:
+创建名为 `Modelfile_qwen3_32b_fp16_tc` 的 Modelfile：
 
 ```dockerfile
 FROM qwen3:32b-fp16
@@ -1524,15 +1524,15 @@ PARAMETER top_k 20
 PARAMETER repeat_penalty 1.1
 ```
 
-Build the custom model:
+构建自定义模型：
 
 ```bash
 ollama create qwen3:32b-fp16-tc -f Modelfile_qwen3_32b_fp16_tc
 ```
 
-##### Example: QwQ 32B FP16 with Extended Context
+##### 示例：扩展上下文的 QwQ 32B FP16
 
-Create a Modelfile named `Modelfile_qwq_32b_fp16_tc`:
+创建名为 `Modelfile_qwq_32b_fp16_tc` 的 Modelfile：
 
 ```dockerfile
 FROM qwq:32b-fp16
@@ -1544,850 +1544,850 @@ PARAMETER top_k 40
 PARAMETER repeat_penalty 1.2
 ```
 
-Build the custom model:
+构建自定义模型：
 
 ```bash
 ollama create qwq:32b-fp16-tc -f Modelfile_qwq_32b_fp16_tc
 ```
 
-> **Note**: The QwQ 32B FP16 model requires approximately **71.3 GB VRAM** for inference. Ensure your system has sufficient GPU memory before attempting to use this model.
+> **注意**：QwQ 32B FP16 推理大约需要 **71.3 GB 显存**。使用前请确认系统有足够的 GPU 显存。
 
-These custom models are referenced in the pre-built provider configuration files (`ollama-qwen332b-fp16-tc.provider.yml` and `ollama-qwq32b-fp16-tc.provider.yml`) that are included in the Docker image at `/opt/pentagi/conf/`.
+Docker 镜像的 `/opt/pentagi/conf/` 目录中包含预置提供商配置文件 `ollama-qwen332b-fp16-tc.provider.yml` 和 `ollama-qwq32b-fp16-tc.provider.yml`，其中已引用上述自定义模型。
 
-### OpenAI Provider Configuration
+### OpenAI 提供商配置
 
-PentAGI integrates with OpenAI's comprehensive model lineup, featuring advanced reasoning capabilities with extended chain-of-thought, agentic models with enhanced tool integration, and specialized code models for security engineering.
+PentAGI 可接入 OpenAI 的多个模型，包括支持长思维链的高级推理模型、工具集成能力更强的智能体模型，以及面向安全工程的代码专用模型。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable             | Default                     | Description                 |
+| 变量                 | 默认值                      | 说明                        |
 | -------------------- | --------------------------- | --------------------------- |
-| `OPEN_AI_KEY`        |                             | API key for OpenAI services |
-| `OPEN_AI_SERVER_URL` | `https://api.openai.com/v1` | OpenAI API endpoint         |
+| `OPEN_AI_KEY`        |                             | OpenAI 服务的 API 密钥      |
+| `OPEN_AI_SERVER_URL` | `https://api.openai.com/v1` | OpenAI API 端点             |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Basic OpenAI setup
+# OpenAI 基本设置
 OPEN_AI_KEY=your_openai_api_key
 OPEN_AI_SERVER_URL=https://api.openai.com/v1
 
-# Using with proxy for enhanced security
+# 通过代理连接以提高安全性
 OPEN_AI_KEY=your_openai_api_key
 PROXY_URL=http://your-proxy:8080
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 31 OpenAI models with tool calling, streaming, reasoning modes, and prompt caching. Models marked with `*` are used in default configuration.
+PentAGI 支持 31 个 OpenAI 模型，可使用工具调用、流式输出、推理模式和提示词缓存。标有 `*` 的模型用于默认配置。
 
-**GPT-5.2 Series - Latest Flagship Agentic (December 2025)**
+**GPT-5.2 系列：最新旗舰智能体模型（2025 年 12 月）**
 
-| Model ID              | Thinking | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID               | 推理     | 价格（输入/输出/缓存）     | 适用场景                                        |
 | --------------------- | -------- | -------------------------- | ----------------------------------------------- |
-| `gpt-5.2`*            | ✅        | $1.75/$14.00/$0.18         | Latest flagship with enhanced reasoning and tool integration, autonomous security research |
-| `gpt-5.2-pro`         | ✅        | $21.00/$168.00/$0.00       | Premium version with superior agentic coding, mission-critical security research, zero-day discovery |
-| `gpt-5.2-codex`       | ✅        | $1.75/$14.00/$0.18         | Most advanced code-specialized, context compaction, strong cybersecurity capabilities |
+| `gpt-5.2`*            | ✅        | $1.75/$14.00/$0.18         | 最新旗舰模型，增强了推理和工具集成能力，适合自主安全研究 |
+| `gpt-5.2-pro`         | ✅        | $21.00/$168.00/$0.00       | 高端版本，智能体编码能力更强，适合任务关键型安全研究和零日漏洞发现 |
+| `gpt-5.2-codex`       | ✅        | $1.75/$14.00/$0.18         | 高级代码专用模型，支持上下文压缩，网络安全能力较强 |
 
-**GPT-5/5.1 Series - Advanced Agentic Models**
+**GPT-5/5.1 系列：高级智能体模型**
 
-| Model ID              | Thinking | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID               | 推理     | 价格（输入/输出/缓存）     | 适用场景                                        |
 | --------------------- | -------- | -------------------------- | ----------------------------------------------- |
-| `gpt-5`               | ✅        | $1.25/$10.00/$0.13         | Premier agentic with advanced reasoning, autonomous security research, exploit chain development |
-| `gpt-5.1`             | ✅        | $1.25/$10.00/$0.13         | Enhanced agentic with adaptive reasoning, balanced penetration testing with strong tool coordination |
-| `gpt-5-pro`           | ✅        | $15.00/$120.00/$0.00       | Premium version with major reasoning improvements, reduced hallucinations, critical security operations |
-| `gpt-5-mini`          | ✅        | $0.25/$2.00/$0.03          | Efficient balancing speed and intelligence, automated vulnerability analysis, exploit generation |
-| `gpt-5-nano`          | ✅        | $0.05/$0.40/$0.01          | Fastest for high-throughput scanning, reconnaissance, bulk vulnerability detection |
+| `gpt-5`               | ✅        | $1.25/$10.00/$0.13         | 旗舰智能体模型，具有高级推理能力，适合自主安全研究和利用链开发 |
+| `gpt-5.1`             | ✅        | $1.25/$10.00/$0.13         | 增强型智能体模型，支持自适应推理和较强的工具协同，适合综合渗透测试 |
+| `gpt-5-pro`           | ✅        | $15.00/$120.00/$0.00       | 高端版本，大幅改进推理并减少幻觉，适合关键安全操作 |
+| `gpt-5-mini`          | ✅        | $0.25/$2.00/$0.03          | 兼顾速度与智能，适合自动化漏洞分析和漏洞利用生成 |
+| `gpt-5-nano`          | ✅        | $0.05/$0.40/$0.01          | 速度最快，适合高吞吐扫描、侦察和批量漏洞检测 |
 
-**GPT-5/5.1 Codex Series - Code-Specialized**
+**GPT-5/5.1 Codex 系列：代码专用模型**
 
-| Model ID              | Thinking | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID               | 推理     | 价格（输入/输出/缓存）     | 适用场景                                        |
 | --------------------- | -------- | -------------------------- | ----------------------------------------------- |
-| `gpt-5.1-codex-max`   | ✅        | $1.25/$10.00/$0.13         | Enhanced reasoning for sophisticated coding, proven CVE findings, systematic exploit development |
-| `gpt-5.1-codex`       | ✅        | $1.25/$10.00/$0.13         | Standard code-optimized with strong reasoning, exploit generation, vulnerability analysis |
-| `gpt-5-codex`         | ✅        | $1.25/$10.00/$0.13         | Foundational code-specialized, vulnerability scanning, basic exploit generation |
-| `gpt-5.1-codex-mini`  | ✅        | $0.25/$2.00/$0.03          | Compact high-performance, 4x higher capacity, rapid vulnerability detection |
-| `codex-mini-latest`   | ✅        | $1.50/$6.00/$0.38          | Latest compact code model, automated code review, basic vulnerability analysis |
+| `gpt-5.1-codex-max`   | ✅        | $1.25/$10.00/$0.13         | 增强推理能力，适合复杂编码、CVE 发现和系统化漏洞利用开发 |
+| `gpt-5.1-codex`       | ✅        | $1.25/$10.00/$0.13         | 标准代码优化模型，推理能力较强，适合漏洞利用生成和漏洞分析 |
+| `gpt-5-codex`         | ✅        | $1.25/$10.00/$0.13         | 基础代码专用模型，适合漏洞扫描和基本漏洞利用生成 |
+| `gpt-5.1-codex-mini`  | ✅        | $0.25/$2.00/$0.03          | 小型高性能模型，容量为原来的 4 倍，适合快速漏洞检测 |
+| `codex-mini-latest`   | ✅        | $1.50/$6.00/$0.38          | 最新小型代码模型，适合自动代码审查和基本漏洞分析 |
 
-**GPT-4.1 Series - Enhanced Intelligence**
+**GPT-4.1 系列：增强智能模型**
 
-| Model ID              | Thinking | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID               | 推理     | 价格（输入/输出/缓存）     | 适用场景                                        |
 | --------------------- | -------- | -------------------------- | ----------------------------------------------- |
-| `gpt-4.1`             | ❌        | $2.00/$8.00/$0.50          | Enhanced flagship with superior function calling, complex threat analysis, sophisticated exploit development |
-| `gpt-4.1-mini`*       | ❌        | $0.40/$1.60/$0.10          | Balanced performance with improved efficiency, routine security assessments, automated code analysis |
-| `gpt-4.1-nano`        | ❌        | $0.10/$0.40/$0.03          | Ultra-fast lightweight, bulk security scanning, rapid reconnaissance, continuous monitoring |
+| `gpt-4.1`             | ❌        | $2.00/$8.00/$0.50          | 增强型旗舰模型，函数调用能力出色，适合复杂威胁分析和高级漏洞利用开发 |
+| `gpt-4.1-mini`*       | ❌        | $0.40/$1.60/$0.10          | 兼顾性能与效率，适合常规安全评估和自动代码分析 |
+| `gpt-4.1-nano`        | ❌        | $0.10/$0.40/$0.03          | 超高速轻量模型，适合批量安全扫描、快速侦察和持续监控 |
 
-**GPT-4o Series - Multimodal Flagship**
+**GPT-4o 系列：多模态旗舰模型**
 
-| Model ID              | Thinking | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID               | 推理     | 价格（输入/输出/缓存）     | 适用场景                                        |
 | --------------------- | -------- | -------------------------- | ----------------------------------------------- |
-| `gpt-4o`              | ❌        | $2.50/$10.00/$1.25         | Multimodal flagship with vision, image analysis, web UI assessment, multi-tool orchestration |
-| `gpt-4o-mini`         | ❌        | $0.15/$0.60/$0.08          | Compact multimodal with strong function calling, high-frequency scanning, cost-effective bulk operations |
+| `gpt-4o`              | ❌        | $2.50/$10.00/$1.25         | 支持视觉的多模态旗舰模型，适合图像分析、网页界面评估和多工具编排 |
+| `gpt-4o-mini`         | ❌        | $0.15/$0.60/$0.08          | 小型多模态模型，函数调用能力较强，适合高频扫描和低成本批量操作 |
 
-**o-Series - Advanced Reasoning Models**
+**o 系列：高级推理模型**
 
-| Model ID              | Thinking | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID               | 推理     | 价格（输入/输出/缓存）     | 适用场景                                        |
 | --------------------- | -------- | -------------------------- | ----------------------------------------------- |
-| `o4-mini`*            | ✅        | $1.10/$4.40/$0.28          | Next-gen reasoning with enhanced speed, methodical security assessments, systematic exploit development |
-| `o3`*                 | ✅        | $2.00/$8.00/$0.50          | Advanced reasoning powerhouse, multi-stage attack chains, deep vulnerability analysis |
-| `o3-mini`             | ✅        | $1.10/$4.40/$0.55          | Compact reasoning with extended thinking, step-by-step attack planning, logical vulnerability chaining |
-| `o1`                  | ✅        | $15.00/$60.00/$7.50        | Premier reasoning with maximum depth, advanced penetration testing, novel exploit research |
-| `o3-pro`              | ✅        | $20.00/$80.00/$0.00        | Most advanced reasoning, 80% cheaper than o1-pro, zero-day research, critical security investigations |
-| `o1-pro`              | ✅        | $150.00/$600.00/$0.00      | Previous-gen premium reasoning, exhaustive security analysis, mission-critical challenges |
+| `o4-mini`*            | ✅        | $1.10/$4.40/$0.28          | 新一代快速推理模型，适合有条理的安全评估和系统化漏洞利用开发 |
+| `o3`*                 | ✅        | $2.00/$8.00/$0.50          | 高级推理模型，适合多阶段攻击链和深度漏洞分析 |
+| `o3-mini`             | ✅        | $1.10/$4.40/$0.55          | 小型推理模型，支持扩展思考，适合逐步制定攻击方案和漏洞逻辑串联 |
+| `o1`                  | ✅        | $15.00/$60.00/$7.50        | 深度推理模型，适合高级渗透测试和新型漏洞利用研究 |
+| `o3-pro`              | ✅        | $20.00/$80.00/$0.00        | 高级推理模型，比 o1-pro 便宜 80%，适合零日漏洞研究和关键安全调查 |
+| `o1-pro`              | ✅        | $150.00/$600.00/$0.00      | 上一代高端推理模型，适合详尽安全分析和任务关键型难题 |
 
-**Prices**: Per 1M tokens. Reasoning models include thinking tokens in output pricing.
+**价格**：按每 100 万令牌计费。推理模型的输出价格包含思考令牌。
 
 > [!WARNING]
-> **GPT-5* Models - Trusted Access Required**
+> **GPT-5* 模型：需要可信访问权限**
 >
-> All GPT-5 series models (`gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5-pro`, `gpt-5.2-pro`, and all Codex variants) work **unstably with PentAGI** and may trigger OpenAI's cybersecurity safety mechanisms without verified access.
+> 所有 GPT-5 系列模型（`gpt-5`、`gpt-5.1`、`gpt-5.2`、`gpt-5-pro`、`gpt-5.2-pro` 及全部 Codex 变体）在 PentAGI 中运行时都可能**不稳定**；如果未获得已验证的访问权限，还可能触发 OpenAI 的网络安全保护机制。
 >
-> **To use GPT-5* models reliably:**
-> 1. **Individual users**: Verify your identity at [chatgpt.com/cyber](https://chatgpt.com/cyber)
-> 2. **Enterprise teams**: Request trusted access through your OpenAI representative
-> 3. **Security researchers**: Apply for the [Cybersecurity Grant Program](https://openai.com/form/cybersecurity-grant-program/) (includes $10M in API credits)
+> **如需稳定使用 GPT-5* 模型：**
+> 1. **个人用户**：在 [chatgpt.com/cyber](https://chatgpt.com/cyber) 完成身份验证
+> 2. **企业团队**：通过 OpenAI 客户代表申请可信访问权限
+> 3. **安全研究人员**：申请[网络安全资助计划](https://openai.com/form/cybersecurity-grant-program/)（提供总额 1,000 万美元的 API 额度）
 >
-> **Recommended alternatives without verification:**
-> - Use `o-series` models (o3, o4-mini, o1) for reasoning tasks
-> - Use `gpt-4.1` series for general intelligence and function calling
-> - All o-series and gpt-4.x models work reliably without special access
+> **无需验证的建议替代方案：**
+> - 推理任务使用 `o-series` 模型（o3、o4-mini、o1）
+> - 通用智能和函数调用使用 `gpt-4.1` 系列
+> - 所有 o 系列和 gpt-4.x 模型无需特殊访问权限即可稳定运行
 
-**Reasoning Effort Levels**:
-- **High**: Maximum reasoning depth (refiner - o3 with high effort)
-- **Medium**: Balanced reasoning (primary_agent, assistant, reflector - o4-mini/o3 with medium effort)
-- **Low**: Efficient targeted reasoning (coder, installer, pentester - o3/o4-mini with low effort; adviser - gpt-5.2 with low effort)
+**推理强度级别**：
+- **High（高）**：最大推理深度（`refiner` 使用 high 强度的 o3）
+- **Medium（中）**：平衡推理深度与开销（`primary_agent`、`assistant`、`reflector` 使用 medium 强度的 o4-mini/o3）
+- **Low（低）**：高效执行目标明确的推理任务（`coder`、`installer`、`pentester` 使用 low 强度的 o3/o4-mini；`adviser` 使用 low 强度的 gpt-5.2）
 
-**Key Features**:
-- **Extended Reasoning**: o-series models with chain-of-thought for complex security analysis
-- **Agentic Intelligence**: GPT-5/5.1/5.2 series with enhanced tool integration and autonomous capabilities
-- **Prompt Caching**: Cost reduction on repeated context (10-50% of input price)
-- **Code Specialization**: Dedicated Codex models for vulnerability discovery and exploit development
-- **Multimodal Support**: GPT-4o series for vision-based security assessments
-- **Tool Calling**: Robust function calling across all models for pentesting tool orchestration
-- **Streaming**: Real-time response streaming for interactive workflows
-- **Proven Track Record**: Industry-leading models with CVE discoveries and real-world security applications
+**主要特性**：
+- **扩展推理**：o 系列模型通过思维链处理复杂安全分析
+- **智能体能力**：GPT-5/5.1/5.2 系列增强了工具集成和自主执行能力
+- **提示词缓存**：重复使用上下文时降低成本，缓存价格为输入价格的 10%～50%
+- **代码专用模型**：Codex 模型专门用于漏洞发现和漏洞利用开发
+- **多模态支持**：GPT-4o 系列可执行基于视觉信息的安全评估
+- **工具调用**：所有模型均提供可靠的函数调用，可编排渗透测试工具
+- **流式输出**：为交互式工作流程实时返回响应
+- **实际成果**：这些模型已用于发现 CVE，并应用于真实安全场景
 
-### Anthropic Provider Configuration
+### Anthropic 提供商配置
 
-PentAGI integrates with Anthropic's Claude models, featuring advanced extended thinking capabilities, exceptional safety mechanisms, and sophisticated understanding of complex security contexts with prompt caching.
+PentAGI 可接入 Anthropic 的 Claude 模型，支持高级扩展思考、提示词缓存和安全机制，并能理解复杂的安全上下文。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable               | Default                        | Description                    |
+| 变量                   | 默认值                         | 说明                           |
 | ---------------------- | ------------------------------ | ------------------------------ |
-| `ANTHROPIC_API_KEY`    |                                | API key for Anthropic services |
-| `ANTHROPIC_SERVER_URL` | `https://api.anthropic.com/v1` | Anthropic API endpoint         |
+| `ANTHROPIC_API_KEY`    |                                | Anthropic 服务的 API 密钥      |
+| `ANTHROPIC_SERVER_URL` | `https://api.anthropic.com/v1` | Anthropic API 端点             |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Basic Anthropic setup
+# Anthropic 基本设置
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ANTHROPIC_SERVER_URL=https://api.anthropic.com/v1
 
-# Using with proxy for secure environments
+# 在安全要求较高的环境中通过代理连接
 ANTHROPIC_API_KEY=your_anthropic_api_key
 PROXY_URL=http://your-proxy:8080
 ```
 
 > [!NOTE]
-> **Google Vertex AI for Claude models**
+> **通过 Google Vertex AI 使用 Claude 模型**
 >
-> PentAGI does not currently expose a dedicated Google Vertex AI configuration path for Anthropic Claude in `.env`. There is no separate Vertex AI API key field at this time, and the existing Anthropic variables (`ANTHROPIC_API_KEY`, `ANTHROPIC_SERVER_URL`) target the direct Anthropic API. Supported routes for Claude are:
+> PentAGI 目前没有在 `.env` 中提供 Anthropic Claude 专用的 Google Vertex AI 配置，也没有单独的 Vertex AI API 密钥字段。现有 Anthropic 变量（`ANTHROPIC_API_KEY`、`ANTHROPIC_SERVER_URL`）用于直连 Anthropic API。目前支持通过以下方式接入 Claude：
 >
-> - **Direct Anthropic API**: `ANTHROPIC_API_KEY` and `ANTHROPIC_SERVER_URL` (see above).
-> - **AWS Bedrock**: `BEDROCK_*` variables (see [AWS Bedrock Provider Configuration](#aws-bedrock-provider-configuration)).
+> - **直连 Anthropic API**：使用 `ANTHROPIC_API_KEY` 和 `ANTHROPIC_SERVER_URL`（见上文）
+> - **AWS Bedrock**：使用 `BEDROCK_*` 变量（参见 [AWS Bedrock 提供商配置](#aws-bedrock-提供商配置)）
 >
-> If you need to use Vertex AI today, the safest supported workaround is to expose Vertex AI through an OpenAI-compatible proxy or gateway that translates Vertex AI calls into the Chat Completions format while preserving the chat and tool-call behavior PentAGI relies on, then point the Custom LLM provider at that gateway via `LLM_SERVER_URL`, `LLM_SERVER_KEY`, and `LLM_SERVER_MODEL`. This path is only as reliable as the gateway you choose.
+> 如果当前需要使用 Vertex AI，可以通过兼容 OpenAI 的代理或网关暴露 Vertex AI。代理或网关必须把 Vertex AI 调用转换为 Chat Completions 格式，同时保留 PentAGI 所依赖的聊天和工具调用行为。然后通过 `LLM_SERVER_URL`、`LLM_SERVER_KEY` 和 `LLM_SERVER_MODEL` 将自定义 LLM 提供商指向该网关。这种接入方式的可靠性取决于所选网关。
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 10 Claude models with tool calling, streaming, extended thinking, adaptive thinking, and prompt caching. Models marked with `*` are used in default configuration.
+PentAGI 支持 10 个 Claude 模型，可使用工具调用、流式输出、扩展思考、自适应思考和提示词缓存。标有 `*` 的模型用于默认配置。
 
-**Claude 4 Series - Latest Models (2025-2026)**
+**Claude 4 系列：最新模型（2025 至 2026 年）**
 
-| Model ID                 | Thinking | Release Date | Price (Input/Output/Cache R/W) | Use Case                                        |
+| 模型 ID                  | 思考     | 发布日期     | 价格（输入/输出/缓存读/写）    | 适用场景                                        |
 | ------------------------ | -------- | ------------ | ------------------------------ | ----------------------------------------------- |
-| `claude-opus-4-6`*       | ✅        | May 2025     | $5.00/$25.00/$0.50/$6.25       | Most intelligent model for autonomous agents and coding. Extended + adaptive thinking for complex exploit development, multi-stage attack simulation |
-| `claude-sonnet-4-6`*     | ✅        | Aug 2025     | $3.00/$15.00/$0.30/$3.75       | Best speed/intelligence balance with adaptive thinking. Multi-phase security assessments, intelligent vulnerability analysis, real-time threat hunting |
-| `claude-haiku-4-5`*      | ✅        | Oct 2025     | $1.00/$5.00/$0.10/$1.25        | Fastest model with near-frontier intelligence. High-frequency scanning, real-time monitoring, bulk automated testing |
+| `claude-opus-4-6`*       | ✅        | 2025 年 5 月 | $5.00/$25.00/$0.50/$6.25       | 智能水平最高，适合自主智能体和编码任务。扩展思考和自适应思考可用于复杂漏洞利用开发及多阶段攻击模拟 |
+| `claude-sonnet-4-6`*     | ✅        | 2025 年 8 月 | $3.00/$15.00/$0.30/$3.75       | 速度与智能的平衡较好，并支持自适应思考。适合多阶段安全评估、智能漏洞分析和实时威胁搜寻 |
+| `claude-haiku-4-5`*      | ✅        | 2025 年 10 月 | $1.00/$5.00/$0.10/$1.25       | 速度最快，智能水平接近前沿模型。适合高频扫描、实时监控和批量自动化测试 |
 
-**Legacy Models - Still Supported**
+**旧版模型：仍受支持**
 
-| Model ID                 | Thinking | Release Date | Price (Input/Output/Cache R/W) | Use Case                                        |
+| 模型 ID                  | 思考     | 发布日期     | 价格（输入/输出/缓存读/写）    | 适用场景                                        |
 | ------------------------ | -------- | ------------ | ------------------------------ | ----------------------------------------------- |
-| `claude-sonnet-4-5`      | ✅        | Sep 2025     | $3.00/$15.00/$0.30/$3.75       | State-of-the-art reasoning (superseded by 4-6). Sophisticated penetration testing, advanced threat analysis |
-| `claude-opus-4-5`        | ✅        | Nov 2025     | $5.00/$25.00/$0.50/$6.25       | Ultimate reasoning (superseded by opus-4-6). Critical security research, zero-day discovery, red team operations |
-| `claude-opus-4-1`        | ✅        | Aug 2025     | $15.00/$75.00/$1.50/$18.75     | Advanced reasoning (superseded). Complex penetration testing, sophisticated threat modeling |
-| `claude-sonnet-4-0`      | ✅        | May 2025     | $3.00/$15.00/$0.30/$3.75       | High-performance reasoning (superseded). Complex threat modeling, multi-tool coordination |
-| `claude-opus-4-0`        | ✅        | May 2025     | $15.00/$75.00/$1.50/$18.75     | First generation Opus (superseded). Multi-step exploit development, autonomous pentesting workflows |
+| `claude-sonnet-4-5`      | ✅        | 2025 年 9 月 | $3.00/$15.00/$0.30/$3.75       | 先进推理模型（已由 4-6 取代）。适合复杂渗透测试和高级威胁分析 |
+| `claude-opus-4-5`        | ✅        | 2025 年 11 月 | $5.00/$25.00/$0.50/$6.25      | 高端推理模型（已由 opus-4-6 取代）。适合关键安全研究、零日漏洞发现和红队行动 |
+| `claude-opus-4-1`        | ✅        | 2025 年 8 月 | $15.00/$75.00/$1.50/$18.75     | 高级推理模型（已被后续型号取代）。适合复杂渗透测试和高级威胁建模 |
+| `claude-sonnet-4-0`      | ✅        | 2025 年 5 月 | $3.00/$15.00/$0.30/$3.75       | 高性能推理模型（已被后续型号取代）。适合复杂威胁建模和多工具协同 |
+| `claude-opus-4-0`        | ✅        | 2025 年 5 月 | $15.00/$75.00/$1.50/$18.75     | 第一代 Opus（已被后续型号取代）。适合多步骤漏洞利用开发和自主渗透测试任务流 |
 
-**Deprecated Models - Migrate to Current Models**
+**弃用模型：请迁移到当前模型**
 
-| Model ID                     | Thinking | Release Date | Price (Input/Output/Cache R/W) | Notes                                        |
+| 模型 ID                      | 思考     | 发布日期     | 价格（输入/输出/缓存读/写）    | 备注                                         |
 | ---------------------------- | -------- | ------------ | ------------------------------ | -------------------------------------------- |
-| `claude-3-haiku-20240307`    | ❌        | Mar 2024     | $0.25/$1.25/$0.03/$0.30        | Will be retired April 19, 2026. Migrate to claude-haiku-4-5 |
+| `claude-3-haiku-20240307`    | ❌        | 2024 年 3 月 | $0.25/$1.25/$0.03/$0.30        | 将于 2026 年 4 月 19 日停用，请迁移到 claude-haiku-4-5 |
 
-**Prices**: Per 1M tokens. Cache pricing includes both Read and Write costs.
+**价格**：按每 100 万令牌计费。缓存价格同时列出读取和写入成本。
 
-**Extended Thinking Configuration**:
-- **Max Tokens 4096**: Generator (claude-opus-4-6) for maximum reasoning depth on complex exploit development
-- **Max Tokens 2048**: Coder (claude-sonnet-4-6) for balanced code analysis and vulnerability research  
-- **Max Tokens 1024**: Primary agent, assistant, refiner, adviser, reflector, searcher, installer, pentester for focused reasoning on specific tasks
-- **Extended Thinking**: All Claude 4.5+ and 4.6 models support configurable extended thinking for deep reasoning tasks
+**扩展思考配置**：
+- **最大令牌数 4096**：Generator（生成器）使用 claude-opus-4-6，以最大推理深度处理复杂漏洞利用开发
+- **最大令牌数 2048**：Coder（编码）使用 claude-sonnet-4-6，兼顾代码分析和漏洞研究
+- **最大令牌数 1024**：Primary agent（主智能体）、assistant（助手）、refiner（优化）、adviser（顾问）、reflector（反思）、searcher（搜索）、installer（安装）和 pentester（渗透测试）用于针对具体任务进行集中推理
+- **扩展思考**：所有 Claude 4.5+ 和 4.6 模型均支持可配置的扩展思考，可用于深度推理任务
 
-**Key Features**:
-- **Extended Thinking**: All Claude 4.5+ and 4.6 models with configurable chain-of-thought reasoning depths for complex security analysis
-- **Adaptive Thinking**: Claude 4.6 series (Opus/Sonnet) dynamically adjusts reasoning depth based on task complexity for optimal performance
-- **Prompt Caching**: Significant cost reduction with separate read/write pricing (10% read, 125% write of input)
-- **Extended Context Window**: 200K tokens standard, up to 1M tokens (beta) for Claude Opus/Sonnet 4.6 for comprehensive codebase analysis
-- **Tool Calling**: Robust function calling with exceptional accuracy for security tool orchestration
-- **Streaming**: Real-time response streaming for interactive penetration testing workflows
-- **Safety-First Design**: Built-in safety mechanisms ensuring responsible security testing practices
-- **Multimodal Support**: Vision capabilities in latest models for screenshot analysis and UI security assessment
-- **Constitutional AI**: Advanced safety training providing reliable and ethical security guidance
+**主要特性**：
+- **扩展思考**：所有 Claude 4.5+ 和 4.6 模型都可配置思维链推理深度，用于复杂安全分析
+- **自适应思考**：Claude 4.6 系列（Opus/Sonnet）会根据任务复杂度动态调整推理深度
+- **提示词缓存**：读取与写入分别计价，可明显降低成本（读取为输入价格的 10%，写入为 125%）
+- **扩展上下文窗口**：标准窗口为 200K 令牌；Claude Opus/Sonnet 4.6 的测试版最高支持 100 万令牌，可用于全面分析代码库
+- **工具调用**：函数调用准确可靠，适合编排安全工具
+- **流式输出**：为交互式渗透测试任务流实时返回响应
+- **安全优先设计**：内置安全机制，帮助以负责任的方式开展安全测试
+- **多模态支持**：最新模型具有视觉能力，可分析截图并评估界面安全性
+- **Constitutional AI（宪法式 AI）**：通过高级安全训练提供可靠、合乎规范的安全指导
 
-### Google AI (Gemini) Provider Configuration
+### Google AI（Gemini）提供商配置
 
-PentAGI integrates with Google's Gemini models through the Google AI API, offering state-of-the-art multimodal reasoning capabilities with extended thinking and context caching.
+PentAGI 通过 Google AI API 接入 Gemini 模型，支持高级多模态推理、扩展思考和上下文缓存。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable            | Default                                     | Description                    |
+| 变量                | 默认值                                      | 说明                           |
 | ------------------- | ------------------------------------------- | ------------------------------ |
-| `GEMINI_API_KEY`    |                                             | API key for Google AI services |
-| `GEMINI_SERVER_URL` | `https://generativelanguage.googleapis.com` | Google AI API endpoint         |
+| `GEMINI_API_KEY`    |                                             | Google AI 服务的 API 密钥      |
+| `GEMINI_SERVER_URL` | `https://generativelanguage.googleapis.com` | Google AI API 端点             |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Basic Gemini setup
+# Gemini 基本设置
 GEMINI_API_KEY=your_gemini_api_key
 GEMINI_SERVER_URL=https://generativelanguage.googleapis.com
 
-# Using with proxy
+# 通过代理连接
 GEMINI_API_KEY=your_gemini_api_key
 PROXY_URL=http://your-proxy:8080
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 9 Gemini models with tool calling, streaming, thinking modes, and context caching. Models marked with `*` are used in default configuration.
+PentAGI 支持 9 个 Gemini 模型，可使用工具调用、流式输出、思考模式和上下文缓存。标有 `*` 的模型用于默认配置。
 
-**Gemini 3.5 Series - Latest Stable Flash (May 2026)**
+**Gemini 3.5 系列：最新稳定版 Flash（2026 年 5 月）**
 
-| Model ID                              | Thinking | Context | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID                               | 思考     | 上下文  | 价格（输入/输出/缓存）     | 适用场景                                        |
 | ------------------------------------- | -------- | ------- | -------------------------- | ----------------------------------------------- |
-| `gemini-3.5-flash`*                   | ✅        | 1M      | $1.50/$9.00/$0.15          | Most intelligent Flash model with sustained frontier performance on agentic and coding tasks, superior search and grounding |
+| `gemini-3.5-flash`*                   | ✅        | 1M      | $1.50/$9.00/$0.15          | 智能水平最高的 Flash 模型，在智能体和编码任务中持续保持前沿性能，搜索及基于检索结果作答的能力更强 |
 
-**Gemini 3.1 Series - Stable Flash-Lite + Pro Preview (Feb-May 2026)**
+**Gemini 3.1 系列：稳定版 Flash-Lite 与 Pro 预览版（2026 年 2 月至 5 月）**
 
-| Model ID                              | Thinking | Context | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID                               | 思考     | 上下文  | 价格（输入/输出/缓存）     | 适用场景                                        |
 | ------------------------------------- | -------- | ------- | -------------------------- | ----------------------------------------------- |
-| `gemini-3.1-pro-preview`*             | ✅        | 1M      | $2.00/$12.00/$0.20         | Latest flagship with refined thinking, improved token efficiency, optimized for software engineering and agentic workflows |
-| `gemini-3.1-pro-preview-customtools`  | ✅        | 1M      | $2.00/$12.00/$0.20         | Custom tools endpoint optimized for bash and custom tools (view_file, search_code) prioritization |
-| `gemini-3.1-flash-lite`*              | ✅        | 1M      | $0.25/$1.50/$0.025         | Most cost-efficient stable multimodal model, frontier-class performance for high-volume agentic tasks and low-latency applications |
+| `gemini-3.1-pro-preview`*             | ✅        | 1M      | $2.00/$12.00/$0.20         | 最新旗舰模型，优化了思考过程并提高令牌效率，适合软件工程和智能体任务流 |
+| `gemini-3.1-pro-preview-customtools`  | ✅        | 1M      | $2.00/$12.00/$0.20         | 自定义工具端点，优先调用 bash 和自定义工具（view_file、search_code） |
+| `gemini-3.1-flash-lite`*              | ✅        | 1M      | $0.25/$1.50/$0.025         | 成本最低的稳定版多模态模型，在大规模智能体任务和低延迟应用中达到前沿水平 |
 
-**Gemini 2.5 Series - Advanced Thinking Models (active until October 16, 2026)**
+**Gemini 2.5 系列：高级思考模型（服务至 2026 年 10 月 16 日）**
 
-| Model ID                                 | Thinking | Context | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID                                  | 思考     | 上下文  | 价格（输入/输出/缓存）     | 适用场景                                        |
 | ---------------------------------------- | -------- | ------- | -------------------------- | ----------------------------------------------- |
-| `gemini-2.5-pro`                         | ✅        | 1M      | $1.25/$10.00/$0.125        | State-of-the-art for complex coding and reasoning, sophisticated threat modeling |
-| `gemini-2.5-flash`                       | ✅        | 1M      | $0.30/$2.50/$0.03          | First hybrid reasoning model with thinking budgets, best price-performance for large-scale assessments |
-| `gemini-2.5-flash-lite`                  | ✅        | 1M      | $0.10/$0.40/$0.01          | Smallest and most cost-effective for at-scale usage, high-throughput scanning |
+| `gemini-2.5-pro`                         | ✅        | 1M      | $1.25/$10.00/$0.125        | 适合复杂编码和推理，也可用于高级威胁建模 |
+| `gemini-2.5-flash`                       | ✅        | 1M      | $0.30/$2.50/$0.03          | 首个支持思考预算的混合推理模型，适合注重性价比的大规模评估 |
+| `gemini-2.5-flash-lite`                  | ✅        | 1M      | $0.10/$0.40/$0.01          | 体量和成本最低，适合大规模使用和高吞吐扫描 |
 
-**Gemma 4 Open-Source Models (Apache 2.0, Free Tier)**
+**Gemma 4 开源模型（Apache 2.0，免费套餐）**
 
-| Model ID                              | Thinking | Context | Price (Input/Output/Cache) | Use Case                                        |
+| 模型 ID                               | 思考     | 上下文  | 价格（输入/输出/缓存）     | 适用场景                                        |
 | ------------------------------------- | -------- | ------- | -------------------------- | ----------------------------------------------- |
-| `gemma-4-31b-it`                      | ✅        | 256K    | Free/Free/Free             | Largest open-source Gemma 4 dense model (~31B params), multimodal text+image, 140+ languages, on-premises security operations |
-| `gemma-4-26b-a4b-it`                  | ✅        | 256K    | Free/Free/Free             | MoE architecture (~26B total / ~3.8B active params), highly efficient inference on consumer GPUs for on-premises high-throughput scanning |
+| `gemma-4-31b-it`                      | ✅        | 256K    | 免费/免费/免费             | 最大的开源 Gemma 4 稠密模型（约 31B 参数），支持文本和图像、140 多种语言，适合本地安全操作 |
+| `gemma-4-26b-a4b-it`                  | ✅        | 256K    | 免费/免费/免费             | MoE 架构（总参数约 26B，激活参数约 3.8B），可在消费级 GPU 上高效推理，适合本地高吞吐扫描 |
 
-**Prices**: Per 1M tokens (Standard Paid tier). Context window is input token limit.
+**价格**：按每 100 万令牌计费（标准付费套餐）。上下文窗口指输入令牌上限。
 
 > [!NOTE]
-> **Gemini 2.5 Series Shutdown**
+> **Gemini 2.5 系列停服**
 >
-> `gemini-2.5-pro`, `gemini-2.5-flash`, and `gemini-2.5-flash-lite` will be **shut down on October 16, 2026**. Recommended migrations:
+> `gemini-2.5-pro`、`gemini-2.5-flash` 和 `gemini-2.5-flash-lite` 将于 **2026 年 10 月 16 日停服**。建议按以下方式迁移：
 >
-> - `gemini-2.5-pro` → `gemini-3.1-pro-preview` (same $2.00 input pricing tier)
-> - `gemini-2.5-flash` → `gemini-3.5-flash` (improved frontier capabilities)
-> - `gemini-2.5-flash-lite` → `gemini-3.1-flash-lite` (same $0.25 input pricing)
+> - `gemini-2.5-pro` → `gemini-3.1-pro-preview`（同为 $2.00 输入价格档）
+> - `gemini-2.5-flash` → `gemini-3.5-flash`（前沿能力有所改进）
+> - `gemini-2.5-flash-lite` → `gemini-3.1-flash-lite`（输入价格同为 $0.25）
 
-**Default Model Assignments (config.yml)**:
-- **`gemini-3.1-pro-preview`** - `primary_agent`, `assistant`, `generator`, `refiner`, `adviser`, `coder`, `pentester`
-- **`gemini-3.5-flash`** - `reflector`, `searcher`, `enricher`, `installer`
-- **`gemini-3.1-flash-lite`** - `simple`, `simple_json`
+**默认模型分配（config.yml）**：
+- **`gemini-3.1-pro-preview`**：`primary_agent`、`assistant`、`generator`、`refiner`、`adviser`、`coder`、`pentester`
+- **`gemini-3.5-flash`**：`reflector`、`searcher`、`enricher`、`installer`
+- **`gemini-3.1-flash-lite`**：`simple`、`simple_json`
 
-**Key Features**:
-- **Extended Thinking**: Step-by-step reasoning for complex security analysis (all Gemini 3.x, 2.5 series, and Gemma 4 with toggleable thinking)
-- **Context Caching**: Significant cost reduction on repeated context (10% of input price for most models)
-- **Ultra-Long Context**: 1M tokens for Gemini chat models, 256K tokens for Gemma 4 open-source models
-- **Multimodal Support**: Text, image, video, audio, and PDF processing for comprehensive assessments
-- **Tool Calling**: Seamless integration with 20+ pentesting tools via function calling
-- **Streaming**: Real-time response streaming for interactive security workflows
-- **Code Execution**: Built-in code execution for offensive tool testing and exploit validation
-- **Search Grounding**: Google Search integration for threat intelligence and CVE research
-- **File Search**: Document retrieval and RAG capabilities for knowledge-based assessments
-- **Batch API**: 50% cost reduction for non-real-time batch processing
-- **Custom Tools Endpoint**: Dedicated `gemini-3.1-pro-preview-customtools` route for tool-heavy agentic workflows that prefer registered tools over bash
+**主要特性**：
+- **扩展思考**：逐步推理复杂安全分析（所有 Gemini 3.x、2.5 系列及 Gemma 4 均可开关思考模式）
+- **上下文缓存**：重复使用上下文时可明显降低成本（多数模型的缓存价格为输入价格的 10%）
+- **超长上下文**：Gemini 聊天模型支持 100 万令牌，Gemma 4 开源模型支持 256K 令牌
+- **多模态支持**：可处理文本、图像、视频、音频和 PDF，用于综合评估
+- **工具调用**：通过函数调用接入 20 多种渗透测试工具
+- **流式输出**：为交互式安全任务流实时返回响应
+- **代码执行**：内置代码执行能力，可测试攻击性工具并验证漏洞利用
+- **搜索依据**：集成 Google 搜索，用于威胁情报和 CVE 研究
+- **文件搜索**：支持文档检索和 RAG，可执行基于知识库的评估
+- **批处理 API**：非实时批处理的成本降低 50%
+- **自定义工具端点**：专用的 `gemini-3.1-pro-preview-customtools` 路由，适合工具密集型智能体任务流，并优先使用已注册工具而不是 bash
 
-**Reasoning Effort Levels**:
-- **High**: Maximum thinking depth for complex multi-step analysis (generator)
-- **Medium**: Balanced reasoning for general agentic tasks (primary_agent, assistant, refiner, adviser)
-- **Low**: Efficient thinking for focused tasks (coder, installer, pentester)
+**推理强度级别**：
+- **High（高）**：以最大思考深度执行复杂的多步骤分析（`generator`）
+- **Medium（中）**：兼顾推理深度与开销，适合一般智能体任务（`primary_agent`、`assistant`、`refiner`、`adviser`）
+- **Low（低）**：高效思考目标明确的任务（`coder`、`installer`、`pentester`）
 
-### AWS Bedrock Provider Configuration
+### AWS Bedrock 提供商配置
 
-PentAGI integrates with Amazon Bedrock, offering access to 20+ foundation models from leading AI companies including Anthropic, Amazon, Cohere, DeepSeek, OpenAI, Qwen, Mistral, and Moonshot.
+PentAGI 可接入 Amazon Bedrock，使用 Anthropic、Amazon、Cohere、DeepSeek、OpenAI、Qwen、Mistral 和 Moonshot 等公司提供的 20 多个基础模型。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable                    | Default     | Description                                                                                         |
+| 变量                        | 默认值      | 说明                                                                                                |
 | --------------------------- | ----------- | --------------------------------------------------------------------------------------------------- |
-| `BEDROCK_REGION`            | `us-east-1` | AWS region for Bedrock service                                                                      |
-| `BEDROCK_DEFAULT_AUTH`      | `false`     | Use AWS SDK default credential chain (environment, EC2 role, ~/.aws/credentials) - highest priority |
-| `BEDROCK_BEARER_TOKEN`      |             | Bearer token authentication - priority over static credentials                                      |
-| `BEDROCK_ACCESS_KEY_ID`     |             | AWS access key ID for static credentials                                                            |
-| `BEDROCK_SECRET_ACCESS_KEY` |             | AWS secret access key for static credentials                                                        |
-| `BEDROCK_SESSION_TOKEN`     |             | AWS session token for temporary credentials (optional, used with static credentials)                |
-| `BEDROCK_SERVER_URL`        |             | Custom Bedrock endpoint (VPC endpoints, local testing)                                              |
+| `BEDROCK_REGION`            | `us-east-1` | Bedrock 服务所在的 AWS 区域                                                                         |
+| `BEDROCK_DEFAULT_AUTH`      | `false`     | 使用 AWS SDK 默认凭证链（环境变量、EC2 角色、~/.aws/credentials），优先级最高                        |
+| `BEDROCK_BEARER_TOKEN`      |             | Bearer 令牌认证，优先级高于静态凭证                                                                 |
+| `BEDROCK_ACCESS_KEY_ID`     |             | 静态凭证的 AWS 访问密钥 ID                                                                          |
+| `BEDROCK_SECRET_ACCESS_KEY` |             | 静态凭证的 AWS 秘密访问密钥                                                                         |
+| `BEDROCK_SESSION_TOKEN`     |             | 临时凭证的 AWS 会话令牌（可选，与静态凭证配合使用）                                                 |
+| `BEDROCK_SERVER_URL`        |             | 自定义 Bedrock 端点（用于 VPC 端点或本地测试）                                                      |
 
-**Authentication Priority**: `BEDROCK_DEFAULT_AUTH` → `BEDROCK_BEARER_TOKEN` → `BEDROCK_ACCESS_KEY_ID`+`BEDROCK_SECRET_ACCESS_KEY`
+**认证优先级**：`BEDROCK_DEFAULT_AUTH` → `BEDROCK_BEARER_TOKEN` → `BEDROCK_ACCESS_KEY_ID`+`BEDROCK_SECRET_ACCESS_KEY`
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Recommended: Default AWS SDK authentication (EC2/ECS/Lambda roles)
+# 推荐：AWS SDK 默认认证（EC2/ECS/Lambda 角色）
 BEDROCK_REGION=us-east-1
 BEDROCK_DEFAULT_AUTH=true
 
-# Bearer token authentication (AWS STS, custom auth)
+# Bearer 令牌认证（AWS STS、自定义认证）
 BEDROCK_REGION=us-east-1
 BEDROCK_BEARER_TOKEN=your_bearer_token
 
-# Static credentials (development, testing)
+# 静态凭证（开发、测试）
 BEDROCK_REGION=us-east-1
 BEDROCK_ACCESS_KEY_ID=your_aws_access_key
 BEDROCK_SECRET_ACCESS_KEY=your_aws_secret_key
 
-# With proxy and custom endpoint
+# 使用代理和自定义端点
 BEDROCK_REGION=us-east-1
 BEDROCK_DEFAULT_AUTH=true
 BEDROCK_SERVER_URL=https://bedrock-runtime.us-east-1.vpce-xxx.amazonaws.com
 PROXY_URL=http://your-proxy:8080
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 21 AWS Bedrock models with tool calling, streaming, and multimodal capabilities. Models marked with `*` are used in default configuration.
+PentAGI 支持 21 个 AWS Bedrock 模型，可使用工具调用、流式输出和多模态能力。标有 `*` 的模型用于默认配置。
 
-| Model ID                                         | Provider        | Thinking | Multimodal | Price (Input/Output) | Use Case                                |
+| 模型 ID                                          | 提供商          | 思考     | 多模态     | 价格（输入/输出）   | 适用场景                                |
 | ------------------------------------------------ | --------------- | -------- | ---------- | -------------------- | --------------------------------------- |
-| `us.amazon.nova-2-lite-v1:0`                     | Amazon Nova     | ❌        | ✅          | $0.33/$2.75          | Adaptive reasoning, efficient thinking  |
-| `us.amazon.nova-premier-v1:0`                    | Amazon Nova     | ❌        | ✅          | $2.50/$12.50         | Complex reasoning, advanced analysis    |
-| `us.amazon.nova-pro-v1:0`                        | Amazon Nova     | ❌        | ✅          | $0.80/$3.20          | Balanced accuracy, speed, cost          |
-| `us.amazon.nova-lite-v1:0`                       | Amazon Nova     | ❌        | ✅          | $0.06/$0.24          | Fast processing, high-volume operations |
-| `us.amazon.nova-micro-v1:0`                      | Amazon Nova     | ❌        | ❌          | $0.035/$0.14         | Ultra-low latency, real-time monitoring |
-| `us.anthropic.claude-opus-4-6-v1`*               | Anthropic       | ✅        | ✅          | $5.00/$25.00         | World-class coding, enterprise agents   |
-| `us.anthropic.claude-sonnet-4-6`                 | Anthropic       | ✅        | ✅          | $3.00/$15.00         | Frontier intelligence, enterprise scale |
-| `us.anthropic.claude-opus-4-5-20251101-v1:0`     | Anthropic       | ✅        | ✅          | $5.00/$25.00         | Multi-day software development          |
-| `us.anthropic.claude-haiku-4-5-20251001-v1:0`*   | Anthropic       | ✅        | ✅          | $1.00/$5.00          | Near-frontier performance, high speed   |
-| `us.anthropic.claude-sonnet-4-5-20250929-v1:0`*  | Anthropic       | ✅        | ✅          | $3.00/$15.00         | Real-world agents, coding excellence    |
-| `us.anthropic.claude-sonnet-4-20250514-v1:0`     | Anthropic       | ✅        | ✅          | $3.00/$15.00         | Balanced performance, production-ready  |
-| `us.anthropic.claude-3-5-haiku-20241022-v1:0`    | Anthropic       | ❌        | ❌          | $0.80/$4.00          | Fastest model, cost-effective scanning  |
-| `cohere.command-r-plus-v1:0`                     | Cohere          | ❌        | ❌          | $3.00/$15.00         | Large-scale operations, superior RAG    |
-| `deepseek.v3.2`                                  | DeepSeek        | ❌        | ❌          | $0.58/$1.68          | Long-context reasoning, efficiency      |
-| `openai.gpt-oss-120b-1:0`*                       | OpenAI (OSS)    | ✅        | ❌          | $0.15/$0.60          | Strong reasoning, scientific analysis   |
-| `openai.gpt-oss-20b-1:0`                         | OpenAI (OSS)    | ✅        | ❌          | $0.07/$0.30          | Efficient coding, software development  |
-| `qwen.qwen3-next-80b-a3b`                        | Qwen            | ❌        | ❌          | $0.15/$1.20          | Ultra-long context, flagship reasoning  |
-| `qwen.qwen3-32b-v1:0`                            | Qwen            | ❌        | ❌          | $0.15/$0.60          | Balanced reasoning, research use cases  |
-| `qwen.qwen3-coder-30b-a3b-v1:0`                  | Qwen            | ❌        | ❌          | $0.15/$0.60          | Vibe coding, natural-language first     |
-| `qwen.qwen3-coder-next`                          | Qwen            | ❌        | ❌          | $0.45/$1.80          | Tool use, function calling optimized    |
-| `mistral.mistral-large-3-675b-instruct`          | Mistral         | ❌        | ✅          | $4.00/$12.00         | Advanced multimodal, long-context       |
-| `moonshotai.kimi-k2.5`                           | Moonshot        | ❌        | ✅          | $0.60/$3.00          | Vision, language, code in one model     |
+| `us.amazon.nova-2-lite-v1:0`                     | Amazon Nova     | ❌        | ✅          | $0.33/$2.75          | 自适应推理，高效思考                    |
+| `us.amazon.nova-premier-v1:0`                    | Amazon Nova     | ❌        | ✅          | $2.50/$12.50         | 复杂推理，高级分析                      |
+| `us.amazon.nova-pro-v1:0`                        | Amazon Nova     | ❌        | ✅          | $0.80/$3.20          | 兼顾准确度、速度和成本                  |
+| `us.amazon.nova-lite-v1:0`                       | Amazon Nova     | ❌        | ✅          | $0.06/$0.24          | 快速处理，大批量操作                    |
+| `us.amazon.nova-micro-v1:0`                      | Amazon Nova     | ❌        | ❌          | $0.035/$0.14         | 超低延迟，实时监控                      |
+| `us.anthropic.claude-opus-4-6-v1`*               | Anthropic       | ✅        | ✅          | $5.00/$25.00         | 顶尖编码能力，企业级智能体              |
+| `us.anthropic.claude-sonnet-4-6`                 | Anthropic       | ✅        | ✅          | $3.00/$15.00         | 前沿智能，适合企业规模                  |
+| `us.anthropic.claude-opus-4-5-20251101-v1:0`     | Anthropic       | ✅        | ✅          | $5.00/$25.00         | 持续多日的软件开发任务                  |
+| `us.anthropic.claude-haiku-4-5-20251001-v1:0`*   | Anthropic       | ✅        | ✅          | $1.00/$5.00          | 性能接近前沿模型，速度快                |
+| `us.anthropic.claude-sonnet-4-5-20250929-v1:0`*  | Anthropic       | ✅        | ✅          | $3.00/$15.00         | 真实场景智能体，出色的编码能力          |
+| `us.anthropic.claude-sonnet-4-20250514-v1:0`     | Anthropic       | ✅        | ✅          | $3.00/$15.00         | 性能均衡，可用于生产环境                |
+| `us.anthropic.claude-3-5-haiku-20241022-v1:0`    | Anthropic       | ❌        | ❌          | $0.80/$4.00          | 速度最快，扫描成本较低                  |
+| `cohere.command-r-plus-v1:0`                     | Cohere          | ❌        | ❌          | $3.00/$15.00         | 大规模操作，RAG 能力较强                |
+| `deepseek.v3.2`                                  | DeepSeek        | ❌        | ❌          | $0.58/$1.68          | 长上下文推理，效率较高                  |
+| `openai.gpt-oss-120b-1:0`*                       | OpenAI（OSS）   | ✅        | ❌          | $0.15/$0.60          | 推理能力较强，适合科学分析              |
+| `openai.gpt-oss-20b-1:0`                         | OpenAI（OSS）   | ✅        | ❌          | $0.07/$0.30          | 高效编码，软件开发                      |
+| `qwen.qwen3-next-80b-a3b`                        | Qwen            | ❌        | ❌          | $0.15/$1.20          | 超长上下文，旗舰级推理                  |
+| `qwen.qwen3-32b-v1:0`                            | Qwen            | ❌        | ❌          | $0.15/$0.60          | 推理能力均衡，适合研究场景              |
+| `qwen.qwen3-coder-30b-a3b-v1:0`                  | Qwen            | ❌        | ❌          | $0.15/$0.60          | Vibe Coding（氛围编程），自然语言优先   |
+| `qwen.qwen3-coder-next`                          | Qwen            | ❌        | ❌          | $0.45/$1.80          | 针对工具使用和函数调用优化              |
+| `mistral.mistral-large-3-675b-instruct`          | Mistral         | ❌        | ✅          | $4.00/$12.00         | 高级多模态，长上下文                    |
+| `moonshotai.kimi-k2.5`                           | Moonshot        | ❌        | ✅          | $0.60/$3.00          | 单一模型支持视觉、语言和代码            |
 
-**Prices**: Per 1M tokens. Models with thinking/reasoning support additional compute costs during reasoning phase.
+**价格**：按每 100 万令牌计费。支持思考/推理的模型在推理阶段会产生额外计算费用。
 
-#### Tested but Incompatible Models
+#### 已测试但不兼容的模型
 
-Some AWS Bedrock models were tested but are **not supported** due to technical limitations:
+部分 AWS Bedrock 模型经过测试后发现存在技术限制，因此**不受支持**：
 
-| Model Family              | Reason for Incompatibility                                                                |
+| 模型系列                  | 不兼容原因                                                                                |
 | ------------------------- | ----------------------------------------------------------------------------------------- |
-| **GLM (Z.AI)**            | Tool calling format incompatible with Converse API (expects string instead of JSON)       |
-| **AI21 Jamba**            | Severe rate limits (1-2 req/min) prevent reliable testing and production use              |
-| **Meta Llama 3.3/3.1**    | Unstable tool call result processing, causes unexpected failures in multi-turn workflows  |
-| **Mistral Magistral**     | Tool calling not supported by the model                                                   |
-| **Moonshot K2-Thinking**  | Unstable streaming behavior with tool calls, unreliable in production                     |
-| **Qwen3-VL**              | Unstable streaming with tool calling, multimodal + tools combination fails intermittently |
+| **GLM（Z.AI）**           | 工具调用格式与 Converse API 不兼容（要求字符串而不是 JSON）                              |
+| **AI21 Jamba**            | 速率限制严格（每分钟 1～2 个请求），难以可靠测试或用于生产环境                           |
+| **Meta Llama 3.3/3.1**    | 工具调用结果处理不稳定，会导致多轮任务流意外失败                                          |
+| **Mistral Magistral**     | 模型不支持工具调用                                                                        |
+| **Moonshot K2-Thinking**  | 工具调用的流式输出不稳定，不适合生产环境                                                  |
+| **Qwen3-VL**              | 工具调用的流式输出不稳定，多模态与工具结合使用时会间歇性失败                              |
 
 > [!IMPORTANT]
-> **Rate Limits & Quota Management**
+> **速率限制与配额管理**
 >
-> Default AWS Bedrock quotas for Claude models are **extremely restrictive** (2-20 requests/minute for new accounts). For production penetration testing:
+> AWS Bedrock 为 Claude 模型提供的默认配额**非常严格**（新账号每分钟 2～20 个请求）。用于生产环境的渗透测试前，请执行以下操作：
 >
-> 1. **Request quota increases** through AWS Service Quotas console for models you plan to use
-> 2. **Use Amazon Nova models** - higher default quotas and excellent performance
-> 3. **Enable provisioned throughput** for consistent high-volume testing
-> 4. **Monitor usage** - AWS throttles aggressively at quota limits
+> 1. 在 AWS Service Quotas 控制台为准备使用的模型**申请提高配额**
+> 2. **使用 Amazon Nova 模型**，其默认配额较高，性能也较好
+> 3. **启用预置吞吐量**，以稳定执行大批量测试
+> 4. **监控用量**，达到配额上限时 AWS 会严格限流
 >
-> Without quota increases, expect frequent delays and workflow interruptions.
+> 如果不提高配额，任务流会频繁延迟或中断。
 
 > [!WARNING]
-> **Converse API Requirements**
+> **Converse API 要求**
 >
-> PentAGI uses Amazon Bedrock **Converse API** for unified model access. All supported models require:
+> PentAGI 通过 Amazon Bedrock **Converse API** 统一访问模型。所有受支持模型都必须具备以下能力：
 >
-> - ✅ Converse/ConverseStream API support
-> - ✅ Tool use (function calling) for penetration testing workflows
-> - ✅ Streaming tool use for real-time feedback
+> - ✅ 支持 Converse/ConverseStream API
+> - ✅ 支持用于渗透测试任务流的工具调用（函数调用）
+> - ✅ 支持流式工具调用，以便实时反馈
 >
-> Verify model capabilities at: [AWS Bedrock Model Features](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html)
+> 请在以下页面核对模型能力：[AWS Bedrock 模型功能](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html)。
 
-**Key Features**:
-- **Automatic Prompt Caching**: 40-70% cost reduction on repeated context (Claude 4.x models)
-- **Extended Thinking**: Step-by-step reasoning for complex security analysis (Claude, DeepSeek R1, OpenAI GPT)
-- **Multimodal Analysis**: Process screenshots, diagrams, video for comprehensive testing (Nova, Claude, Mistral, Kimi)
-- **Tool Calling**: Seamless integration with 20+ pentesting tools via function calling
-- **Streaming**: Real-time response streaming for interactive security assessment workflows
+**主要特性**：
+- **自动提示词缓存**：重复使用上下文时可降低 40%～70% 的成本（Claude 4.x 模型）
+- **扩展思考**：逐步推理复杂安全分析（Claude、DeepSeek R1、OpenAI GPT）
+- **多模态分析**：处理截图、图表和视频，执行综合测试（Nova、Claude、Mistral、Kimi）
+- **工具调用**：通过函数调用接入 20 多种渗透测试工具
+- **流式输出**：为交互式安全评估任务流实时返回响应
 
-### DeepSeek Provider Configuration
+### DeepSeek 提供商配置
 
-PentAGI integrates with DeepSeek, providing access to advanced AI models with strong reasoning, coding capabilities, and context caching at competitive prices.
+PentAGI 可接入 DeepSeek，以较低价格使用具有较强推理、编码和上下文缓存能力的模型。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable              | Default Value              | Description                                         |
+| 变量                  | 默认值                     | 说明                                                |
 | --------------------- | -------------------------- | --------------------------------------------------- |
-| `DEEPSEEK_API_KEY`    |                            | DeepSeek API key for authentication                 |
-| `DEEPSEEK_SERVER_URL` | `https://api.deepseek.com` | DeepSeek API endpoint URL                           |
-| `DEEPSEEK_PROVIDER`   |                            | Provider prefix for LiteLLM integration (optional)  |
+| `DEEPSEEK_API_KEY`    |                            | 用于认证的 DeepSeek API 密钥                        |
+| `DEEPSEEK_SERVER_URL` | `https://api.deepseek.com` | DeepSeek API 端点 URL                               |
+| `DEEPSEEK_PROVIDER`   |                            | 接入 LiteLLM 时使用的提供商前缀（可选）             |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Direct API usage
+# 直连 API
 DEEPSEEK_API_KEY=your_deepseek_api_key
 DEEPSEEK_SERVER_URL=https://api.deepseek.com
 
-# With LiteLLM proxy
+# 通过 LiteLLM 代理连接
 DEEPSEEK_API_KEY=your_litellm_key
 DEEPSEEK_SERVER_URL=http://litellm-proxy:4000
-DEEPSEEK_PROVIDER=deepseek  # Adds prefix to model names (deepseek/deepseek-v4-flash) for LiteLLM
+DEEPSEEK_PROVIDER=deepseek  # 为 LiteLLM 添加模型名称前缀（deepseek/deepseek-v4-flash）
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 2 DeepSeek V4 models with tool calling, streaming, hybrid thinking/non-thinking modes, and context caching. Both models support thinking mode by default and can be switched to non-thinking mode via `extra_body`. Models marked with `*` are used in default configuration.
+PentAGI 支持 2 个 DeepSeek V4 模型，可使用工具调用、流式输出、思考/非思考混合模式和上下文缓存。两个模型默认均启用思考模式，也可以通过 `extra_body` 切换到非思考模式。标有 `*` 的模型用于默认配置。
 
-| Model ID              | Thinking | Max Output | Context | Price (Input/Output/Cache) | Use Case                                             |
+| 模型 ID               | 思考     | 最大输出   | 上下文  | 价格（输入/输出/缓存）     | 适用场景                                             |
 | --------------------- | -------- | ---------- | ------- | -------------------------- | ---------------------------------------------------- |
-| `deepseek-v4-flash`*  | ✅ hybrid | 384K       | 1M      | $0.14/$0.28/$0.0028        | Utility agents, general dialogue, fast tool calling  |
-| `deepseek-v4-pro`*    | ✅ hybrid | 384K       | 1M      | $1.74/$3.48/$0.0145        | Advanced reasoning, complex logic, security analysis |
+| `deepseek-v4-flash`*  | ✅ 混合   | 384K       | 1M      | $0.14/$0.28/$0.0028        | 辅助型智能体、一般对话、快速工具调用                 |
+| `deepseek-v4-pro`*    | ✅ 混合   | 384K       | 1M      | $1.74/$3.48/$0.0145        | 高级推理、复杂逻辑、安全分析                         |
 
-**Prices**: Per 1M tokens. Cache pricing applies to prompt tokens served from cache (input cache hit, reduced to 1/10 of launch price since 2026-04-26). Both models support hybrid thinking — `thinking` mode is enabled by default; pass `extra_body.thinking.type: disabled` to switch to non-thinking mode for faster/cheaper responses.
+**价格**：按每 100 万令牌计费。缓存价格适用于从缓存读取的提示词令牌（输入缓存命中价自 2026 年 4 月 26 日起降至首发价格的 1/10）。两个模型均支持混合思考；默认开启 `thinking` 模式，传入 `extra_body.thinking.type: disabled` 可切换到非思考模式，以更快、更低成本地响应。
 
-> **Pricing Note (deepseek-v4-pro)**: The 75% promotional discount on `deepseek-v4-pro` officially ended on 2026-05-31 15:59 UTC. The prices above reflect the standard post-promotional pricing. If you have legacy configurations using the discounted prices ($0.435/$0.87/$0.003625), update them to the current rates for accurate cost tracking.
+> **价格说明（deepseek-v4-pro）**：`deepseek-v4-pro` 的 75% 推广折扣已于 2026 年 5 月 31 日 15:59（UTC）结束。上表列出折扣结束后的标准价格。如果旧配置仍使用折扣价（$0.435/$0.87/$0.003625），请更新为当前价格，以便准确统计成本。
 
-> The legacy model names `deepseek-chat` and `deepseek-reasoner` are scheduled
-> for deprecation by DeepSeek on 2026-07-24. Existing user configurations
-> referencing the legacy names continue to work until then; the defaults above
-> use the current V4 names. `deepseek-chat` maps to `deepseek-v4-flash`
-> non-thinking mode; `deepseek-reasoner` maps to `deepseek-v4-flash` thinking mode.
+> DeepSeek 计划于 2026 年 7 月 24 日弃用旧模型名称 `deepseek-chat` 和
+> `deepseek-reasoner`。在此之前，引用旧名称的现有用户配置仍可使用；
+> 上述默认配置已改用当前 V4 名称。`deepseek-chat` 映射到
+> `deepseek-v4-flash` 的非思考模式；`deepseek-reasoner` 映射到
+> `deepseek-v4-flash` 的思考模式。
 
-**Default Agent Configuration**:
+**默认智能体配置**：
 
-Strategy: prefer `deepseek-v4-flash` (12x cheaper input, 12x cheaper output) as the workhorse for utility/lightweight agents; reserve `deepseek-v4-pro` for complex multi-step reasoning. The `installer` agent runs on Flash with thinking enabled because environment setup tasks (shell commands, config edits) rarely require pro-level reasoning. Run A/B tests on your own workloads before promoting more agents to Pro.
+配置策略是优先将 `deepseek-v4-flash` 用作辅助型和轻量智能体的主力模型，其输入和输出成本均为 Pro 的 1/12；`deepseek-v4-pro` 则留给复杂的多步骤推理。`installer` 智能体使用开启思考的 Flash，因为环境设置任务（shell 命令、配置修改）通常不需要 Pro 级推理。将更多智能体切换到 Pro 前，请先使用自己的工作负载进行 A/B 测试。
 
-| Agent Role                                  | Default Model        | Thinking | Reasoning Effort | Max Output | Temperature | Top P |
+| 智能体角色                                  | 默认模型             | 思考     | 推理强度         | 最大输出   | 温度        | Top P |
 | ------------------------------------------- | -------------------- | -------- | ---------------- | ---------- | ----------- | ----- |
-| Generator / Refiner                         | `deepseek-v4-pro`    | Enabled  | High             | 32768      | (auto)      | (auto) |
-| Coder                                       | `deepseek-v4-pro`    | Enabled  | High             | 20480      | (auto)      | (auto) |
-| Primary Agent / Assistant / Pentester       | `deepseek-v4-pro`    | Enabled  | High             | 16384      | (auto)      | (auto) |
-| Adviser (mentor/planner)                    | `deepseek-v4-pro`    | Enabled  | High             | 8192       | (auto)      | (auto) |
-| Installer                                   | `deepseek-v4-flash`  | Enabled  | High             | 12288      | (auto)      | (auto) |
-| Reflector / Searcher / Enricher             | `deepseek-v4-flash`  | Disabled | —                | 4096       | 0.5         | 0.9   |
-| Simple / Simple JSON                        | `deepseek-v4-flash`  | Disabled | —                | 2048       | 0.3         | 0.9   |
+| Generator（生成）/ Refiner（优化）          | `deepseek-v4-pro`    | 开启     | 高               | 32768      | （自动）    | （自动） |
+| Coder（编码）                               | `deepseek-v4-pro`    | 开启     | 高               | 20480      | （自动）    | （自动） |
+| Primary Agent（主智能体）/ Assistant（助手）/ Pentester（渗透测试） | `deepseek-v4-pro` | 开启 | 高 | 16384 | （自动） | （自动） |
+| Adviser（导师/规划）                        | `deepseek-v4-pro`    | 开启     | 高               | 8192       | （自动）    | （自动） |
+| Installer（安装）                           | `deepseek-v4-flash`  | 开启     | 高               | 12288      | （自动）    | （自动） |
+| Reflector（反思）/ Searcher（搜索）/ Enricher（补充） | `deepseek-v4-flash` | 关闭 | — | 4096 | 0.5 | 0.9 |
+| Simple（简单任务）/ Simple JSON             | `deepseek-v4-flash`  | 关闭     | —                | 2048       | 0.3         | 0.9   |
 
-> **Note**: When thinking mode is enabled, DeepSeek silently ignores `temperature`, `top_p`, `presence_penalty`, and `frequency_penalty`. The langchaingo client automatically nullifies `temperature`/`top_p` when `reasoning_effort` is set, so they appear as "(auto)" in the table above. All thinking-enabled agents also explicitly pass `extra_body.thinking.type: enabled` as defensive coding against future provider default changes.
+> **注意**：开启思考模式后，DeepSeek 会直接忽略 `temperature`、`top_p`、`presence_penalty` 和 `frequency_penalty`。设置 `reasoning_effort` 时，langchaingo 客户端会自动将 `temperature`/`top_p` 置空，因此上表将其标为“（自动）”。所有开启思考的智能体还会显式传入 `extra_body.thinking.type: enabled`，防止提供商将来更改默认值后影响现有行为。
 
-**Key Features**:
-- **Hybrid Thinking Modes**: Switch between thinking (deep reasoning) and non-thinking (fast) modes via `extra_body.thinking.type`
-- **Automatic Prompt Caching**: Significant cost reduction on repeated context via cache-hit pricing (1/10 of launch price)
-- **Extended Thinking**: Reinforcement learning CoT for complex security analysis (both V4 models)
-- **Strong Coding**: Optimized for code generation and exploit development
-- **Long Context**: 1M token context window with up to 384K output tokens
-- **Tool Calling**: Seamless integration with 20+ pentesting tools via function calling
-- **Streaming**: Real-time response streaming for interactive workflows
-- **Multilingual**: Strong Chinese and English support
-- **Additional Features**: JSON Output, Chat Prefix Completion (beta), FIM/Fill-in-the-Middle Completion (non-thinking mode only)
+**主要特性**：
+- **混合思考模式**：通过 `extra_body.thinking.type` 在思考（深度推理）与非思考（快速响应）模式间切换
+- **自动提示词缓存**：按缓存命中价格计费，可明显降低重复上下文的成本（首发价格的 1/10）
+- **扩展思考**：两个 V4 模型都通过强化学习思维链处理复杂安全分析
+- **较强的编码能力**：针对代码生成和漏洞利用开发进行了优化
+- **长上下文**：上下文窗口为 100 万令牌，最多输出 384K 令牌
+- **工具调用**：通过函数调用接入 20 多种渗透测试工具
+- **流式输出**：为交互式任务流实时返回响应
+- **多语言**：对中文和英文的支持较好
+- **其他功能**：JSON 输出、聊天前缀补全（测试版）、FIM/中间填充补全（仅限非思考模式）
 
-**Concurrency Limits**: `deepseek-v4-flash`: 2500 concurrent requests; `deepseek-v4-pro`: 500 concurrent requests.
+**并发限制**：`deepseek-v4-flash` 支持 2500 个并发请求；`deepseek-v4-pro` 支持 500 个并发请求。
 
-**LiteLLM Integration**: Set `DEEPSEEK_PROVIDER=deepseek` to enable model name prefixing when using default PentAGI configurations with LiteLLM proxy. Leave empty for direct API usage.
+**LiteLLM 集成**：通过 LiteLLM 代理使用 PentAGI 默认配置时，设置 `DEEPSEEK_PROVIDER=deepseek` 可为模型名称添加前缀；直连 API 时请留空。
 
-### GLM Provider Configuration
+### GLM 提供商配置
 
-PentAGI integrates with GLM from Zhipu AI (Z.AI), providing advanced language models with MoE architecture, strong reasoning, and agentic capabilities developed by Tsinghua University.
+PentAGI 可接入智谱 AI（Z.AI）的 GLM，使用由清华大学研发、采用 MoE 架构并具有较强推理和智能体能力的高级语言模型。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable          | Default Value                   | Description                                                |
+| 变量              | 默认值                          | 说明                                                       |
 | ----------------- | ------------------------------- | ---------------------------------------------------------- |
-| `GLM_API_KEY`     |                                 | GLM API key for authentication                             |
-| `GLM_SERVER_URL`  | `https://api.z.ai/api/paas/v4`  | GLM API endpoint URL (international)                       |
-| `GLM_PROVIDER`    |                                 | Provider prefix for LiteLLM integration (optional)         |
+| `GLM_API_KEY`     |                                 | 用于认证的 GLM API 密钥                                    |
+| `GLM_SERVER_URL`  | `https://api.z.ai/api/paas/v4`  | GLM API 端点 URL（国际站）                                 |
+| `GLM_PROVIDER`    |                                 | 接入 LiteLLM 时使用的提供商前缀（可选）                    |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Direct API usage (international endpoint)
+# 直连 API（国际站端点）
 GLM_API_KEY=your_glm_api_key
 GLM_SERVER_URL=https://api.z.ai/api/paas/v4
 
-# Alternative endpoints
-GLM_SERVER_URL=https://open.bigmodel.cn/api/paas/v4  # China
-GLM_SERVER_URL=https://api.z.ai/api/coding/paas/v4   # Coding-specific
+# 其他端点
+GLM_SERVER_URL=https://open.bigmodel.cn/api/paas/v4  # 中国站
+GLM_SERVER_URL=https://api.z.ai/api/coding/paas/v4   # 编码专用
 
-# With LiteLLM proxy
+# 通过 LiteLLM 代理连接
 GLM_API_KEY=your_litellm_key
 GLM_SERVER_URL=http://litellm-proxy:4000
-GLM_PROVIDER=zai  # Adds prefix to model names (zai/glm-4) for LiteLLM
+GLM_PROVIDER=zai  # 为 LiteLLM 添加模型名称前缀（zai/glm-4）
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 13 GLM models with tool calling, streaming, hybrid thinking modes, and prompt caching. Models marked with `*` are used in default configuration. Thinking is controlled via `extra_body.thinking.type` ("enabled"/"disabled"); unlike Kimi, GLM is permissive about temperature in either mode.
+PentAGI 支持 13 个 GLM 模型，可使用工具调用、流式输出、混合思考模式和提示词缓存。标有 `*` 的模型用于默认配置。思考模式通过 `extra_body.thinking.type`（`"enabled"`/`"disabled"`）控制；与 Kimi 不同，GLM 在两种模式下对 temperature 的限制都较少。
 
-**GLM-5.x Series - Latest Generation (200K context, 128K max output)**
+**GLM-5.x 系列：最新一代（200K 上下文，最大输出 128K）**
 
-| Model ID         | Thinking | Context | Max Output | Price (Input/Output/Cache) | Use Case                                                            |
+| 模型 ID          | 思考     | 上下文  | 最大输出   | 价格（输入/输出/缓存）     | 适用场景                                                            |
 | ---------------- | -------- | ------- | ---------- | -------------------------- | ------------------------------------------------------------------- |
-| `glm-5.1`*       | ✅ Hybrid | 200K    | 128K       | $1.40/$4.40/$0.26          | Newest flagship: 8h sustained autonomous execution, Claude Opus 4.6-aligned (generator/refiner/adviser/coder/pentester default) |
-| `glm-5`          | ✅ Hybrid | 200K    | 128K       | $1.00/$3.20/$0.20          | Foundation for Agentic Engineering, MoE 744B/40B active, Claude Opus 4.5-level coding |
-| `glm-5-turbo`*   | ✅ Hybrid | 200K    | 128K       | $1.20/$4.00/$0.24          | OpenClaw-native: optimized for tool invocation, persistent tasks, long-chain execution (primary_agent/assistant default) |
+| `glm-5.1`*       | ✅ 混合   | 200K    | 128K       | $1.40/$4.40/$0.26          | 最新旗舰：支持持续 8 小时自主执行，对标 Claude Opus 4.6（`generator`/`refiner`/`adviser`/`coder`/`pentester` 的默认模型） |
+| `glm-5`          | ✅ 混合   | 200K    | 128K       | $1.00/$3.20/$0.20          | 面向智能体工程的基础模型，MoE 总参数 744B/激活参数 40B，编码能力达到 Claude Opus 4.5 水平 |
+| `glm-5-turbo`*   | ✅ 混合   | 200K    | 128K       | $1.20/$4.00/$0.24          | OpenClaw 原生模型，针对工具调用、持久任务和长链执行优化（`primary_agent`/`assistant` 的默认模型） |
 
-**GLM-4.7 Series - Premium with Interleaved Thinking**
+**GLM-4.7 系列：支持交错思考的高端模型**
 
-| Model ID          | Thinking | Context | Max Output | Price (Input/Output/Cache) | Use Case                                            |
+| 模型 ID           | 思考     | 上下文  | 最大输出   | 价格（输入/输出/缓存）     | 适用场景                                            |
 | ----------------- | -------- | ------- | ---------- | -------------------------- | --------------------------------------------------- |
-| `glm-4.7`         | ✅ Hybrid | 200K    | 128K       | $0.60/$2.20/$0.11          | Enhanced programming, stable multi-step reasoning   |
-| `glm-4.7-flashx`  | ✅ Hybrid | 200K    | 128K       | $0.07/$0.40/$0.01          | Ultra-cheap with priority GPU, but lower RPM limits (avoid for high-frequency use) |
-| `glm-4.7-flash`   | ✅ Hybrid | 200K    | 128K       | Free/Free/Free             | Free ~30B SOTA model, 1 concurrent request          |
+| `glm-4.7`         | ✅ 混合   | 200K    | 128K       | $0.60/$2.20/$0.11          | 增强编程能力，多步骤推理稳定                        |
+| `glm-4.7-flashx`  | ✅ 混合   | 200K    | 128K       | $0.07/$0.40/$0.01          | 价格很低并使用优先 GPU，但 RPM 限制较低，不适合高频使用 |
+| `glm-4.7-flash`   | ✅ 混合   | 200K    | 128K       | 免费/免费/免费             | 免费的约 30B 参数先进模型，仅支持 1 个并发请求      |
 
-**GLM-4.6 Series - Balanced with Auto-Thinking**
+**GLM-4.6 系列：均衡的自动思考模型**
 
-| Model ID  | Thinking | Context | Max Output | Price (Input/Output/Cache) | Use Case                                          |
+| 模型 ID   | 思考     | 上下文  | 最大输出   | 价格（输入/输出/缓存）     | 适用场景                                          |
 | --------- | -------- | ------- | ---------- | -------------------------- | ------------------------------------------------- |
-| `glm-4.6` | ✅ Auto   | 200K    | 128K       | $0.60/$2.20/$0.11          | Balanced, streaming tool calls, token-efficient   |
+| `glm-4.6` | ✅ 自动   | 200K    | 128K       | $0.60/$2.20/$0.11          | 性能均衡，支持流式工具调用，令牌效率较高          |
 
-**GLM-4.5 Series - Unified Reasoning/Coding/Agents**
+**GLM-4.5 系列：统一支持推理、编码和智能体**
 
-| Model ID         | Thinking | Context | Max Output | Price (Input/Output/Cache) | Use Case                                          |
+| 模型 ID          | 思考     | 上下文  | 最大输出   | 价格（输入/输出/缓存）     | 适用场景                                          |
 | ---------------- | -------- | ------- | ---------- | -------------------------- | ------------------------------------------------- |
-| `glm-4.5`        | ✅ Auto   | 128K    | 96K        | $0.60/$2.20/$0.11          | Unified, MoE 355B/32B active                      |
-| `glm-4.5-x`      | ✅ Auto   | 128K    | 96K        | $2.20/$8.90/$0.45          | Ultra-fast premium, lowest latency                |
-| `glm-4.5-air`*   | ✅ Auto   | 128K    | 96K        | $0.20/$1.10/$0.03          | Cost-effective MoE 106B/12B (simple/simple_json/reflector/searcher/enricher/installer default) |
-| `glm-4.5-airx`   | ✅ Auto   | 128K    | 96K        | $1.10/$4.50/$0.22          | Accelerated Air with priority GPU                 |
-| `glm-4.5-flash`  | ✅ Auto   | 128K    | 96K        | Free/Free/Free             | Free with reasoning/coding/agents support         |
+| `glm-4.5`        | ✅ 自动   | 128K    | 96K        | $0.60/$2.20/$0.11          | 统一模型，MoE 总参数 355B/激活参数 32B            |
+| `glm-4.5-x`      | ✅ 自动   | 128K    | 96K        | $2.20/$8.90/$0.45          | 超高速高端模型，延迟最低                          |
+| `glm-4.5-air`*   | ✅ 自动   | 128K    | 96K        | $0.20/$1.10/$0.03          | 高性价比 MoE，总参数 106B/激活参数 12B（`simple`/`simple_json`/`reflector`/`searcher`/`enricher`/`installer` 的默认模型） |
+| `glm-4.5-airx`   | ✅ 自动   | 128K    | 96K        | $1.10/$4.50/$0.22          | 使用优先 GPU 加速的 Air 模型                      |
+| `glm-4.5-flash`  | ✅ 自动   | 128K    | 96K        | 免费/免费/免费             | 免费，支持推理、编码和智能体任务                  |
 
-**GLM-4 Legacy - Dense Architecture**
+**旧版 GLM-4：稠密架构**
 
-| Model ID              | Thinking | Context | Max Output | Price (Input/Output) | Use Case                                      |
+| 模型 ID               | 思考     | 上下文  | 最大输出   | 价格（输入/输出）   | 适用场景                                      |
 | --------------------- | -------- | ------- | ---------- | -------------------- | --------------------------------------------- |
-| `glm-4-32b-0414-128k` | ❌        | 128K    | 16K        | $0.10/$0.10          | Ultra-budget dense 32B, parsing without reasoning |
+| `glm-4-32b-0414-128k` | ❌        | 128K    | 16K        | $0.10/$0.10          | 超低成本的稠密 32B 模型，用于无需推理的解析任务 |
 
-**Prices**: Per 1M tokens. Cache pricing is for prompt cache hit; cache storage is currently free per Z.AI promotion. GLM-4-32B has no cache support.
+**价格**：按每 100 万令牌计费。缓存价格适用于提示词缓存命中；根据 Z.AI 的推广活动，缓存存储目前免费。GLM-4-32B 不支持缓存。
 
-**Default Agent Configuration**:
+**默认智能体配置**：
 
-Strategy: `glm-5.1` (newest flagship, $1.40 input) for critical reasoning, `glm-5-turbo` (OpenClaw-native, agent-optimized) for orchestration, `glm-4.5-air` (cheap MoE with hybrid thinking and reliable RPM) for all utility/installer agents. `glm-4.7-flashx` is avoided as default due to lower RPM limits causing frequent 429 errors at high frequency.
+配置策略是让 `glm-5.1`（最新旗舰，输入价格 $1.40）处理关键推理，`glm-5-turbo`（OpenClaw 原生，针对智能体优化）负责编排，`glm-4.5-air`（低成本 MoE，支持混合思考且 RPM 稳定）用于所有辅助型和安装智能体。`glm-4.7-flashx` 的 RPM（每分钟请求数）限制较低，高频调用时容易出现 429 错误，因此不作为默认模型。
 
-| Agent Role                          | Default Model | Thinking | Temperature | Top P | Max Output |
+| 智能体角色                          | 默认模型      | 思考     | 温度        | Top P | 最大输出   |
 | ----------------------------------- | ------------- | -------- | ----------- | ----- | ---------- |
-| Generator / Refiner                 | `glm-5.1`     | Enabled  | 1.0         | 0.95  | 32768      |
-| Coder                               | `glm-5.1`     | Enabled  | 1.0         | 0.95  | 20480      |
-| Adviser / Pentester                 | `glm-5.1`     | Enabled  | 1.0         | 0.95  | 16384      |
-| Primary Agent / Assistant           | `glm-5-turbo` | Enabled  | 1.0         | 0.95  | 16384      |
-| Installer                           | `glm-4.5-air` | Enabled  | 1.0         | 0.95  | 16384      |
-| Simple / Reflector                  | `glm-4.5-air` | Disabled | 0.6         | 0.9   | 8192       |
-| Searcher / Enricher / Simple JSON   | `glm-4.5-air` | Disabled | 0.6         | 0.9   | 4096       |
+| Generator（生成）/ Refiner（优化）  | `glm-5.1`     | 开启     | 1.0         | 0.95  | 32768      |
+| Coder（编码）                       | `glm-5.1`     | 开启     | 1.0         | 0.95  | 20480      |
+| Adviser（顾问）/ Pentester（渗透测试） | `glm-5.1`  | 开启     | 1.0         | 0.95  | 16384      |
+| Primary Agent（主智能体）/ Assistant（助手） | `glm-5-turbo` | 开启 | 1.0 | 0.95 | 16384 |
+| Installer（安装）                   | `glm-4.5-air` | 开启     | 1.0         | 0.95  | 16384      |
+| Simple（简单任务）/ Reflector（反思） | `glm-4.5-air` | 关闭   | 0.6         | 0.9   | 8192       |
+| Searcher（搜索）/ Enricher（补充）/ Simple JSON | `glm-4.5-air` | 关闭 | 0.6 | 0.9 | 4096 |
 
-> **Note on temperature**: GLM accepts both `1.0` and `0.6` in either thinking/non-thinking mode (per Z.AI docs). langchaingo's `IsReasoningModel` matches `glm-4.5*`/`glm-4.6*`/`glm-4.7*` prefixes and force-overrides temperature to 1.0 in `createChatRequest` — this is harmless for GLM (unlike Kimi) but means temperature values for those models in YAML are advisory. `glm-5`/`glm-5.1`/`glm-5-turbo` are not matched, so explicit values pass through unchanged.
+> **温度说明**：根据 Z.AI 文档，GLM 在思考和非思考模式下都接受 `1.0` 与 `0.6`。langchaingo 的 `IsReasoningModel` 会匹配 `glm-4.5*`/`glm-4.6*`/`glm-4.7*` 前缀，并在 `createChatRequest` 中强制将温度覆盖为 1.0。这对 GLM 没有影响（Kimi 则不同），但意味着 YAML 中这些模型的温度值仅供参考。`glm-5`/`glm-5.1`/`glm-5-turbo` 不会被匹配，因此显式设置的值会原样传入。
 
-**Thinking Modes**:
-- **Hybrid** (GLM-5.x, GLM-4.7): Explicit toggle via `extra_body.thinking.type`
-- **Auto** (GLM-4.6, GLM-4.5 series): Model automatically determines when reasoning is needed
-- **Preserved Thinking** (Z.AI Coding capability): all thinking-enabled agents in PentAGI also pass `extra_body.thinking.clear_thinking: false` so that `reasoning_content` from previous assistant turns is retained across the conversation. This is required on the standard API endpoint (`/api/paas/v4`) — on the Coding Plan endpoint it would be enabled by default. Improves reasoning continuity and cache hit rates in multi-turn tool call chains.
-- All thinking-enabled agents also pass `extra_body.tool_choice: auto` defensively
+**思考模式**：
+- **混合模式**（GLM-5.x、GLM-4.7）：通过 `extra_body.thinking.type` 显式开关
+- **自动模式**（GLM-4.6、GLM-4.5 系列）：模型自动判断何时需要推理
+- **保留思考**（Z.AI Coding 功能）：PentAGI 中所有开启思考的智能体还会传入 `extra_body.thinking.clear_thinking: false`，在整个对话中保留助手前几轮的 `reasoning_content`。标准 API 端点（`/api/paas/v4`）要求显式设置此项；Coding Plan 端点则默认开启。这样可以保持多轮工具调用链中的推理连续性，并提高缓存命中率
+- 所有开启思考的智能体还会传入 `extra_body.tool_choice: auto`，防止提供商默认行为变化后影响工具选择
 
-**Key Features**:
-- **Long-Horizon Tasks**: GLM-5.1 supports 8-hour sustained autonomous execution, ideal for complex multi-stage agentic workflows
-- **OpenClaw-Native Orchestration**: GLM-5-Turbo is specifically optimized for tool invocation, instruction following, and long-chain execution
-- **Prompt Caching**: Significant cost reduction on repeated context (cached input pricing shown)
-- **Ultra-Long Context**: 200K tokens for GLM-5.x/4.7/4.6 series
-- **MoE Architecture**: Efficient 744B/40B active (GLM-5/5.1), 355B/32B (GLM-4.5), 106B/12B (GLM-4.5-Air)
-- **Tool Calling**: Seamless integration with 20+ pentesting tools via function calling
-- **Streaming**: Real-time streaming with streaming tool calls support (GLM-4.6+)
-- **Multilingual**: Exceptional Chinese and English NLP capabilities
-- **Free Options**: GLM-4.7-Flash and GLM-4.5-Flash for prototyping and experimentation
+**主要特性**：
+- **长周期任务**：GLM-5.1 支持持续 8 小时自主执行，适合复杂的多阶段智能体任务流
+- **OpenClaw 原生编排**：GLM-5-Turbo 专门针对工具调用、指令遵循和长链执行优化
+- **提示词缓存**：重复使用上下文时可明显降低成本（表中已列出缓存输入价格）
+- **超长上下文**：GLM-5.x/4.7/4.6 系列支持 200K 令牌
+- **MoE 架构**：GLM-5/5.1 为总参数 744B/激活参数 40B，GLM-4.5 为 355B/32B，GLM-4.5-Air 为 106B/12B
+- **工具调用**：通过函数调用接入 20 多种渗透测试工具
+- **流式输出**：支持实时流式输出及流式工具调用（GLM-4.6+）
+- **多语言**：具有出色的中文和英文自然语言处理能力
+- **免费选项**：GLM-4.7-Flash 和 GLM-4.5-Flash 可用于原型开发和实验
 
-**LiteLLM Integration**: Set `GLM_PROVIDER=zai` to enable model name prefixing when using default PentAGI configurations with LiteLLM proxy. Leave empty for direct API usage.
+**LiteLLM 集成**：通过 LiteLLM 代理使用 PentAGI 默认配置时，设置 `GLM_PROVIDER=zai` 可为模型名称添加前缀；直连 API 时请留空。
 
-### Kimi Provider Configuration
+### Kimi 提供商配置
 
-PentAGI integrates with Kimi from Moonshot AI, providing ultra-long context models with multimodal capabilities perfect for analyzing extensive codebases and documentation.
+PentAGI 可接入 Moonshot AI 的 Kimi，使用具有多模态能力的超长上下文模型，适合分析大型代码库和文档。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable           | Default Value                | Description                                         |
-| ------------------ | -----------------------------| --------------------------------------------------- |
-| `KIMI_API_KEY`     |                              | Kimi API key for authentication                     |
-| `KIMI_SERVER_URL`  | `https://api.moonshot.ai/v1` | Kimi API endpoint URL (international)               |
-| `KIMI_PROVIDER`    |                              | Provider prefix for LiteLLM integration (optional)  |
+| 变量               | 默认值                       | 说明                                                |
+| ------------------ | ---------------------------- | --------------------------------------------------- |
+| `KIMI_API_KEY`     |                              | 用于认证的 Kimi API 密钥                            |
+| `KIMI_SERVER_URL`  | `https://api.moonshot.ai/v1` | Kimi API 端点 URL（国际站）                         |
+| `KIMI_PROVIDER`    |                              | 接入 LiteLLM 时使用的提供商前缀（可选）             |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Direct API usage (international endpoint)
+# 直连 API（国际站端点）
 KIMI_API_KEY=your_kimi_api_key
 KIMI_SERVER_URL=https://api.moonshot.ai/v1
 
-# Alternative endpoint
-KIMI_SERVER_URL=https://api.moonshot.cn/v1  # China
+# 其他端点
+KIMI_SERVER_URL=https://api.moonshot.cn/v1  # 中国站
 
-# With LiteLLM proxy
+# 通过 LiteLLM 代理连接
 KIMI_API_KEY=your_litellm_key
 KIMI_SERVER_URL=http://litellm-proxy:4000
-KIMI_PROVIDER=moonshot  # Adds prefix to model names (moonshot/kimi-k2.5) for LiteLLM
+KIMI_PROVIDER=moonshot  # 为 LiteLLM 添加模型名称前缀（moonshot/kimi-k2.5）
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 8 Kimi/Moonshot models with tool calling, streaming, hybrid thinking modes, and multimodal capabilities (text/image/video for K2.x). All `kimi-k2-*` legacy models (turbo-preview, 0905-preview, 0711-preview, thinking, thinking-turbo) were deprecated by Moonshot on 2026-05-25 and are NOT included. Models marked with `*` are used in default configuration.
+PentAGI 支持 8 个 Kimi/Moonshot 模型，可使用工具调用、流式输出、混合思考模式和多模态能力（K2.x 支持文本/图像/视频）。Moonshot 已于 2026 年 5 月 25 日弃用所有旧版 `kimi-k2-*` 模型（turbo-preview、0905-preview、0711-preview、thinking、thinking-turbo），此处**未将其列入**。标有 `*` 的模型用于默认配置。
 
-**Kimi K2.x Series - Multimodal Flagship**
+**Kimi K2.x 系列：多模态旗舰模型**
 
-| Model ID         | Thinking | Multimodal | Context | Price (Input Miss / Output / Cache Hit) | Use Case                                                |
+| 模型 ID          | 思考     | 多模态     | 上下文  | 价格（输入未命中/输出/缓存命中）        | 适用场景                                                |
 | ---------------- | -------- | ---------- | ------- | --------------------------------------- | ------------------------------------------------------- |
-| `kimi-k2.6`*     | ✅ hybrid | ✅          | 256K    | $0.95 / $4.00 / $0.16                   | Latest flagship: native multimodal, stronger code, improved instruction compliance (generator/refiner/adviser/coder/pentester default) |
-| `kimi-k2.5`*     | ✅ hybrid | ✅          | 256K    | $0.60 / $3.00 / $0.10                   | Previous-gen: 36% cheaper input, same architecture (primary/assistant/installer/utility default) |
+| `kimi-k2.6`*     | ✅ 混合   | ✅          | 256K    | $0.95 / $4.00 / $0.16                   | 最新旗舰：原生多模态，编码和指令遵循能力更强（`generator`/`refiner`/`adviser`/`coder`/`pentester` 的默认模型） |
+| `kimi-k2.5`*     | ✅ 混合   | ✅          | 256K    | $0.60 / $3.00 / $0.10                   | 上一代同架构模型，输入成本低 36%（`primary`/`assistant`/`installer`/辅助型智能体的默认模型） |
 
-**Moonshot V1 Series - Generation Models (Flexible Parameters)**
+**Moonshot V1 系列：参数灵活的生成模型**
 
-| Model ID            | Thinking | Multimodal | Context | Price (Input / Output) | Use Case                                       |
+| 模型 ID             | 思考     | 多模态     | 上下文  | 价格（输入/输出）     | 适用场景                                       |
 | ------------------- | -------- | ---------- | ------- | ---------------------- | ---------------------------------------------- |
-| `moonshot-v1-8k`    | ❌        | ❌          | 8K      | $0.20 / $2.00          | Short text generation, ultra-cheap             |
-| `moonshot-v1-32k`   | ❌        | ❌          | 32K     | $1.00 / $3.00          | Long text generation                           |
-| `moonshot-v1-128k`  | ❌        | ❌          | 128K    | $2.00 / $5.00          | Very long context                              |
+| `moonshot-v1-8k`    | ❌        | ❌          | 8K      | $0.20 / $2.00          | 短文本生成，成本很低                           |
+| `moonshot-v1-32k`   | ❌        | ❌          | 32K     | $1.00 / $3.00          | 长文本生成                                     |
+| `moonshot-v1-128k`  | ❌        | ❌          | 128K    | $2.00 / $5.00          | 超长上下文                                     |
 
-**Moonshot V1 Vision Series - Image Understanding**
+**Moonshot V1 Vision 系列：图像理解**
 
-| Model ID                          | Thinking | Multimodal | Context | Price (Input / Output) | Use Case                                |
+| 模型 ID                           | 思考     | 多模态     | 上下文  | 价格（输入/输出）     | 适用场景                                |
 | --------------------------------- | -------- | ---------- | ------- | ---------------------- | --------------------------------------- |
-| `moonshot-v1-8k-vision-preview`   | ❌        | ✅          | 8K      | $0.20 / $2.00          | Vision + short context                  |
-| `moonshot-v1-32k-vision-preview`  | ❌        | ✅          | 32K     | $1.00 / $3.00          | Vision + medium context                 |
-| `moonshot-v1-128k-vision-preview` | ❌        | ✅          | 128K    | $2.00 / $5.00          | Vision + long context                   |
+| `moonshot-v1-8k-vision-preview`   | ❌        | ✅          | 8K      | $0.20 / $2.00          | 视觉与短上下文                          |
+| `moonshot-v1-32k-vision-preview`  | ❌        | ✅          | 32K     | $1.00 / $3.00          | 视觉与中等长度上下文                    |
+| `moonshot-v1-128k-vision-preview` | ❌        | ✅          | 128K    | $2.00 / $5.00          | 视觉与长上下文                          |
 
-**Prices**: Per 1M tokens. Cache pricing applies to prompt tokens served from automatic context cache (only Kimi K2.x models support cache).
+**价格**：按每 100 万令牌计费。缓存价格适用于从自动上下文缓存读取的提示词令牌（仅 Kimi K2.x 模型支持缓存）。
 
-> **CRITICAL — Kimi K2.6/K2.5 parameter constraints**: API returns `invalid_request_error` for any deviation:
-> - `temperature`: MUST be `1.0` in thinking mode, MUST be `0.6` in non-thinking mode
-> - `top_p`: MUST be `0.95`
-> - `n`: MUST be `1`
-> - `presence_penalty` and `frequency_penalty`: MUST be `0` (not modifiable)
+> **关键：Kimi K2.6/K2.5 参数限制**：任何不符合以下要求的值都会使 API 返回 `invalid_request_error`：
+> - `temperature`：思考模式下必须为 `1.0`，非思考模式下必须为 `0.6`
+> - `top_p`：必须为 `0.95`
+> - `n`：必须为 `1`
+> - `presence_penalty` 和 `frequency_penalty`：必须为 `0`（不可修改）
 >
-> Moonshot V1 models use standard OpenAI-compatible parameters with no such constraints.
+> Moonshot V1 模型使用兼容 OpenAI 的标准参数，没有上述限制。
 
-**Default Agent Configuration**:
+**默认智能体配置**：
 
-Strategy: prefer `kimi-k2.5` as cost-effective workhorse (36% cheaper input vs `kimi-k2.6`); reserve `kimi-k2.6` for critical reasoning. All `kimi-k2.x` agents are configured with the API-required fixed parameters (temp/top_p/n) and explicit `extra_body.thinking.type`. For thinking-enabled agents, `extra_body.thinking.keep: "all"` is set to preserve historical `reasoning_content` in multi-turn tool call chains (without it Moonshot returns "thinking is enabled but reasoning_content is missing").
+配置策略是优先将 `kimi-k2.5` 用作性价比较高的主力模型（输入成本比 `kimi-k2.6` 低 36%），`kimi-k2.6` 则留给关键推理。所有 `kimi-k2.x` 智能体都使用 API 要求的固定参数（temp/top_p/n），并显式设置 `extra_body.thinking.type`。对于开启思考的智能体，还会设置 `extra_body.thinking.keep: "all"`，在多轮工具调用链中保留历史 `reasoning_content`；否则 Moonshot 会返回 `thinking is enabled but reasoning_content is missing`。
 
-| Agent Role                                   | Default Model | Thinking | Temperature | Top P | Max Output |
+| 智能体角色                                   | 默认模型      | 思考     | 温度        | Top P | 最大输出   |
 | -------------------------------------------- | ------------- | -------- | ----------- | ----- | ---------- |
-| Generator / Refiner                          | `kimi-k2.6`   | Enabled (keep=all) | 1.0 | 0.95 | 32768 |
-| Coder                                        | `kimi-k2.6`   | Enabled (keep=all) | 1.0 | 0.95 | 20480 |
-| Pentester                                    | `kimi-k2.6`   | Enabled (keep=all) | 1.0 | 0.95 | 16384 |
-| Adviser (mentor/planner)                     | `kimi-k2.6`   | Enabled (keep=all) | 1.0 | 0.95 | 8192  |
-| Primary Agent / Assistant                    | `kimi-k2.5`   | Enabled (keep=all) | 1.0 | 0.95 | 16384 |
-| Installer                                    | `kimi-k2.5`   | Enabled (keep=all) | 1.0 | 0.95 | 12288 |
-| Reflector / Searcher / Enricher              | `kimi-k2.5`   | Disabled           | 0.6 | 0.95 | 4096  |
-| Simple / Simple JSON                         | `kimi-k2.5`   | Disabled           | 0.6 | 0.95 | 2048  |
+| Generator（生成）/ Refiner（优化）           | `kimi-k2.6`   | 开启（keep=all）   | 1.0 | 0.95 | 32768 |
+| Coder（编码）                                | `kimi-k2.6`   | 开启（keep=all）   | 1.0 | 0.95 | 20480 |
+| Pentester（渗透测试）                        | `kimi-k2.6`   | 开启（keep=all）   | 1.0 | 0.95 | 16384 |
+| Adviser（导师/规划）                         | `kimi-k2.6`   | 开启（keep=all）   | 1.0 | 0.95 | 8192  |
+| Primary Agent（主智能体）/ Assistant（助手） | `kimi-k2.5`   | 开启（keep=all）   | 1.0 | 0.95 | 16384 |
+| Installer（安装）                            | `kimi-k2.5`   | 开启（keep=all）   | 1.0 | 0.95 | 12288 |
+| Reflector（反思）/ Searcher（搜索）/ Enricher（补充） | `kimi-k2.5` | 关闭 | 0.6 | 0.95 | 4096 |
+| Simple（简单任务）/ Simple JSON              | `kimi-k2.5`   | 关闭               | 0.6 | 0.95 | 2048  |
 
-**Key Features**:
-- **Ultra-Long Context**: Up to 256K tokens (K2.x) for comprehensive codebase/documentation analysis
-- **Native Multimodal**: K2.6/K2.5 support text + image + video input out of the box
-- **Hybrid Thinking**: K2.6/K2.5 toggle between thinking and non-thinking via `extra_body.thinking.type`
-- **Preserved Thinking** (K2.6): `thinking.keep: "all"` preserves historical `reasoning_content` across turns — required for multi-turn tool call chains
-- **Automatic Context Caching**: K2.x models cache repeated prefixes (~17% of miss price for K2.6, ~17% for K2.5)
-- **Tool Calling**: Full function-calling support for K2.x and Moonshot V1
-- **Self-Correction**: K2.6 features improved instruction compliance and self-correction
-- **Multilingual**: Strong Chinese, English, and multi-language support
+**主要特性**：
+- **超长上下文**：K2.x 最高支持 256K 令牌，可全面分析代码库和文档
+- **原生多模态**：K2.6/K2.5 原生支持文本、图像和视频输入
+- **混合思考**：K2.6/K2.5 通过 `extra_body.thinking.type` 在思考与非思考模式间切换
+- **保留思考**（K2.6）：`thinking.keep: "all"` 会跨轮保留历史 `reasoning_content`，这是多轮工具调用链的必要设置
+- **自动上下文缓存**：K2.x 模型会缓存重复前缀（K2.6 和 K2.5 的缓存价格均约为未命中价格的 17%）
+- **工具调用**：K2.x 和 Moonshot V1 完整支持函数调用
+- **自我纠正**：K2.6 改进了指令遵循和自我纠正能力
+- **多语言**：对中文、英文及其他多种语言的支持较好
 
-**Multi-turn with thinking + tool calls**: PentAGI's universal reasoning preservation pattern (`TextPartWithReasoning` + `WithPreserveReasoningContent`) automatically ensures `reasoning_content` is sent back in the required TextContent → ToolCall order, satisfying Moonshot's "thinking is enabled but reasoning_content is missing in assistant tool call message" requirement.
+**思考与工具调用并用的多轮对话**：PentAGI 的通用推理保留模式（`TextPartWithReasoning` + `WithPreserveReasoningContent`）会自动按要求的 TextContent → ToolCall 顺序回传 `reasoning_content`，从而避免 Moonshot 报出 `thinking is enabled but reasoning_content is missing in assistant tool call message` 错误。
 
-**LiteLLM Integration**: Set `KIMI_PROVIDER=moonshot` to enable model name prefixing when using default PentAGI configurations with LiteLLM proxy. Leave empty for direct API usage.
+**LiteLLM 集成**：通过 LiteLLM 代理使用 PentAGI 默认配置时，设置 `KIMI_PROVIDER=moonshot` 可为模型名称添加前缀；直连 API 时请留空。
 
-### Qwen Provider Configuration
+### Qwen 提供商配置
 
-PentAGI integrates with Qwen from Alibaba Cloud Model Studio (DashScope), providing powerful multilingual models with reasoning capabilities and context caching support.
+PentAGI 可接入阿里云百炼（DashScope）的 Qwen，使用支持推理与上下文缓存的多语言模型。
 
-#### Configuration Variables
+#### 配置变量
 
-| Variable           | Default Value                                          | Description                                         |
+| 变量               | 默认值                                                 | 说明                                                |
 | ------------------ | ------------------------------------------------------ | --------------------------------------------------- |
-| `QWEN_API_KEY`     |                                                        | Qwen API key for authentication                     |
-| `QWEN_SERVER_URL`  | `https://dashscope-us.aliyuncs.com/compatible-mode/v1` | Qwen API endpoint URL (international)               |
-| `QWEN_PROVIDER`    |                                                        | Provider prefix for LiteLLM integration (optional)  |
+| `QWEN_API_KEY`     |                                                        | 用于认证的 Qwen API 密钥                            |
+| `QWEN_SERVER_URL`  | `https://dashscope-us.aliyuncs.com/compatible-mode/v1` | Qwen API 端点 URL（国际站）                         |
+| `QWEN_PROVIDER`    |                                                        | 接入 LiteLLM 时使用的提供商前缀（可选）             |
 
-#### Configuration Examples
+#### 配置示例
 
 ```bash
-# Direct API usage (Global/US endpoint)
+# 直连 API（全球/美国端点）
 QWEN_API_KEY=your_qwen_api_key
 QWEN_SERVER_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
 
-# Alternative endpoints
-QWEN_SERVER_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1  # International (Singapore)
-QWEN_SERVER_URL=https://dashscope.aliyuncs.com/compatible-mode/v1       # Chinese Mainland (Beijing)
+# 其他端点
+QWEN_SERVER_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1  # 国际站（新加坡）
+QWEN_SERVER_URL=https://dashscope.aliyuncs.com/compatible-mode/v1       # 中国大陆（北京）
 
-# With LiteLLM proxy
+# 通过 LiteLLM 代理连接
 QWEN_API_KEY=your_litellm_key
 QWEN_SERVER_URL=http://litellm-proxy:4000
-QWEN_PROVIDER=dashscope  # Adds prefix to model names (dashscope/qwen-plus) for LiteLLM
+QWEN_PROVIDER=dashscope  # 为 LiteLLM 添加模型名称前缀（dashscope/qwen-plus）
 ```
 
-#### Supported Models
+#### 支持的模型
 
-PentAGI supports 33 Qwen models curated for agent workflows: text reasoning, code generation, and vision-language (browser screenshots). All models are non-snapshot main aliases with tool calling, streaming, thinking modes, and context caching. Models marked with `*` are used in default configuration.
+PentAGI 精选了 33 个适合智能体任务流的 Qwen 模型，涵盖文本推理、代码生成和视觉语言（浏览器截图）任务。所有模型均使用非快照主别名，支持工具调用、流式输出、思考模式和上下文缓存。标有 `*` 的模型用于默认配置。
 
-**Flagship Models (Top-tier Reasoning)**
+**旗舰模型（顶级推理）**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3.7-max`*               | ✅        | ✅    | ✅         | ✅     | $2.50/$7.50/$0.50          | Next-gen flagship for agent-centric era (generator/refiner/adviser default) |
-| `qwen3.6-max-preview`        | ✅        | ✅    | ✅         | ✅     | $1.30/$7.80/$0.13          | Preview Max with enhanced vibe coding & front-end skills |
-| `qwen3-max`                  | ✅        | ✅    | ✅         | ✅     | $1.20/$6.00/$0.24          | Previous-gen flagship with agent programming upgrades   |
-| `qwen-plus`                  | ✅        | ✅    | ✅         | ✅     | $0.40/$4.00/$0.08          | Qwen3-backbone Plus with switchable thinking modes      |
+| `qwen3.7-max`*               | ✅        | ✅    | ✅         | ✅     | $2.50/$7.50/$0.50          | 面向智能体时代的下一代旗舰模型（`generator`/`refiner`/`adviser` 的默认模型） |
+| `qwen3.6-max-preview`        | ✅        | ✅    | ✅         | ✅     | $1.30/$7.80/$0.13          | Max 预览版，增强了 Vibe Coding（氛围编程）和前端开发能力 |
+| `qwen3-max`                  | ✅        | ✅    | ✅         | ✅     | $1.20/$6.00/$0.24          | 上一代旗舰模型，改进了智能体编程能力                    |
+| `qwen-plus`                  | ✅        | ✅    | ✅         | ✅     | $0.40/$4.00/$0.08          | 基于 Qwen3 的 Plus 模型，可切换思考模式                 |
 
-**Balanced Plus Models (Mid-tier)**
+**均衡型 Plus 模型（中端）**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3.6-plus`*              | ✅        | ✅    | ✅         | ✅     | $0.50/$3.00/$0.05          | Native VL Plus with agentic coding (primary/assistant/pentester default) |
-| `qwen3.5-plus`               | ✅        | ✅    | ✅         | ✅     | $0.40/$2.40/$0.04          | Previous-gen native VL with strong multimodal capabilities |
+| `qwen3.6-plus`*              | ✅        | ✅    | ✅         | ✅     | $0.50/$3.00/$0.05          | 原生视觉语言 Plus 模型，支持智能体编码（`primary`/`assistant`/`pentester` 的默认模型） |
+| `qwen3.5-plus`               | ✅        | ✅    | ✅         | ✅     | $0.40/$2.40/$0.04          | 上一代原生视觉语言模型，多模态能力较强                  |
 
-**Fast Flash Models (Cost-optimized)**
+**快速 Flash 模型（成本优化）**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3.6-flash`              | ✅        | ✅    | ✅         | ✅     | $0.25/$1.50/$0.025         | Latest Flash with significant agentic-coding boost      |
-| `qwen3.5-flash`*             | ✅        | ✅    | ✅         | ✅     | $0.10/$0.40/$0.01          | Ultra-fast lightweight (simple/reflector/searcher/enricher default) |
-| `qwen-flash`                 | ✅        | ✅    | ✅         | ✅     | $0.05/$0.40/$0.01          | Qwen3-series Flash with 1M context, tiered pricing      |
+| `qwen3.6-flash`              | ✅        | ✅    | ✅         | ✅     | $0.25/$1.50/$0.025         | 最新 Flash 模型，智能体编码能力明显增强                |
+| `qwen3.5-flash`*             | ✅        | ✅    | ✅         | ✅     | $0.10/$0.40/$0.01          | 超高速轻量模型（`simple`/`reflector`/`searcher`/`enricher` 的默认模型） |
+| `qwen-flash`                 | ✅        | ✅    | ✅         | ✅     | $0.05/$0.40/$0.01          | Qwen3 系列 Flash 模型，支持 100 万令牌上下文和分级定价 |
 
-**Code-Specialized Models**
+**代码专用模型**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3-coder-plus`*          | ❌        | ✅    | ✅         | ✅     | $1.00/$5.00/$0.20          | Strong coding agent with autonomous programming (coder default) |
-| `qwen3-coder-flash`*         | ❌        | ✅    | ✅         | ✅     | $0.30/$1.50/$0.06          | Fast code-gen with multi-turn tool stability (installer default) |
-| `qwen3-coder-next`           | ❌        | ✅    | ✅         | ✅     | $0.30/$1.50/—              | Open-source code generation, SOTA at same scale         |
+| `qwen3-coder-plus`*          | ❌        | ✅    | ✅         | ✅     | $1.00/$5.00/$0.20          | 编码能力较强的智能体模型，支持自主编程（`coder` 的默认模型） |
+| `qwen3-coder-flash`*         | ❌        | ✅    | ✅         | ✅     | $0.30/$1.50/$0.06          | 快速生成代码，多轮工具调用稳定（`installer` 的默认模型） |
+| `qwen3-coder-next`           | ❌        | ✅    | ✅         | ✅     | $0.30/$1.50/—              | 开源代码生成模型，同等规模下达到先进水平               |
 
-**Vision-Language Models (Browser & Screenshot Analysis)**
+**视觉语言模型（浏览器和截图分析）**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3-vl-plus`              | ✅        | ✅    | ✅         | ✅     | $0.20/$1.60/$0.04          | VL with visual agent capabilities, ultra-long video understanding |
-| `qwen3-vl-flash`             | ✅        | ✅    | ✅         | ✅     | $0.05/$0.40/$0.01          | Small VL with 2D/3D localization for browser triage     |
-| `qvq-max`                    | ✅        | ✅    | ✅         | ✅     | $1.20/$4.80/—              | Visual reasoning with chain-of-thought                  |
+| `qwen3-vl-plus`              | ✅        | ✅    | ✅         | ✅     | $0.20/$1.60/$0.04          | 具有视觉智能体能力的 VL 模型，支持超长视频理解         |
+| `qwen3-vl-flash`             | ✅        | ✅    | ✅         | ✅     | $0.05/$0.40/$0.01          | 小型 VL 模型，支持 2D/3D 定位，可用于浏览器截图初筛    |
+| `qvq-max`                    | ✅        | ✅    | ✅         | ✅     | $1.20/$4.80/—              | 支持思维链的视觉推理                                    |
 
-**Open-Source Qwen3.6 Series**
+**开源 Qwen3.6 系列**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3.6-27b`                | ✅        | ✅    | ✅         | ✅     | $0.60/$3.60/—              | Native VL on hybrid architecture, on-premises ready     |
-| `qwen3.6-35b-a3b`            | ✅        | ✅    | ✅         | ✅     | $0.25/$1.49/—              | Efficient 35B MoE (~3B active) for continuous monitoring |
+| `qwen3.6-27b`                | ✅        | ✅    | ✅         | ✅     | $0.60/$3.60/—              | 混合架构的原生 VL 模型，可在本地部署                   |
+| `qwen3.6-35b-a3b`            | ✅        | ✅    | ✅         | ✅     | $0.25/$1.49/—              | 高效的 35B MoE（约 3B 激活参数），适合持续监控         |
 
-**Open-Source Qwen3.5 Series**
+**开源 Qwen3.5 系列**
 
-| Model ID                     | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                      | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ---------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3.5-397b-a17b`          | ✅        | ✅    | ✅         | ✅     | $0.60/$3.60/—              | Largest 397B params (~17B active), exceptional reasoning |
-| `qwen3.5-122b-a10b`          | ✅        | ✅    | ✅         | ✅     | $0.40/$3.20/—              | Large 122B params (~10B active), strong balance         |
-| `qwen3.5-35b-a3b`            | ✅        | ✅    | ✅         | ✅     | $0.25/$2.00/—              | Efficient 35B MoE (~3B active), cost-effective          |
-| `qwen3.5-27b`                | ✅        | ✅    | ✅         | ✅     | $0.30/$2.40/—              | Medium 27B with hybrid linear attention + sparse MoE    |
+| `qwen3.5-397b-a17b`          | ✅        | ✅    | ✅         | ✅     | $0.60/$3.60/—              | 最大的 397B 参数模型（约 17B 激活参数），推理能力出色  |
+| `qwen3.5-122b-a10b`          | ✅        | ✅    | ✅         | ✅     | $0.40/$3.20/—              | 大型 122B 参数模型（约 10B 激活参数），各项能力较均衡  |
+| `qwen3.5-35b-a3b`            | ✅        | ✅    | ✅         | ✅     | $0.25/$2.00/—              | 高效的 35B MoE（约 3B 激活参数），性价比较高           |
+| `qwen3.5-27b`                | ✅        | ✅    | ✅         | ✅     | $0.30/$2.40/—              | 中型 27B 模型，采用混合线性注意力与稀疏 MoE            |
 
-**Open-Source Qwen3 Coder Series**
+**开源 Qwen3 Coder 系列**
 
-| Model ID                              | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                               | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ------------------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3-coder-480b-a35b-instruct`      | ❌        | ✅    | ✅         | ✅     | $1.50/$7.50/—              | Largest open coder MoE (480B/~35B active)               |
-| `qwen3-coder-30b-a3b-instruct`        | ❌        | ✅    | ✅         | ✅     | $0.45/$2.25/—              | Efficient 30B MoE (~3B active), repository-scale        |
+| `qwen3-coder-480b-a35b-instruct`      | ❌        | ✅    | ✅         | ✅     | $1.50/$7.50/—              | 最大的开源编码 MoE（480B 总参数/约 35B 激活参数）      |
+| `qwen3-coder-30b-a3b-instruct`        | ❌        | ✅    | ✅         | ✅     | $0.45/$2.25/—              | 高效的 30B MoE（约 3B 激活参数），可处理仓库级任务     |
 
-**Open-Source Qwen3 Dense & MoE Series**
+**开源 Qwen3 稠密与 MoE 系列**
 
-| Model ID                              | Thinking | Intl | Global/US | China | Price (Input/Output/Cache) | Use Case                                                |
+| 模型 ID                               | 思考     | 国际站 | 全球/美国 | 中国 | 价格（输入/输出/缓存）     | 适用场景                                                |
 | ------------------------------------- | -------- | ---- | --------- | ----- | -------------------------- | ------------------------------------------------------- |
-| `qwen3-next-80b-a3b-thinking`         | ✅        | ✅    | ✅         | ✅     | $0.15/$1.20/—              | Next-gen 80B MoE (~3B active) thinking-only             |
-| `qwen3-next-80b-a3b-instruct`         | ❌        | ✅    | ✅         | ✅     | $0.15/$1.20/—              | Next-gen 80B MoE instruction-following                  |
-| `qwen3-235b-a22b`                     | ✅        | ✅    | ✅         | ✅     | $0.70/$8.40/—              | Dual-mode 235B MoE (~22B active)                        |
-| `qwen3-32b`                           | ✅        | ✅    | ✅         | ✅     | $0.16/$0.64/—              | Versatile 32B dense dual-mode                           |
-| `qwen3-30b-a3b`                       | ✅        | ✅    | ✅         | ✅     | $0.20/$2.40/—              | Efficient 30B MoE (~3B active)                          |
-| `qwen3-14b`                           | ✅        | ✅    | ✅         | ✅     | $0.35/$4.20/—              | Medium 14B dense performance-cost balance               |
-| `qwen3-8b`                            | ✅        | ✅    | ✅         | ✅     | $0.18/$2.10/—              | Compact 8B dense efficiency                             |
-| `qwen3-4b`                            | ✅        | ✅    | ✅         | ✅     | $0.11/$1.26/—              | Lightweight 4B dense for simple tasks                   |
-| `qwen3-1.7b`                          | ✅        | ✅    | ✅         | ✅     | $0.11/$1.26/—              | Ultra-compact 1.7B basic checks                         |
-| `qwen3-0.6b`                          | ✅        | ✅    | ✅         | ✅     | $0.11/$1.26/—              | Smallest 0.6B for edge monitoring                       |
+| `qwen3-next-80b-a3b-thinking`         | ✅        | ✅    | ✅         | ✅     | $0.15/$1.20/—              | 新一代 80B MoE（约 3B 激活参数），仅支持思考模式       |
+| `qwen3-next-80b-a3b-instruct`         | ❌        | ✅    | ✅         | ✅     | $0.15/$1.20/—              | 新一代 80B MoE 指令遵循模型                            |
+| `qwen3-235b-a22b`                     | ✅        | ✅    | ✅         | ✅     | $0.70/$8.40/—              | 双模式 235B MoE（约 22B 激活参数）                     |
+| `qwen3-32b`                           | ✅        | ✅    | ✅         | ✅     | $0.16/$0.64/—              | 用途广泛的 32B 稠密双模式模型                          |
+| `qwen3-30b-a3b`                       | ✅        | ✅    | ✅         | ✅     | $0.20/$2.40/—              | 高效的 30B MoE（约 3B 激活参数）                       |
+| `qwen3-14b`                           | ✅        | ✅    | ✅         | ✅     | $0.35/$4.20/—              | 中型 14B 稠密模型，兼顾性能和成本                      |
+| `qwen3-8b`                            | ✅        | ✅    | ✅         | ✅     | $0.18/$2.10/—              | 小型 8B 稠密模型，效率较高                             |
+| `qwen3-4b`                            | ✅        | ✅    | ✅         | ✅     | $0.11/$1.26/—              | 轻量 4B 稠密模型，适合简单任务                         |
+| `qwen3-1.7b`                          | ✅        | ✅    | ✅         | ✅     | $0.11/$1.26/—              | 超小型 1.7B 模型，适合基本检查                         |
+| `qwen3-0.6b`                          | ✅        | ✅    | ✅         | ✅     | $0.11/$1.26/—              | 最小的 0.6B 模型，适合边缘监控                         |
 
-**Prices**: Per 1M tokens. Cache pricing reflects implicit cache hit (when available); MoE/dense open-source models do not expose cache pricing. Tiered models (Max/Plus) show lowest-tier pricing (typically ≤32k or ≤256k input); larger contexts incur higher rates per Alibaba Cloud pricing.
+**价格**：按每 100 万令牌计费。缓存价格指隐式缓存命中时的价格（如支持）；开源 MoE/稠密模型未提供缓存价格。分级定价模型（Max/Plus）列出最低档价格（输入通常不超过 32K 或 256K）；根据阿里云定价，使用更大上下文时费率更高。
 
-**Region Availability**:
-- **Intl** (International): Singapore region (`dashscope-intl.aliyuncs.com`)
-- **Global/US**: US Virginia region (`dashscope-us.aliyuncs.com`)
-- **China**: Chinese Mainland Beijing region (`dashscope.aliyuncs.com`)
+**区域可用性**：
+- **Intl（国际站）**：新加坡区域（`dashscope-intl.aliyuncs.com`）
+- **Global/US（全球/美国）**：美国弗吉尼亚区域（`dashscope-us.aliyuncs.com`）
+- **China（中国）**：中国大陆北京区域（`dashscope.aliyuncs.com`）
 
-**Default Agent Configuration**:
-| Agent Role                                       | Default Model        | Tier      |
+**默认智能体配置**：
+| 智能体角色                                       | 默认模型             | 档位      |
 | ------------------------------------------------ | -------------------- | --------- |
-| Generator / Refiner / Adviser (planning, mentor) | `qwen3.7-max`        | Flagship  |
-| Primary / Assistant / Pentester                  | `qwen3.6-plus`       | Balanced  |
-| Coder (exploit development)                      | `qwen3-coder-plus`   | Code+     |
-| Installer (env setup)                            | `qwen3-coder-flash`  | Code Fast |
-| Simple / Reflector / Searcher / Enricher         | `qwen3.5-flash`      | Fast      |
+| Generator（生成）/ Refiner（优化）/ Adviser（规划、导师） | `qwen3.7-max` | 旗舰 |
+| Primary（主智能体）/ Assistant（助手）/ Pentester（渗透测试） | `qwen3.6-plus` | 均衡 |
+| Coder（漏洞利用开发）                            | `qwen3-coder-plus`   | Code+     |
+| Installer（环境设置）                            | `qwen3-coder-flash`  | 快速编码  |
+| Simple（简单任务）/ Reflector（反思）/ Searcher（搜索）/ Enricher（补充） | `qwen3.5-flash` | 快速 |
 
-**Key Features**:
-- **Agent-Centric Design**: Qwen3.7-Max is purpose-built for long-horizon autonomous execution and tool invocation
-- **Automatic Context Caching**: 30-50% cost reduction on repeated context with implicit cache
-- **Extended Thinking**: Chain-of-thought reasoning for complex security analysis (Qwen3.7/3.6/3.5/3-Max, QVQ-Max)
-- **Code Specialization**: Qwen3-Coder series with multi-turn tool interaction and repository-level understanding
-- **Vision-Language**: Qwen3-VL series for browser screenshot triage, 2D/3D localization, OCR-level analysis
-- **Tool Calling**: Seamless integration with 20+ pentesting tools via function calling
-- **Streaming**: Real-time response streaming for interactive workflows
-- **Multilingual**: Strong Chinese, English, and multi-language support
-- **Open-Source Variants**: Dense and MoE models from 0.6B to 480B for on-premises/air-gapped deployments
+**主要特性**：
+- **面向智能体设计**：Qwen3.7-Max 专为长周期自主执行和工具调用而设计
+- **自动上下文缓存**：通过隐式缓存将重复上下文的成本降低 30%～50%
+- **扩展思考**：通过思维链推理复杂安全分析（Qwen3.7/3.6/3.5/3-Max、QVQ-Max）
+- **代码专用模型**：Qwen3-Coder 系列支持多轮工具交互和仓库级理解
+- **视觉语言**：Qwen3-VL 系列可对浏览器截图进行初步分析、2D/3D 定位和 OCR 级分析
+- **工具调用**：通过函数调用接入 20 多种渗透测试工具
+- **流式输出**：为交互式任务流实时返回响应
+- **多语言**：对中文、英文及其他多种语言的支持较好
+- **开源变体**：提供 0.6B 至 480B 的稠密与 MoE 模型，可在本地或隔离网络中部署
 
-**LiteLLM Integration**: Set `QWEN_PROVIDER=dashscope` to enable model name prefixing when using default PentAGI configurations with LiteLLM proxy. Leave empty for direct API usage.
+**LiteLLM 集成**：通过 LiteLLM 代理使用 PentAGI 默认配置时，设置 `QWEN_PROVIDER=dashscope` 可为模型名称添加前缀；直连 API 时请留空。
 
-#### Alternative Integrations
+#### 其他集成方式
 
-DashScope is fully OpenAI-compatible, so Qwen can also power two other PentAGI subsystems through the standard OpenAI client.
+DashScope 完全兼容 OpenAI 接口，因此还可以通过标准 OpenAI 客户端，将 Qwen 用于 PentAGI 的另外两个子系统。
 
-**As embedding provider** (`text-embedding-v4`, see [Alibaba Cloud Model Studio pricing](https://modelstudio.console.alibabacloud.com/ap-southeast-1?tab=doc#/doc/?type=model&url=prices)):
+**用作嵌入模型提供商**（`text-embedding-v4`，参见[阿里云百炼定价](https://modelstudio.console.alibabacloud.com/ap-southeast-1?tab=doc#/doc/?type=model&url=prices)）：
 
 ```bash
 EMBEDDING_PROVIDER=openai
-EMBEDDING_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1  # International (Singapore)
-# EMBEDDING_URL=https://dashscope.aliyuncs.com/compatible-mode/v1     # Chinese Mainland
+EMBEDDING_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1  # 国际站（新加坡）
+# EMBEDDING_URL=https://dashscope.aliyuncs.com/compatible-mode/v1     # 中国大陆
 EMBEDDING_KEY=sk-*******
 EMBEDDING_MODEL=text-embedding-v4
-EMBEDDING_BATCH_SIZE=         # optional, default applies
-EMBEDDING_STRIP_NEW_LINES=    # optional, default applies
+EMBEDDING_BATCH_SIZE=         # 可选，使用默认值
+EMBEDDING_STRIP_NEW_LINES=    # 可选，使用默认值
 ```
 
-> Note: the Global/US DashScope endpoint (`dashscope-us.aliyuncs.com`) does **not** expose embedding APIs — use the International or China endpoints for `text-embedding-v4`.
+> 注意：DashScope 全球/美国端点（`dashscope-us.aliyuncs.com`）**不提供**嵌入 API。使用 `text-embedding-v4` 时，请选择国际站或中国站端点。
 
-**As OpenAI-typed custom LLM provider**: instead of the dedicated `QWEN_*` variables, you can wire any Qwen chat model through PentAGI's custom OpenAI-compatible provider by pointing `OPENAI_SERVER_URL` (or a custom provider entry) to the DashScope `/compatible-mode/v1` endpoint and selecting the desired Qwen model name. Useful when you already manage all model traffic through a single OpenAI-shaped client (e.g. shared with LiteLLM/OneAPI proxies).
+**用作 OpenAI 兼容的自定义 LLM 提供商**：除了专用的 `QWEN_*` 变量，还可以通过 PentAGI 的 OpenAI 兼容自定义提供商接入任意 Qwen 聊天模型。将 `OPENAI_SERVER_URL`（或自定义提供商条目）指向 DashScope 的 `/compatible-mode/v1` 端点，再选择所需的 Qwen 模型名称即可。如果已经通过一个兼容 OpenAI 接口的客户端统一管理所有模型流量（例如与 LiteLLM/OneAPI 代理共用），这种方式会更方便。
 
 ## Advanced Setup
 

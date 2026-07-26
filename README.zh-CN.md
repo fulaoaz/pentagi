@@ -2389,92 +2389,92 @@ EMBEDDING_STRIP_NEW_LINES=    # 可选，使用默认值
 
 **用作 OpenAI 兼容的自定义 LLM 提供商**：除了专用的 `QWEN_*` 变量，还可以通过 PentAGI 的 OpenAI 兼容自定义提供商接入任意 Qwen 聊天模型。将 `OPENAI_SERVER_URL`（或自定义提供商条目）指向 DashScope 的 `/compatible-mode/v1` 端点，再选择所需的 Qwen 模型名称即可。如果已经通过一个兼容 OpenAI 接口的客户端统一管理所有模型流量（例如与 LiteLLM/OneAPI 代理共用），这种方式会更方便。
 
-## Advanced Setup
+## 高级设置
 
-### Langfuse Integration
+### 集成 Langfuse
 
-Langfuse provides advanced capabilities for monitoring and analyzing AI agent operations.
+Langfuse 可用于监控并分析 AI 智能体的运行情况。
 
-1. Configure Langfuse environment variables in existing `.env` file.
+1. 在现有 `.env` 文件中配置 Langfuse 环境变量。
 
 <details>
-    <summary>Langfuse valuable environment variables</summary>
+    <summary>Langfuse 重要环境变量</summary>
 
-### Database Credentials
-- `LANGFUSE_POSTGRES_USER` and `LANGFUSE_POSTGRES_PASSWORD` - Langfuse PostgreSQL credentials
-- `LANGFUSE_CLICKHOUSE_USER` and `LANGFUSE_CLICKHOUSE_PASSWORD` - ClickHouse credentials
-- `LANGFUSE_REDIS_AUTH` - Redis password
+### 数据库凭证
+- `LANGFUSE_POSTGRES_USER` 和 `LANGFUSE_POSTGRES_PASSWORD`：Langfuse PostgreSQL 凭证
+- `LANGFUSE_CLICKHOUSE_USER` 和 `LANGFUSE_CLICKHOUSE_PASSWORD`：ClickHouse 凭证
+- `LANGFUSE_REDIS_AUTH`：Redis 密码
 
-### Encryption and Security Keys
-- `LANGFUSE_SALT` - Salt for hashing in Langfuse Web UI
-- `LANGFUSE_ENCRYPTION_KEY` - Encryption key (32 bytes in hex)
-- `LANGFUSE_NEXTAUTH_SECRET` - Secret key for NextAuth
+### 加密与安全密钥
+- `LANGFUSE_SALT`：Langfuse 网页界面进行哈希处理时使用的盐值
+- `LANGFUSE_ENCRYPTION_KEY`：加密密钥（以十六进制表示的 32 字节数据）
+- `LANGFUSE_NEXTAUTH_SECRET`：NextAuth 密钥
 
-### Admin Credentials
-- `LANGFUSE_INIT_USER_EMAIL` - Admin email
-- `LANGFUSE_INIT_USER_PASSWORD` - Admin password
-- `LANGFUSE_INIT_USER_NAME` - Admin username
+### 管理员凭证
+- `LANGFUSE_INIT_USER_EMAIL`：管理员邮箱
+- `LANGFUSE_INIT_USER_PASSWORD`：管理员密码
+- `LANGFUSE_INIT_USER_NAME`：管理员用户名
 
-### API Keys and Tokens
-- `LANGFUSE_INIT_PROJECT_PUBLIC_KEY` - Project public key (used from PentAGI side too)
-- `LANGFUSE_INIT_PROJECT_SECRET_KEY` - Project secret key (used from PentAGI side too)
+### API 密钥与令牌
+- `LANGFUSE_INIT_PROJECT_PUBLIC_KEY`：项目公钥（PentAGI 端也会使用）
+- `LANGFUSE_INIT_PROJECT_SECRET_KEY`：项目密钥（PentAGI 端也会使用）
 
-### S3 Storage
-- `LANGFUSE_S3_ACCESS_KEY_ID` - S3 access key ID
-- `LANGFUSE_S3_SECRET_ACCESS_KEY` - S3 secret access key
+### S3 存储
+- `LANGFUSE_S3_ACCESS_KEY_ID`：S3 访问密钥 ID
+- `LANGFUSE_S3_SECRET_ACCESS_KEY`：S3 秘密访问密钥
 
 </details>
 
-2. Enable integration with Langfuse for PentAGI service in `.env` file.
+2. 在 `.env` 文件中为 PentAGI 服务启用 Langfuse 集成。
 
 ```bash
 LANGFUSE_BASE_URL=http://langfuse-web:3000
-LANGFUSE_PROJECT_ID= # default: value from ${LANGFUSE_INIT_PROJECT_ID}
-LANGFUSE_PUBLIC_KEY= # default: value from ${LANGFUSE_INIT_PROJECT_PUBLIC_KEY}
-LANGFUSE_SECRET_KEY= # default: value from ${LANGFUSE_INIT_PROJECT_SECRET_KEY}
+LANGFUSE_PROJECT_ID= # 默认值：${LANGFUSE_INIT_PROJECT_ID} 的值
+LANGFUSE_PUBLIC_KEY= # 默认值：${LANGFUSE_INIT_PROJECT_PUBLIC_KEY} 的值
+LANGFUSE_SECRET_KEY= # 默认值：${LANGFUSE_INIT_PROJECT_SECRET_KEY} 的值
 ```
 
-3. Run the Langfuse stack:
+3. 启动 Langfuse 服务栈：
 
 ```bash
 curl -O https://raw.githubusercontent.com/vxcontrol/pentagi/master/docker-compose-langfuse.yml
 docker compose -f docker-compose.yml -f docker-compose-langfuse.yml up -d
 ```
 
-Visit [localhost:4000](http://localhost:4000) to access Langfuse Web UI with credentials from `.env` file:
+打开 [localhost:4000](http://localhost:4000)，使用 `.env` 文件中的凭证登录 Langfuse 网页界面：
 
-- `LANGFUSE_INIT_USER_EMAIL` - Admin email
-- `LANGFUSE_INIT_USER_PASSWORD` - Admin password
+- `LANGFUSE_INIT_USER_EMAIL`：管理员邮箱
+- `LANGFUSE_INIT_USER_PASSWORD`：管理员密码
 
-### Monitoring and Observability
+### 监控与可观测性
 
-For detailed system operation tracking, integration with monitoring tools is available.
+如需详细跟踪系统运行情况，可以接入监控工具。
 
-1. Enable integration with OpenTelemetry and all observability services for PentAGI in `.env` file.
+1. 在 `.env` 文件中为 PentAGI 启用 OpenTelemetry 及全部可观测性服务。
 
 ```bash
 OTEL_HOST=otelcol:8148
 ```
 
-2. Run the observability stack:
+2. 启动可观测性服务栈：
 
 ```bash
 curl -O https://raw.githubusercontent.com/vxcontrol/pentagi/master/docker-compose-observability.yml
 docker compose -f docker-compose.yml -f docker-compose-observability.yml up -d
 ```
 
-Visit [localhost:3000](http://localhost:3000) to access Grafana Web UI.
+打开 [localhost:3000](http://localhost:3000) 访问 Grafana 网页界面。
 
 > [!NOTE]
-> If you want to use Observability stack with Langfuse, you need to enable integration in `.env` file to set `LANGFUSE_OTEL_EXPORTER_OTLP_ENDPOINT` to `http://otelcol:4318`.
+> 如需同时使用可观测性服务栈与 Langfuse，请在 `.env` 文件中启用集成，将 `LANGFUSE_OTEL_EXPORTER_OTLP_ENDPOINT` 设为 `http://otelcol:4318`。
 >
-> To run all available stacks together (Langfuse, Graphiti, and Observability):
+> 如需同时启动所有可用服务栈（Langfuse、Graphiti 和可观测性服务）：
 >
 > ```bash
 > docker compose -f docker-compose.yml -f docker-compose-langfuse.yml -f docker-compose-graphiti.yml -f docker-compose-observability.yml up -d
 > ```
 >
-> You can also register aliases for these commands in your shell to run it faster:
+> 也可以在 shell 中为这些命令设置别名，方便以后快速运行：
 >
 > ```bash
 > alias pentagi="docker compose -f docker-compose.yml -f docker-compose-langfuse.yml -f docker-compose-graphiti.yml -f docker-compose-observability.yml"
@@ -2482,114 +2482,114 @@ Visit [localhost:3000](http://localhost:3000) to access Grafana Web UI.
 > alias pentagi-down="docker compose -f docker-compose.yml -f docker-compose-langfuse.yml -f docker-compose-graphiti.yml -f docker-compose-observability.yml down"
 > ```
 
-### Knowledge Graph Integration (Graphiti)
+### 集成知识图谱（Graphiti）
 
 > [!IMPORTANT]
-> The Graphiti integration is currently a **beta** feature and has notable provider limitations. See [Current Limitations](#current-limitations) below before enabling it in production.
+> Graphiti 集成目前仍是**测试版**，对提供商有明显限制。在生产环境中启用前，请先阅读下文的[当前限制](#当前限制)。
 
-PentAGI integrates with [Graphiti](https://github.com/vxcontrol/pentagi-graphiti), a temporal knowledge graph system powered by Neo4j, to provide advanced semantic understanding and relationship tracking for AI agent operations. The vxcontrol fork provides custom entity and edge types that are specific to pentesting purposes.
+PentAGI 集成了由 Neo4j 驱动的时序知识图谱系统 [Graphiti](https://github.com/vxcontrol/pentagi-graphiti)，可理解 AI 智能体运行过程中的语义并跟踪实体关系。vxcontrol 分支增加了渗透测试专用的实体类型和边类型。
 
-#### What is Graphiti?
+#### Graphiti 是什么？
 
-Graphiti automatically extracts and stores structured knowledge from agent interactions, building a graph of entities, relationships, and temporal context. This enables:
+Graphiti 会自动从智能体交互中提取并存储结构化知识，构建包含实体、关系和时间上下文的图谱。借助这些数据，可以实现以下功能：
 
-- **Semantic Memory**: Store and recall relationships between tools, targets, vulnerabilities, and techniques
-- **Contextual Understanding**: Track how different pentesting actions relate to each other over time
-- **Knowledge Reuse**: Learn from past penetration tests and apply insights to new assessments
-- **Advanced Querying**: Search for complex patterns like "What tools were effective against similar targets?"
+- **语义记忆**：存储并检索工具、目标、漏洞和技术之间的关系
+- **上下文理解**：跟踪不同渗透测试操作随时间形成的关联
+- **知识复用**：利用以往渗透测试的经验辅助新的评估
+- **高级查询**：搜索复杂模式，例如“哪些工具对相似目标有效？”
 
-#### Enabling Graphiti
+#### 启用 Graphiti
 
-The Graphiti knowledge graph is **optional** and disabled by default. To enable it:
+Graphiti 知识图谱是**可选功能**，默认关闭。启用步骤如下：
 
-1. Configure Graphiti environment variables in `.env` file:
+1. 在 `.env` 文件中配置 Graphiti 环境变量：
 
 ```bash
-## Graphiti knowledge graph settings
+## Graphiti 知识图谱设置
 GRAPHITI_ENABLED=true
 GRAPHITI_TIMEOUT=30
 GRAPHITI_URL=http://graphiti:8000
 GRAPHITI_MODEL_NAME=gpt-5-mini
 
-# Neo4j settings (used by Graphiti stack)
+# Neo4j 设置（供 Graphiti 服务栈使用）
 NEO4J_USER=neo4j
 NEO4J_DATABASE=neo4j
 NEO4J_PASSWORD=devpassword
 NEO4J_URI=bolt://neo4j:7687
 
-# OpenAI API key (required by Graphiti for entity extraction)
+# OpenAI API 密钥（Graphiti 提取实体时需要）
 OPEN_AI_KEY=your_openai_api_key
 ```
 
-2. Run the Graphiti stack along with the main PentAGI services:
+2. 与 PentAGI 主服务一起启动 Graphiti 服务栈：
 
 ```bash
-# Download the Graphiti compose file if needed
+# 如有需要，下载 Graphiti Compose 文件
 curl -O https://raw.githubusercontent.com/vxcontrol/pentagi/master/docker-compose-graphiti.yml
 
-# Start PentAGI with Graphiti
+# 启动 PentAGI 和 Graphiti
 docker compose -f docker-compose.yml -f docker-compose-graphiti.yml up -d
 ```
 
-3. Verify Graphiti is running:
+3. 验证 Graphiti 是否正常运行：
 
 ```bash
-# Check service health
+# 检查服务健康状态
 docker compose -f docker-compose.yml -f docker-compose-graphiti.yml ps graphiti neo4j
 
-# View Graphiti logs
+# 查看 Graphiti 日志
 docker compose -f docker-compose.yml -f docker-compose-graphiti.yml logs -f graphiti
 
-# Access Neo4j Browser (optional)
-# Visit http://localhost:7474 and login with NEO4J_USER/NEO4J_PASSWORD
+# 访问 Neo4j Browser（可选）
+# 打开 http://localhost:7474，使用 NEO4J_USER/NEO4J_PASSWORD 登录
 
-# Access Graphiti API (optional, for debugging)
-# Visit http://localhost:8000/docs for Swagger API documentation
+# 访问 Graphiti API（可选，用于调试）
+# 打开 http://localhost:8000/docs 查看 Swagger API 文档
 ```
 
 > [!NOTE]
-> The Graphiti service is defined in `docker-compose-graphiti.yml` as a separate stack. You must run both compose files together to enable the knowledge graph functionality. The pre-built Docker image `vxcontrol/graphiti:latest` is used by default.
+> Graphiti 服务在 `docker-compose-graphiti.yml` 中定义为独立服务栈。必须同时运行两个 Compose 文件才能启用知识图谱。默认使用预构建 Docker 镜像 `vxcontrol/graphiti:latest`。
 
-#### What Gets Stored
+#### 存储的内容
 
-When enabled, PentAGI automatically captures:
+启用后，PentAGI 会自动记录以下内容：
 
-- **Agent Responses**: All agent reasoning, analysis, and decisions
-- **Tool Executions**: Commands executed, tools used, and their results
-- **Context Information**: Flow, task, and subtask hierarchy
+- **智能体响应**：智能体的所有推理、分析和决策
+- **工具执行记录**：执行的命令、使用的工具及其结果
+- **上下文信息**：任务流、任务和子任务的层级关系
 
-#### Current Limitations
+#### 当前限制
 
-The Graphiti integration is currently a beta feature. Operators should plan around the following constraints before enabling it in production:
+Graphiti 集成目前仍是测试版。在生产环境中启用前，需要考虑以下限制：
 
-- **OpenAI-compatible LLM only.** The bundled `vxcontrol/graphiti` image authenticates against a single OpenAI-compatible endpoint configured through PentAGI's `.env` variables `OPEN_AI_KEY` and `OPEN_AI_SERVER_URL` (default `https://api.openai.com/v1`). `docker-compose-graphiti.yml` maps these into the container as `OPENAI_API_KEY` and `OPENAI_BASE_URL`, so operators do not set the container variables directly. Provider credentials configured elsewhere in PentAGI for Anthropic, Google AI (Gemini), AWS Bedrock, DeepSeek, GLM, Kimi, or Qwen are **not** used by Graphiti for entity extraction. If your deployment cannot reach an OpenAI-compatible endpoint, leave `GRAPHITI_ENABLED=false`.
-- **Single fixed model per deployment.** Graphiti uses one model name (`GRAPHITI_MODEL_NAME`, default `gpt-5-mini`) for all extractions. The model cannot be selected per agent or per flow.
-- **Independent billing.** Even when a flow runs against a non-OpenAI provider, Graphiti still incurs cost on the configured OpenAI-compatible endpoint.
-- **No in-app graph explorer yet.** Browsing the captured graph relies on the Neo4j Browser at `http://localhost:7474` and the Graphiti Swagger UI at `http://localhost:8000/docs`. There is no PentAGI UI surface for the graph today.
+- **仅支持 OpenAI 兼容 LLM。** 随附的 `vxcontrol/graphiti` 镜像只会向一个 OpenAI 兼容端点进行认证。该端点通过 PentAGI `.env` 中的 `OPEN_AI_KEY` 和 `OPEN_AI_SERVER_URL` 配置，后者默认为 `https://api.openai.com/v1`。`docker-compose-graphiti.yml` 会将这两个变量映射为容器内的 `OPENAI_API_KEY` 和 `OPENAI_BASE_URL`，因此无需直接设置容器变量。PentAGI 中为 Anthropic、Google AI（Gemini）、AWS Bedrock、DeepSeek、GLM、Kimi 或 Qwen 配置的凭证**不会**供 Graphiti 提取实体使用。如果部署环境连接不到 OpenAI 兼容端点，请保持 `GRAPHITI_ENABLED=false`。
+- **每次部署只能使用一个固定模型。** Graphiti 使用同一个模型名称（`GRAPHITI_MODEL_NAME`，默认为 `gpt-5-mini`）完成所有提取任务，无法按智能体或任务流选择模型。
+- **独立计费。** 即使任务流使用的不是 OpenAI 提供商，Graphiti 仍会在所配置的 OpenAI 兼容端点产生费用。
+- **暂不提供应用内图谱浏览器。** 如需浏览已记录的图谱，请使用 `http://localhost:7474` 上的 Neo4j Browser 或 `http://localhost:8000/docs` 上的 Graphiti Swagger UI。目前 PentAGI 界面中没有图谱视图。
 
-When `GRAPHITI_ENABLED=false`, PentAGI continues to operate with its primary memory and vector store; only the additional knowledge graph features are skipped.
+设置 `GRAPHITI_ENABLED=false` 后，PentAGI 仍会使用主要记忆系统和向量存储正常运行，只跳过额外的知识图谱功能。
 
-### GitHub and Google OAuth Integration
+### 集成 GitHub 与 Google OAuth
 
-OAuth integration with GitHub and Google allows users to authenticate using their existing accounts on these platforms. This provides several benefits:
+接入 GitHub 和 Google OAuth 后，用户可以使用已有的平台账号完成认证，具体优点包括：
 
-- Simplified login process without need to create separate credentials
-- Enhanced security through trusted identity providers
-- Access to user profile information from GitHub/Google accounts
-- Seamless integration with existing development workflows
+- 无需另建凭证，登录步骤更简单
+- 通过可信身份提供商提高安全性
+- 可以读取 GitHub/Google 账号的用户资料
+- 便于接入现有开发任务流
 
-PentAGI uses `PUBLIC_URL` as the public origin/base URL for OAuth redirects. In the default deployment, both GitHub and Google callbacks are handled by:
+PentAGI 使用 `PUBLIC_URL` 作为 OAuth 重定向的公开来源和基础 URL。默认部署中，GitHub 与 Google 都通过以下端点处理回调：
 
 ```text
 ${PUBLIC_URL}/api/v1/auth/login-callback
 ```
 
-For GitHub OAuth:
+GitHub OAuth 配置步骤：
 
-1. Create a new OAuth App in your GitHub account.
-2. Set **Homepage URL** to your `PUBLIC_URL`.
-3. Set **Authorization callback URL** to `${PUBLIC_URL}/api/v1/auth/login-callback`.
-4. Add the client credentials to your `.env` file:
+1. 在 GitHub 账号中创建新的 OAuth App。
+2. 将 **Homepage URL（主页 URL）** 设为 `PUBLIC_URL` 的值。
+3. 将 **Authorization callback URL（授权回调 URL）** 设为 `${PUBLIC_URL}/api/v1/auth/login-callback`。
+4. 将客户端凭证写入 `.env` 文件：
 
 ```bash
 PUBLIC_URL=https://pentagi.example.com
@@ -2597,11 +2597,11 @@ OAUTH_GITHUB_CLIENT_ID=your_github_client_id
 OAUTH_GITHUB_CLIENT_SECRET=your_github_client_secret
 ```
 
-For Google OAuth:
+Google OAuth 配置步骤：
 
-1. Create OAuth credentials in your Google Cloud project.
-2. Use the same callback endpoint: `${PUBLIC_URL}/api/v1/auth/login-callback`.
-3. Add the client credentials to your `.env` file:
+1. 在 Google Cloud 项目中创建 OAuth 凭证。
+2. 使用相同的回调端点：`${PUBLIC_URL}/api/v1/auth/login-callback`。
+3. 将客户端凭证写入 `.env` 文件：
 
 ```bash
 PUBLIC_URL=https://pentagi.example.com
@@ -2609,56 +2609,56 @@ OAUTH_GOOGLE_CLIENT_ID=your_google_client_id
 OAUTH_GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-Make sure `PUBLIC_URL` matches the externally accessible HTTPS address of your PentAGI instance and does not include the callback path itself. If the URL configured in the OAuth provider does not exactly match the callback generated by PentAGI, the provider will reject the login attempt with a redirect URI mismatch error.
+确保 `PUBLIC_URL` 与 PentAGI 实例可从外部访问的 HTTPS 地址一致，并且不要包含回调路径。如果 OAuth 提供商中配置的 URL 与 PentAGI 生成的回调地址不完全一致，提供商会因重定向 URI 不匹配而拒绝登录。
 
-### Docker Image Configuration
+### Docker 镜像配置
 
-PentAGI allows you to configure Docker image selection for executing various tasks. The system automatically chooses the most appropriate image based on the task type, but you can constrain this selection by specifying your preferred images:
+PentAGI 可以为不同任务配置 Docker 镜像选择规则。系统会根据任务类型自动选择合适的镜像，也可以通过以下变量限制可选镜像：
 
-| Variable                           | Default                | Description                                                 |
+| 变量                               | 默认值                 | 说明                                                        |
 | ---------------------------------- | ---------------------- | ----------------------------------------------------------- |
-| `PENTAGI_IMAGE`                    | `vxcontrol/pentagi:latest` | Docker image used for the main PentAGI application service |
-| `DOCKER_DEFAULT_IMAGE`             | `debian:latest`        | Default Docker image for general tasks and ambiguous cases  |
-| `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` | `vxcontrol/kali-linux` | Default Docker image for security/penetration testing tasks |
+| `PENTAGI_IMAGE`                    | `vxcontrol/pentagi:latest` | PentAGI 主应用服务使用的 Docker 镜像                     |
+| `DOCKER_DEFAULT_IMAGE`             | `debian:latest`        | 一般任务或类型不明确的任务所用的默认 Docker 镜像           |
+| `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` | `vxcontrol/kali-linux` | 安全/渗透测试任务所用的默认 Docker 镜像                    |
 
-`PENTAGI_IMAGE` changes the image used by the main `pentagi` service in `docker-compose.yml`. The `DOCKER_DEFAULT_IMAGE` and `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` variables only affect automatic worker image selection for task execution inside PentAGI. They do not rewrite the rest of the Compose stack, so services such as `pgvector`, `scraper`, and the optional `graphiti` stack still use the image references defined in the compose files.
+`PENTAGI_IMAGE` 会更改 `docker-compose.yml` 中主 `pentagi` 服务使用的镜像。`DOCKER_DEFAULT_IMAGE` 和 `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` 只影响 PentAGI 内部执行任务时自动选择的工作容器镜像，不会改写 Compose 服务栈的其他部分。因此，`pgvector`、`scraper` 以及可选的 `graphiti` 服务栈仍使用 Compose 文件中定义的镜像。
 
-When `DOCKER_DEFAULT_IMAGE` and `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` are set, AI agents will be limited to the image choices you specify. This is particularly useful for:
+设置 `DOCKER_DEFAULT_IMAGE` 和 `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` 后，AI 智能体只能从指定镜像中选择。这适用于以下情况：
 
-- **Security Enforcement**: Restricting usage to only verified and trusted images
-- **Environment Standardization**: Using corporate or customized images across all operations
-- **Performance Optimization**: Utilizing pre-built images with necessary tools already installed
+- **落实安全要求**：只允许使用经过验证且可信的镜像
+- **统一环境**：所有操作均使用企业镜像或自定义镜像
+- **优化性能**：使用已安装所需工具的预构建镜像
 
-Configuration examples:
+配置示例：
 
 ```bash
-# Using a custom PentAGI application image
+# 使用自定义 PentAGI 应用镜像
 PENTAGI_IMAGE=registry.example.com/security/pentagi:latest
 
-# Using a custom image for general tasks
+# 为一般任务使用自定义镜像
 DOCKER_DEFAULT_IMAGE=mycompany/custom-debian:latest
 
-# Using a specialized image for penetration testing
+# 为渗透测试使用专用镜像
 DOCKER_DEFAULT_IMAGE_FOR_PENTEST=mycompany/pentest-tools:v2.0
 ```
 
 > [!NOTE]
-> If a user explicitly specifies a particular Docker image in their task, the system will try to use that exact image, ignoring these settings. These variables only affect the system's automatic image selection process.
+> 如果用户在任务中明确指定 Docker 镜像，系统会尝试直接使用该镜像，而忽略这些设置。这些变量只影响系统的自动镜像选择过程。
 
-For an advanced OpenVAS/GVM experiment that uses a custom pentest image, see [OpenVAS via a Custom Pentest Image](examples/guides/openvas-custom-image.md).
+有关使用自定义渗透测试镜像开展 OpenVAS/GVM 高级实验的方法，请参阅[通过自定义渗透测试镜像使用 OpenVAS](examples/guides/openvas-custom-image.md)。
 
-#### Restricted Networks, Docker Mirrors, and Proxies
+#### 受限网络、Docker 镜像站与代理
 
-If your environment cannot reach Docker Hub (`docker.io`) directly, changing PentAGI environment variables is usually not enough to fix image download failures. PentAGI still relies on Docker's own registry access for Compose-managed services, and the installer network checks also validate Docker Hub reachability.
+如果当前环境无法直连 Docker Hub（`docker.io`），仅修改 PentAGI 环境变量通常解决不了镜像下载失败。Compose 管理的服务仍依赖 Docker 自身访问镜像仓库，安装器的网络检查也会验证 Docker Hub 是否可达。
 
-For restricted networks:
+在受限网络中，请按以下步骤配置：
 
-1. Confirm that the host can resolve and reach `docker.io`.
-2. If your environment requires an outbound proxy for PentAGI or installer HTTP traffic, set the `PROXY_URL` environment variable. To route Docker image pulls through a proxy, configure the Docker daemon or Docker Desktop proxy separately — Docker does not use PentAGI's `PROXY_URL` for registry access.
-3. If Docker Hub is blocked or heavily rate-limited, configure an organization-approved registry mirror or registry proxy before running the installer or `docker compose up`.
-4. Restart Docker after changing the daemon configuration, then rerun the installer checks or Compose startup.
+1. 确认宿主机可以解析并访问 `docker.io`。
+2. 如果 PentAGI 或安装器的 HTTP 流量需要通过出站代理，请设置环境变量 `PROXY_URL`。如需通过代理拉取 Docker 镜像，还要单独配置 Docker 守护进程或 Docker Desktop 代理。Docker 访问镜像仓库时不会使用 PentAGI 的 `PROXY_URL`。
+3. 如果 Docker Hub 被阻断或受到严格限流，请先配置组织批准的镜像站或镜像仓库代理，再运行安装器或 `docker compose up`。
+4. 更改守护进程配置后重启 Docker，然后重新运行安装器检查或启动 Compose。
 
-Example Docker daemon mirror configuration:
+Docker 守护进程的镜像站配置示例：
 
 ```json
 {
@@ -2666,9 +2666,9 @@ Example Docker daemon mirror configuration:
 }
 ```
 
-On Linux, this is typically configured in `/etc/docker/daemon.json`. On Docker Desktop, use the equivalent Docker Engine or proxy settings. A Docker Hub mirror covers Docker Hub-hosted images such as `vxcontrol/*`, but the main Compose stack already includes `quay.io/prometheuscommunity/postgres-exporter`, and the optional observability stack includes `gcr.io/cadvisor/cadvisor`. Those registries still need direct access or individually approved proxy/mirror paths.
+Linux 通常在 `/etc/docker/daemon.json` 中配置此项；Docker Desktop 则使用对应的 Docker Engine 或代理设置。Docker Hub 镜像站可以代理 `vxcontrol/*` 等托管在 Docker Hub 上的镜像，但主 Compose 服务栈还包含 `quay.io/prometheuscommunity/postgres-exporter`，可选的可观测性服务栈也包含 `gcr.io/cadvisor/cadvisor`。这些镜像仓库仍需能够直连，或分别配置获准使用的代理/镜像路径。
 
-See the official Docker documentation for [registry mirrors](https://docs.docker.com/docker-hub/image-library/mirror/) and [daemon proxy configuration](https://docs.docker.com/engine/daemon/proxy/).
+详情请参阅 Docker 官方文档中的[镜像仓库镜像站](https://docs.docker.com/docker-hub/image-library/mirror/)和[守护进程代理配置](https://docs.docker.com/engine/daemon/proxy/)。
 
 ## Development
 

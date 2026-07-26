@@ -6,7 +6,7 @@
 <br>
 <div align="center">
 
-> **加入社区！** 与安全研究人员、AI 爱好者和其他白帽黑客交流。获取支持、分享见解，并及时了解 PentAGI 的最新进展。
+> **加入社区！** 与安全研究人员、AI 爱好者和志同道合的白帽黑客交流，获取支持、分享经验，并及时了解 PentAGI 的最新进展。
 
 [![Discord](https://img.shields.io/badge/Discord-7289DA?logo=discord&logoColor=white)](https://discord.gg/2xrMh7qX6m)⠀[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white)](https://t.me/+Ka9i6CNwe71hMWQy)
 
@@ -57,31 +57,31 @@ PentAGI 是一款用于自动化安全测试的创新工具，采用了前沿的
 ## 功能特性
 
 - 安全隔离。所有操作都在完全隔离的 Docker 沙箱环境中执行。
-- 完全自主。由 AI 驱动的智能体自动判断并执行渗透测试步骤，并可选启用执行监控和智能任务规划以提升可靠性。
-- 专业渗透工具。内置 20 多款专业安全工具，包括 nmap、metasploit、sqlmap 等。
+- 完全自主。AI 智能体可自主判断并执行渗透测试步骤，还可按需启用执行监控和智能任务规划，提高执行可靠性。
+- 专业渗透测试工具。内置 20 多款专业安全工具，包括 nmap、metasploit、sqlmap 等。
 - 智能记忆系统。长期保存研究成果和成功方案，供后续复用。
 - 知识图谱集成。基于 Graphiti 和 Neo4j 构建知识图谱，用于语义关系追踪和深层上下文理解。
 - 网络情报采集。通过内置浏览器 [scraper](https://hub.docker.com/r/vxcontrol/scraper) 从网络来源获取最新信息。
-- 外部搜索系统。集成多种高级搜索 API，包括 [Tavily](https://tavily.com)、[Traversaal](https://traversaal.ai)、[Perplexity](https://www.perplexity.ai)、[DuckDuckGo](https://duckduckgo.com/)、[Google Custom Search](https://programmablesearchengine.google.com/)、[Sploitus Search](https://sploitus.com) 和 [Searxng](https://searxng.org)，实现全面的信息收集。
-- 专家团队协作。通过任务委派系统，由专门的 AI 智能体分别负责研究、开发和基础设施任务；配合可选的执行监控与智能任务规划，小参数模型也能取得理想表现。
-- 全面监控。提供详尽日志，并集成 Grafana/Prometheus 实现系统实时观测。
-- 详细报告。生成完整的漏洞报告，并附带利用指南。
+- 外部搜索系统。集成多种高级搜索 API，包括 [Tavily](https://tavily.com)、[Traversaal](https://traversaal.ai)、[Perplexity](https://www.perplexity.ai)、[DuckDuckGo](https://duckduckgo.com/)、[Google Custom Search](https://programmablesearchengine.google.com/)、[Sploitus Search](https://sploitus.com) 和 [Searxng](https://searxng.org)，可更全面地采集信息。
+- 专家团队协作。任务委派系统会让专职 AI 智能体分别负责研究、开发和基础设施任务；配合可选的执行监控与智能任务规划，可以让小型模型取得更理想的执行效果。
+- 全面监控。提供详尽日志，并集成 Grafana/Prometheus，便于实时掌握系统状态。
+- 详细报告。生成详尽的漏洞报告，并附带漏洞利用指南。
 - 智能容器管理。根据具体任务需求自动选择 Docker 镜像。
 - 现代化界面。简洁直观的网页界面，用于系统管理与监控。
 - 完备的 API。功能齐全的 REST 与 GraphQL API，支持 Bearer 令牌认证，便于自动化与系统集成。
 - 持久化存储。所有命令与输出均存储在带 [pgvector](https://hub.docker.com/r/vxcontrol/pgvector) 扩展的 PostgreSQL 中。
 - 可扩展架构。基于微服务设计，支持横向扩展。
 - 自托管方案。完全掌控自己的部署环境与数据。
-- 灵活的认证方式。支持 10 多家 LLM 提供商（[OpenAI](https://platform.openai.com/)、[Anthropic](https://www.anthropic.com/)、[Google AI/Gemini](https://ai.google.dev/)、[AWS Bedrock](https://aws.amazon.com/bedrock/)、[Ollama](https://ollama.com/)、[DeepSeek](https://www.deepseek.com/en/)、[GLM](https://z.ai/)、[Kimi](https://platform.moonshot.ai/)、[Qwen](https://www.alibabacloud.com/en/)、自定义），以及聚合平台（[OpenRouter](https://openrouter.ai/)、[DeepInfra](https://deepinfra.com/)）。生产环境的本地化部署可参考 [vLLM + Qwen3.5-27B-FP8 指南](examples/guides/vllm-qwen35-27b-fp8.md)。
-- API 令牌认证。安全的 Bearer 令牌机制，用于以编程方式访问 REST 与 GraphQL API。
+- 灵活的模型接入。支持 10 多个 LLM 提供商（[OpenAI](https://platform.openai.com/)、[Anthropic](https://www.anthropic.com/)、[Google AI/Gemini](https://ai.google.dev/)、[AWS Bedrock](https://aws.amazon.com/bedrock/)、[Ollama](https://ollama.com/)、[DeepSeek](https://www.deepseek.com/en/)、[GLM](https://z.ai/)、[Kimi](https://platform.moonshot.ai/)、[Qwen](https://www.alibabacloud.com/en/) 及自定义提供商），也支持聚合服务（[OpenRouter](https://openrouter.ai/)、[DeepInfra](https://deepinfra.com/)）。如需在生产环境中本地部署，请参阅 [vLLM + Qwen3.5-27B-FP8 指南](examples/guides/vllm-qwen35-27b-fp8.md)。
+- API 令牌认证。通过安全的 Bearer 令牌机制，供程序调用 REST 与 GraphQL API。
 - 快速部署。通过 [Docker Compose](https://docs.docker.com/compose/) 轻松搭建，并提供完善的环境变量配置。
 
 ### 当前能力边界
 
-- 目前 PentAGI 是一个自主运行、并可由助手引导的渗透测试平台，而不是 CALDERA 那类带有预设战役或攻击方案的入侵与攻击模拟（BAS）或对手模拟产品。
+- PentAGI 目前是一款可自主运行、也可由助手引导的渗透测试平台，并非 CALDERA 那类带有预设攻击活动或攻击计划的入侵与攻击模拟（BAS）或对手模拟产品。
 - 由智能体自行编写的 BAS 式攻击脚本应视为设想或未来工作，而非现已实现的功能。
-- 当前的任务流报告界面支持网页查看、复制到剪贴板、下载 Markdown 和下载 PDF。JSON 格式的任务流报告导出目前不在已支持的输出格式之列。
-- 提供商的灵活性目前通过内置提供商以及自定义 / OpenAI 兼容端点来实现。参见[自定义 LLM 提供商配置](#自定义-llm-提供商配置)和 [vLLM + Qwen3.5-27B-FP8 指南](examples/guides/vllm-qwen35-27b-fp8.md)。
+- 当前的任务流报告界面支持网页查看、复制到剪贴板，以及下载 Markdown 或 PDF；JSON 格式尚未列入支持的任务流报告导出格式。
+- 目前既可使用内置提供商，也可通过自定义或 OpenAI 兼容端点灵活接入模型。参见 [自定义 LLM 提供商配置](#自定义-llm-提供商配置)和 [vLLM + Qwen3.5-27B-FP8 指南](examples/guides/vllm-qwen35-27b-fp8.md)。
 
 ## 架构
 
@@ -375,7 +375,7 @@ graph TB
 <details>
 <summary><b>对话链摘要</b>（点击展开）</summary>
 
-对话链摘要系统通过有选择地摘要较早的消息来控制上下文增长。这对于既避免超出 token 上限、又保持对话连贯性至关重要。
+对话链摘要系统会有选择地概括较早的消息，避免上下文不断增长。这样既不会超出 token 上限，也能保持对话连贯。
 
 ```mermaid
 flowchart TD
@@ -400,7 +400,7 @@ flowchart TD
     class C,K output
 ```
 
-该算法基于对话链的结构化表示（ChainAST）进行处理，保留包括工具调用及其响应在内的各类消息类型。所有摘要操作都会在缩减上下文规模的同时，保持关键的对话流程完整。
+该算法使用对话链的结构化表示（ChainAST），保留各类消息，包括工具调用及其响应。所有摘要操作都会在缩减上下文的同时，保持关键对话流程完整。
 
 ### 全局摘要器配置项
 
@@ -410,25 +410,25 @@ flowchart TD
 | 使用问答对       | `SUMMARIZER_USE_QA`              | `true`  | 是否采用问答对摘要策略                   |
 | 摘要问答中的用户消息 | `SUMMARIZER_SUM_MSG_HUMAN_IN_QA` | `false` | 是否对问答对中的用户消息进行摘要         |
 | 最后一节大小     | `SUMMARIZER_LAST_SEC_BYTES`      | `51200` | 最后一节的最大字节数（50KB）             |
-| 单条正文对上限   | `SUMMARIZER_MAX_BP_BYTES`        | `16384` | 单个正文对的最大字节数（16KB）           |
+| 单个消息对大小上限 | `SUMMARIZER_MAX_BP_BYTES`        | `16384` | 单个消息对的最大字节数（16KB）           |
 | 最大问答节数     | `SUMMARIZER_MAX_QA_SECTIONS`     | `10`    | 最多保留的问答对节数                     |
 | 问答内容上限     | `SUMMARIZER_MAX_QA_BYTES`        | `65536` | 问答对各节的最大总字节数（64KB）         |
-| 免摘要问答节数   | `SUMMARIZER_KEEP_QA_SECTIONS`    | `1`     | 最近多少节问答内容不做摘要               |
+| 保留近期问答节数 | `SUMMARIZER_KEEP_QA_SECTIONS`    | `1`     | 保留多少个近期问答节而不进行摘要         |
 
 ### 助手摘要器配置项
 
-助手实例可使用单独的摘要设置，以便更精细地调节上下文管理行为：
+助手实例可以使用独立的摘要设置，对上下文管理策略进行细粒度调整：
 
 | 参数             | 环境变量                                | 默认值  | 说明                                        |
 | ---------------- | --------------------------------------- | ------- | ------------------------------------------- |
 | 保留最后一节     | `ASSISTANT_SUMMARIZER_PRESERVE_LAST`    | `true`  | 是否完整保留助手最后一节中的所有消息        |
 | 最后一节大小     | `ASSISTANT_SUMMARIZER_LAST_SEC_BYTES`   | `76800` | 助手最后一节的最大字节数（75KB）            |
-| 单条正文对上限   | `ASSISTANT_SUMMARIZER_MAX_BP_BYTES`     | `16384` | 助手上下文中单个正文对的最大字节数（16KB）  |
+| 单个消息对大小上限 | `ASSISTANT_SUMMARIZER_MAX_BP_BYTES`     | `16384` | 助手上下文中单个消息对的最大字节数（16KB）  |
 | 最大问答节数     | `ASSISTANT_SUMMARIZER_MAX_QA_SECTIONS`  | `7`     | 助手上下文中最多保留的问答节数              |
 | 问答内容上限     | `ASSISTANT_SUMMARIZER_MAX_QA_BYTES`     | `76800` | 助手问答内容的最大总字节数（75KB）          |
-| 免摘要问答节数   | `ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS` | `3`     | 最近多少节问答内容不做摘要                  |
+| 保留近期问答节数 | `ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS` | `3`     | 保留多少个近期问答节而不进行摘要            |
 
-与全局设置相比，助手摘要器配置为上下文保留分配了更多空间，既能保存更多近期对话历史，也能保证 token 的高效使用。
+与全局设置相比，助手摘要器会保留更大的上下文容量，在保存更多近期对话的同时兼顾 token 使用效率。
 
 ### 摘要器环境变量配置
 
@@ -458,37 +458,37 @@ ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS=3
 <details>
 <summary><b>高级智能体监管</b>（点击展开）</summary>
 
-PentAGI 内置多层次的智能体监管机制，用于保证任务高效执行、防止陷入死循环，并在卡住时智能恢复：
+PentAGI 内置多层智能体监管机制，能够提高任务执行效率、防止无限循环，并在执行陷入停滞时智能恢复：
 
 ### 执行监控（测试版）
-- **自动引入导师**：当执行模式显示可能出现问题时，自动调用顾问智能体（导师）介入
-- **模式检测**：监控重复的相同工具调用（阈值 5，可配置）和工具调用总次数（阈值 10，可配置）
-- **进展分析**：评估智能体是否在朝子任务目标推进，识别循环与低效行为
+- **导师自动介入**：检测到可能存在异常的执行模式时，自动启用顾问智能体（导师）
+- **模式检测**：监测同一工具的重复调用（默认阈值 5，可配置）和工具调用总次数（默认阈值 10，可配置）
+- **进展分析**：评估智能体是否在推进子任务，识别循环和低效行为
 - **替代策略**：当前策略失效时推荐其他思路
-- **信息检索引导**：建议先检索已有的成熟方案，而不是重复造轮子
-- **增强的响应格式**：工具响应中同时包含 `<original_result>` 与 `<mentor_analysis>` 两部分
+- **信息检索引导**：建议先查找已有解决方案，避免重复造轮子
+- **扩展响应格式**：工具响应中同时包含 `<original_result>` 与 `<mentor_analysis>` 两部分
 - **可配置**：通过 `EXECUTION_MONITOR_ENABLED` 启用（默认关闭），并可用 `EXECUTION_MONITOR_SAME_TOOL_LIMIT` 和 `EXECUTION_MONITOR_TOTAL_TOOL_LIMIT` 自定义阈值
 
-**适用场景**：参数量较小的模型（< 32B）、需要持续引导的复杂攻击场景，以及防止智能体死守单一思路。
+**适用场景**：适合参数量较小的模型（< 32B）和需要持续引导的复杂攻击场景，也能避免智能体反复尝试同一种方案。
 
-**性能影响**：执行时间与 token 消耗增加 2-3 倍，但根据 Qwen3.5-27B-FP8 的测试，**结果质量提升 2 倍**。
+**性能影响**：执行时间与 token 用量会增至原来的 2-3 倍；但 Qwen3.5-27B-FP8 的测试表明，**结果质量约为基线的 2 倍**。
 
 ### 智能任务规划（测试版）
-- **自动拆解**：在专业智能体开始工作前，由规划器（处于规划模式的顾问）生成 3-7 个具体且可执行的步骤
-- **上下文感知规划**：通过信息增强智能体分析完整的执行上下文，制定有依据的计划
+- **自动拆解**：在专职智能体开始工作前，由 Planner（规划器，即规划模式下的 Adviser）生成 3-7 个具体且可执行的步骤
+- **上下文感知规划**：通过 Enricher（信息增强智能体）分析完整的执行上下文，据此制定计划
 - **结构化分配**：将原始请求封装进 `<task_assignment>` 结构，并附带执行计划与说明
 - **范围管理**：让智能体仅专注于当前子任务，防止任务范围不断扩张
-- **增强说明**：在计划中标明关键操作、潜在陷阱和验证点
+- **补充执行要点**：计划会标出关键操作、潜在问题和验证点
 - **可配置**：通过 `AGENT_PLANNING_STEP_ENABLED` 启用（默认关闭）
 
 **适用场景**：参数量 < 32B 的模型、复杂的渗透测试工作流，以及需要提高复杂任务成功率的场景
 
-**强化顾问配置**：当顾问智能体使用更强的模型或增强设置时，效果尤为明显。例如，让顾问使用同一个基础模型并开启最大推理模式（参见 [`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)），即可用相同的模型架构完成全面的任务分析与策略规划。
+**强化顾问配置**：顾问智能体使用更强的模型或增强设置时，效果尤为明显。例如，让顾问使用同一个基础模型并开启最高推理模式（参见 [`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)），无需更换模型架构即可完成全面的任务分析和策略规划。
 
 **性能影响**：会增加规划开销，但能显著提高任务完成率并减少重复工作
 
 ### 工具调用上限（始终生效）
-- **硬性上限**：无论监管模式是否启用，都能防止任务失控执行
+- **硬性上限**：无论监管功能是否启用，都能防止任务失控执行
 - **按智能体类型区分**：
   - 通用智能体（Assistant、Primary Agent、Pentester、Coder、Installer）：`MAX_GENERAL_AGENT_TOOL_CALLS`（默认 100）
   - 受限智能体（Searcher、Enricher、Memorist、Generator、Reporter、Adviser、Reflector、Planner）：`MAX_LIMITED_AGENT_TOOL_CALLS`（默认 20）
@@ -497,28 +497,28 @@ PentAGI 内置多层次的智能体监管机制，用于保证任务高效执行
 
 ### Reflector 集成（始终生效）
 - **自动纠正**：LLM 连续 3 次未能生成工具调用时自动触发
-- **策略指导**：分析失败原因，引导智能体正确使用工具或屏障工具（`done`、`ask`）
-- **恢复机制**：针对具体的失败模式提供结合上下文的指导
-- **上限执行**：达到工具调用上限时，协调智能体平稳终止任务
+- **策略指导**：分析失败原因，引导智能体正确调用工具，或调用 `done`、`ask` 等 barrier 工具来结束或暂停流程
+- **恢复机制**：根据具体的失败模式，结合上下文给出有针对性的指导
+- **上限控制**：达到工具调用上限时，协调智能体平稳结束任务
 
 ### 面向开源模型的建议
 
 **参数量 < 32B 的模型必备**：
-Qwen3.5-27B-FP8 的测试表明，对较小的开源模型而言，同时启用执行监控与任务规划**至关重要**：
-- **质量提升**：与未启用监管的基线执行相比，结果质量提高 2 倍
+Qwen3.5-27B-FP8 的测试表明，对参数量较小的开源模型而言，同时启用执行监控与任务规划**至关重要**：
+- **质量提升**：与未启用监管的基线执行相比，结果质量约为基线的 2 倍
 - **防止循环**：显著减少无限循环和重复工作
 - **攻击多样性**：鼓励探索多种攻击向量，避免固守单一思路
-- **隔离网络部署**：配合本地 LLM 推理，可在封闭网络环境中实现生产级自主渗透测试
+- **网络隔离部署**：配合本地 LLM 推理，可在与外网隔离的环境中实现生产级自主渗透测试
 
 **权衡取舍**：
-- Token 消耗：由于需要调用导师和规划器，增加 2-3 倍
-- 执行时间：由于增加了分析与规划步骤，延长 2-3 倍
-- 结果质量：完整性、准确性和攻击覆盖范围提高 2 倍
-- 模型要求：顾问采用增强配置时效果最佳，例如提高推理参数、使用更强的模型变体或其他模型
+- token 用量：由于需要调用导师和规划器，会增至原来的 2-3 倍
+- 执行时间：由于增加了分析与规划步骤，会延长至原来的 2-3 倍
+- 结果质量：完整性、准确性和攻击覆盖范围约为基线的 2 倍
+- 模型要求：顾问采用增强配置时效果最佳，例如提高推理强度、使用更强的模型版本或更换模型
 
 **配置策略**：
-为使较小模型达到最佳表现，请为顾问智能体配置增强设置：
-- 使用同一个模型并开启最大推理模式（示例：[`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)）
+要让小型模型取得更好的效果，可为顾问智能体使用增强配置：
+- 使用同一个模型并开启最高推理模式（示例：[`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)）
 - 或让顾问使用更强的模型，其他智能体继续使用基础模型
 - 根据任务复杂度和模型能力调整监控阈值
 
@@ -529,18 +529,18 @@ Qwen3.5-27B-FP8 的测试表明，对较小的开源模型而言，同时启用�
 PentAGI 的架构遵循模块化、可扩展和安全的设计原则，主要组件如下：
 
 1. **核心服务**
-   - 前端 UI：基于 React 构建的网页界面，使用 TypeScript 保证类型安全
-   - 后端 API：基于 Go 构建的 REST 和 GraphQL API，支持通过 Bearer token 认证进行程序化访问
-   - 向量存储：采用带有 pgvector 扩展的 PostgreSQL，实现语义搜索和记忆存储
-   - 任务队列：异步任务处理系统，保证运行可靠
-   - AI 智能体：具有专门角色的多智能体系统，可高效执行测试
+   - 前端 UI：基于 React 构建的网页界面，由 TypeScript 提供类型安全保障
+   - 后端 API：基于 Go 构建的 REST 和 GraphQL API，支持 Bearer 令牌认证，供程序调用
+   - 向量存储：采用启用了 pgvector 扩展的 PostgreSQL，实现语义搜索和记忆存储
+   - 任务队列：可靠处理异步任务
+   - AI 智能体：由多个专职智能体组成，可高效执行测试
 
 2. **知识图谱**
-   - Graphiti：用于跟踪语义关系和理解上下文的知识图谱 API
+   - Graphiti：用于追踪语义关系和理解上下文的知识图谱 API
    - Neo4j：用于存储和查询实体、操作与结果之间关系的图数据库
-   - 自动采集智能体响应和工具执行记录，构建全面的知识库
+   - 自动记录智能体响应和工具执行过程，逐步形成完整的知识库
 
-3. **监控组件栈**
+3. **监控技术栈**
    - OpenTelemetry：统一采集并关联可观测性数据
    - Grafana：提供实时可视化与告警仪表板
    - VictoriaMetrics：高性能时序指标存储
@@ -548,24 +548,24 @@ PentAGI 的架构遵循模块化、可扩展和安全的设计原则，主要组
    - Loki：可扩展的日志聚合与分析系统
 
 4. **分析平台**
-   - Langfuse：提供高级 LLM 可观测性和性能分析
-   - ClickHouse：面向列的分析型数据仓库
+   - Langfuse：提供 LLM 深度可观测性和性能分析
+   - ClickHouse：列式分析数据仓库
    - Redis：用于高速缓存和速率限制
    - MinIO：用于存储产物的 S3 兼容对象存储
 
 5. **安全工具**
-   - 网页抓取器：用于安全网页交互的隔离浏览器环境
-   - 渗透测试工具：包含 20 多种专业安全工具的完整工具集
+   - 网页抓取器：用于安全访问网页的隔离浏览器环境
+   - 渗透测试工具：覆盖 20 多种专业安全工具
    - 沙箱执行：所有操作均在隔离容器中运行
 
 6. **记忆系统**
-   - 长期记忆：持久存储知识与经验
-   - 工作记忆：保存当前操作所需的活动上下文与目标
+   - 长期记忆：持久保存知识与经验
+   - 工作记忆：保存当前操作所需的上下文与目标
    - 情景记忆：记录历史操作与成功模式
    - 知识库：存储结构化的领域知识与工具能力
    - 上下文管理：通过对话链摘要智能管理不断增长的 LLM 上下文窗口
 
-系统使用 Docker 容器实现隔离和便捷部署，并为核心服务、监控和分析组件分别设置独立网络，以确保适当的安全边界。每个组件均支持横向扩展，也可在生产环境中配置为高可用模式。
+系统通过 Docker 容器实现隔离并简化部署。核心服务、监控组件和分析组件分别使用独立网络，形成清晰的安全边界。各组件均支持横向扩展，也可在生产环境中配置为高可用。
 
 ## 快速开始
 
@@ -579,7 +579,7 @@ PentAGI 的架构遵循模块化、可扩展和安全的设计原则，主要组
 
 ### 使用安装程序（推荐）
 
-PentAGI 提供带终端界面的交互式安装程序，用于简化配置与部署。安装程序会引导你完成系统检查、LLM 提供商设置、搜索引擎配置和安全加固。
+PentAGI 提供带有终端交互界面的安装程序，可简化配置和部署流程。安装程序会引导你完成系统检查、LLM 提供商设置、搜索引擎配置和安全加固。
 
 **支持的平台：**
 - **Linux**：amd64 [下载](https://pentagi.com/downloads/linux/amd64/installer-latest.zip) | arm64 [下载](https://pentagi.com/downloads/linux/arm64/installer-latest.zip)
@@ -623,7 +623,7 @@ unzip installer.zip
   docker ps
   ```
 
-  ⚠️ **安全提示：** 将用户加入 `docker` 组等同于授予 root 权限。请仅在受控环境中对可信用户这样做。生产部署建议改用 rootless 模式的 Docker，或以 sudo 运行安装程序。
+  ⚠️ **安全提示：** 将用户加入 `docker` 组等同于授予 root 权限。请仅在受控环境中对可信用户这样做。生产部署建议使用 Docker 无根模式，或通过 sudo 运行安装程序。
 
 安装程序会执行以下步骤：
 1. **系统检查**：验证 Docker、网络连通性和系统要求
@@ -753,19 +753,19 @@ NEO4J_URI=bolt://neo4j:7687
 ASSISTANT_USE_AGENTS=false         # Default value for agent usage when creating new assistants
 ```
 
-5. 修改 `.env` 文件中所有与安全相关的环境变量，以提升安全性。
+5. 修改 `.env` 文件中所有与安全相关的环境变量，加强系统安全性。
 
 <details>
     <summary>与安全相关的环境变量</summary>
 
 ### 主要安全设置
-- `COOKIE_SIGNING_SALT` —— 用于签名 Cookie 的盐值，请改为随机值
-- `PUBLIC_URL` —— 你的服务器公开地址（例如 `https://pentagi.example.com`）
-- `SERVER_SSL_CRT` 和 `SERVER_SSL_KEY` —— 指向你已有的 HTTPS 证书与私钥的自定义路径（这些路径需要在 docker-compose.yml 中以卷的形式挂载）
+- `COOKIE_SIGNING_SALT` —— 用于 Cookie 签名的盐值，请改为随机值
+- `PUBLIC_URL` —— 服务器的公开 URL（例如 `https://pentagi.example.com`）
+- `SERVER_SSL_CRT` 和 `SERVER_SSL_KEY` —— 已有 HTTPS 证书和私钥的路径（需在 docker-compose.yml 中以卷的形式挂载）
 
 ### 抓取服务访问
-- `SCRAPER_PUBLIC_URL` —— 若希望用另一台抓取服务器处理公网地址，可在此配置其公开地址
-- `SCRAPER_PRIVATE_URL` —— 抓取服务的内网地址（docker-compose.yml 中的本地抓取服务器，用于访问本地地址）
+- `SCRAPER_PUBLIC_URL` —— 如需使用另一台抓取服务器访问公网 URL，请在此填写其公开地址
+- `SCRAPER_PRIVATE_URL` —— 抓取服务的内部地址（即 docker-compose.yml 中用于访问本地地址的抓取服务）
 
 ### 访问凭据
 - `PENTAGI_POSTGRES_USER` 和 `PENTAGI_POSTGRES_PASSWORD` —— PostgreSQL 凭据
@@ -779,7 +779,7 @@ ASSISTANT_USE_AGENTS=false         # Default value for agent usage when creating
 perl -i -pe 's/\s+#.*$//' .env
 ```
 
-7. 启动 PentAGI 组件栈：
+7. 启动 PentAGI 服务：
 
 ```bash
 curl -O https://raw.githubusercontent.com/vxcontrol/pentagi/master/docker-compose.yml
@@ -790,25 +790,25 @@ docker compose up -d
 
 #### 网页界面账号
 
-PentAGI 的登录页面不提供公开的自助注册功能。全新安装会创建默认的本地管理员账号：
+PentAGI 的登录页不开放自助注册。全新安装会创建默认的本地管理员账号：
 
 - **邮箱**：`admin@pentagi.com`
 - **密码**：`admin`
 
 首次登录后，请在正式使用前修改默认密码。若之后丢失管理员密码，可通过安装程序的维护菜单重置默认 `admin@pentagi.com` 账号的密码。
 
-对于多用户场景，已认证的管理员可以通过用户管理 REST API（`/api/v1/users/`）管理本地用户。实例启动后，OpenAPI 界面可在 `https://localhost:8443/api/v1/swagger/index.html` 访问。
+在多用户场景中，管理员登录后可以通过用户管理 REST API（`/api/v1/users/`）管理本地用户。实例启动后，可通过 `https://localhost:8443/api/v1/swagger/index.html` 打开 OpenAPI 界面。
 
 > [!NOTE]
-> 如果遇到关于 `pentagi-network`、`observability-network` 或 `langfuse-network` 的错误，需要先运行 `docker-compose.yml` 创建这些网络，之后再运行 `docker-compose-langfuse.yml`、`docker-compose-graphiti.yml` 和 `docker-compose-observability.yml` 来启用 Langfuse、Graphiti 和可观测性服务。
+> 如果出现与 `pentagi-network`、`observability-network` 或 `langfuse-network` 有关的错误，请先运行 `docker-compose.yml` 创建这些网络，再运行 `docker-compose-langfuse.yml`、`docker-compose-graphiti.yml` 和 `docker-compose-observability.yml`，启用 Langfuse、Graphiti 和可观测性服务。
 >
-> 使用 PentAGI 至少需要配置一个语言模型提供商（OpenAI、Anthropic、Gemini、AWS Bedrock 或 Ollama）。AWS Bedrock 以企业级方式提供多家领先 AI 公司的基础模型；如果你有足够的算力，Ollama 则可实现零成本的本地推理。搜索引擎的额外 API 密钥是可选的，但配置后能获得更好的结果。
+> 使用 PentAGI 至少需要配置一个语言模型提供商（OpenAI、Anthropic、Gemini、AWS Bedrock 或 Ollama）。AWS Bedrock 提供企业级的多厂商基础模型接入；如果你有足够的算力，Ollama 则可实现零成本的本地推理。搜索引擎的额外 API 密钥并非必需，但配置后通常能获得更好的结果。
 >
-> **使用先进模型进行完全本地化部署**：请参阅我们的完整指南[使用 vLLM 与 Qwen3.5-27B-FP8 运行 PentAGI](examples/guides/vllm-qwen35-27b-fp8.md)，了解生产级的本地 LLM 部署方案。该配置在 4 张 RTX 5090 显卡上可达到约 13,000 TPS 的提示处理速度和约 650 TPS 的生成速度，支持 12 个以上并发任务流，且完全不依赖云端提供商。
+> **使用先进模型进行全本地部署**：请参阅完整指南 [使用 vLLM 与 Qwen3.5-27B-FP8 运行 PentAGI](examples/guides/vllm-qwen35-27b-fp8.md)，了解生产级本地 LLM 部署方案。该配置在 4 张 RTX 5090 显卡上，提示处理速度约为 13,000 TPS，生成速度约为 650 TPS，可支持 12 个以上并发任务流，并且完全不依赖云端提供商。
 >
 > `LLM_SERVER_*` 系列环境变量属于实验性功能，未来可能变更。目前可用它们指定自定义 LLM 服务地址，并为所有智能体类型统一指定一个模型。
 >
-> `PROXY_URL` 是面向所有 LLM 提供商和外部搜索系统的全局代理地址，可用于与外部网络隔离。
+> `PROXY_URL` 是所有 LLM 提供商和外部搜索系统共用的全局代理地址，可统一控制这些服务对外网的访问。
 >
 > `docker-compose.yml` 以 root 用户运行 PentAGI 服务，因为容器管理需要访问 docker.sock。如果你使用 TCP/IP 方式连接 Docker 而非套接字文件，可以去掉 root 权限、改用默认的 `pentagi` 用户，以获得更好的安全性。
 
@@ -861,7 +861,7 @@ ports:
   - "0.0.0.0:8443:8443"
 ```
 
-然后再次重新创建容器。
+然后重新创建容器。
 
 4. **配置防火墙**，放通 8443 端口的入站连接：
 
@@ -878,20 +878,20 @@ sudo firewall-cmd --reload
 5. **访问 PentAGI：**
 
 - **本机访问：** `https://localhost:8443`
-- **网络访问：** `https://你的服务器IP:8443`
+- **网络访问：** `https://your-server-ip:8443`
 
 > [!NOTE]
-> 通过 IP 地址访问时，需要在浏览器中接受自签名 SSL 证书的警告。
+> 通过 IP 地址访问时，需要在浏览器中确认自签名 SSL 证书警告后继续访问。
 
 ---
 
 ### 使用 Podman 运行 PentAGI
 
-PentAGI 完整支持以 Podman 替代 Docker。不过在 **Podman 无根（rootless）模式** 下，抓取服务需要特殊配置，因为无根容器无法绑定特权端口（1024 以下的端口）。
+PentAGI 完全支持 Podman，可将其作为 Docker 的替代方案。不过在 **Podman 无根（rootless）模式** 下，抓取服务需要额外配置，因为无根容器不能绑定小于 1024 的特权端口。
 
 #### Podman 无根模式配置
 
-抓取服务默认使用 443 端口（HTTPS），这是特权端口。在 Podman 无根模式下，需要将抓取服务改为使用非特权端口：
+抓取服务默认使用 443 端口（HTTPS），这是特权端口。在 Podman 无根模式下，需将抓取服务改到非特权端口：
 
 **1. 编辑 `docker-compose.yml`** —— 修改 `scraper` 服务（大约在第 199 行）：
 
@@ -930,7 +930,7 @@ LOCAL_SCRAPER_PASSWORD=somepass
 ```
 
 > [!IMPORTANT]
-> Podman 下的关键改动：
+> 使用 Podman 时的关键改动：
 > - `SCRAPER_PRIVATE_URL` 使用 **HTTP** 而非 HTTPS
 > - 使用 **3000** 端口而非 443
 > - 将容器内部的 `expose` 改为 `3000/tcp`
@@ -958,7 +958,7 @@ podman exec -it pentagi wget -O- "http://someuser:somepass@scraper:3000/html?url
 
 #### 与 Docker 的兼容性
 
-上述 Podman 配置与 Docker 完全兼容。非特权端口的做法在两种容器运行时中表现一致。
+上述 Podman 配置与 Docker 完全兼容。使用非特权端口的方案在两种容器运行时上的行为一致。
 
 ### 助手配置
 

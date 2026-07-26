@@ -61,6 +61,10 @@ jobs:
         run: pnpm run prettier
         continue-on-error: true
 
+      - name: Frontend - Check localization baseline
+        working-directory: frontend
+        run: pnpm run i18n:check
+
       - name: Frontend - Lint
         working-directory: frontend
         run: pnpm run lint
@@ -101,17 +105,17 @@ jobs:
           PACKAGE_VER=${LATEST_TAG#v}
           CURRENT_COMMIT=$(git rev-parse HEAD)
           TAG_COMMIT=$(git rev-list -n 1 "$LATEST_TAG" 2>/dev/null || echo "")
-          
+
           if [ "$CURRENT_COMMIT" != "$TAG_COMMIT" ]; then
             PACKAGE_REV=$(git rev-parse --short HEAD)
           else
             PACKAGE_REV=""
           fi
-          
+
           LDFLAGS="-X pentagi/pkg/version.PackageName=pentagi -X pentagi/pkg/version.PackageVer=${PACKAGE_VER} -X pentagi/pkg/version.PackageRev=${PACKAGE_REV}"
-          
+
           echo "Building with version: ${PACKAGE_VER}${PACKAGE_REV:+-$PACKAGE_REV}"
-          
+
           # Build for AMD64
           GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$LDFLAGS" -o /tmp/pentagi-amd64 ./cmd/pentagi
           echo "✓ Successfully built for linux/amd64"
@@ -147,13 +151,13 @@ jobs:
           # Get latest tag version (without 'v' prefix)
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           VERSION=${LATEST_TAG#v}
-          
+
           # Get current commit hash
           CURRENT_COMMIT=$(git rev-parse HEAD)
-          
+
           # Get commit hash of the latest tag
           TAG_COMMIT=$(git rev-list -n 1 "$LATEST_TAG" 2>/dev/null || echo "")
-          
+
           # Set revision only if current commit differs from tag commit
           if [ "$CURRENT_COMMIT" != "$TAG_COMMIT" ]; then
             PACKAGE_REV=$(git rev-parse --short HEAD)
@@ -173,7 +177,7 @@ jobs:
             echo "patch=${VERSION}" >> $GITHUB_OUTPUT
             echo "  Docker tags: latest, ${major}, ${major}.${minor}, ${VERSION}"
           fi
-          
+
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Generate Docker metadata

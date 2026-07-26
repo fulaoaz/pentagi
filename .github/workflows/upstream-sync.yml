@@ -1,0 +1,56 @@
+name: Sync upstream into zh-CN
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    if: github.repository == 'fulaoaz/pentagi'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout zh-CN
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: zh-CN
+
+      - name: Merge upstream main for review
+        id: merge
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git remote add upstream https://github.com/vxcontrol/pentagi.git
+          git fetch upstream main --prune
+
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "updates=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git merge --no-ff --no-commit upstream/main
+          echo "updates=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update synchronization PR
+        if: steps.merge.outputs.updates == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          base: zh-CN
+          branch: sync/upstream-main
+          delete-branch: true
+          commit-message: |
+            chore(upstream): merge upstream main
+
+            Constraint: Preserve zh-CN localization while importing upstream changes
+            Confidence: high
+            Scope-risk: broad
+          title: "chore(upstream): sync latest upstream main"
+          body: |
+            自动合并 `vxcontrol/pentagi:main` 的最新改动。
+
+            合并前请检查 CI 的词典一致性和界面英文基线；如果出现新增英文，先完成汉化再合并此 PR。

@@ -8,6 +8,8 @@
         "commitlint": "commitlint --edit",
         "dev": "vite",
         "graphql:generate": "graphql-codegen --config graphql-codegen.ts",
+        "i18n:baseline": "node scripts/check-ui-i18n.mjs --update",
+        "i18n:check": "node scripts/check-ui-i18n.mjs",
         "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
         "lint:fix": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
         "prettier": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",

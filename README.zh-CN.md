@@ -2670,120 +2670,120 @@ Linux 通常在 `/etc/docker/daemon.json` 中配置此项；Docker Desktop 则�
 
 详情请参阅 Docker 官方文档中的[镜像仓库镜像站](https://docs.docker.com/docker-hub/image-library/mirror/)和[守护进程代理配置](https://docs.docker.com/engine/daemon/proxy/)。
 
-## Development
+## 开发
 
-### Development Requirements
+### 开发环境要求
 
-- golang
-- nodejs
-- docker
-- postgres
+- Go
+- Node.js
+- Docker
+- PostgreSQL
 - commitlint
 
-### Environment Setup
+### 环境设置
 
-#### Backend Setup
+#### 后端设置
 
-Run once `cd backend && go mod download` to install needed packages.
+执行一次 `cd backend && go mod download`，安装所需软件包。
 
-For generating swagger files have to run
+运行以下命令生成 Swagger 文件：
 
 ```bash
 swag init -g ../../pkg/server/router.go -o pkg/server/docs/ --parseDependency --parseInternal --parseDepth 2 -d cmd/pentagi
 ```
 
-before installing `swag` package via
+`swag` 的安装命令如下：
 
 ```bash
 go install github.com/swaggo/swag/cmd/swag@v1.8.7
 ```
 
-For generating graphql resolver files have to run
+运行以下命令生成 GraphQL resolver 文件：
 
 ```bash
 go run github.com/99designs/gqlgen --config ./gqlgen/gqlgen.yml
 ```
 
-after that you can see the generated files in `pkg/graph` folder.
+生成的文件位于 `pkg/graph` 目录。
 
-For generating ORM methods (database package) from sqlc configuration
+根据 sqlc 配置生成 ORM 方法（数据库包）：
 
 ```bash
 docker run --rm -v $(pwd):/src -w /src --network pentagi-network -e DATABASE_URL="{URL}" sqlc/sqlc:1.27.0 generate -f sqlc/sqlc.yml
 ```
 
-For generating Langfuse SDK from OpenAPI specification
+根据 OpenAPI 规范生成 Langfuse SDK：
 
 ```bash
 fern generate --local
 ```
 
-and to install fern-cli
+安装 fern-cli：
 
 ```bash
 pnpm add -g fern-api
 ```
 
-#### Testing
+#### 测试
 
-For running tests `cd backend && go test -v ./...`
+运行测试：`cd backend && go test -v ./...`
 
-#### Frontend Setup
+#### 前端设置
 
-Run once `cd frontend && pnpm install` to install needed packages.
+执行一次 `cd frontend && pnpm install`，安装所需软件包。
 
-For generating graphql files have to run `pnpm run graphql:generate` which using `graphql-codegen.ts` file.
+运行 `pnpm run graphql:generate`，根据 `graphql-codegen.ts` 生成 GraphQL 文件。
 
-Be sure that you have `graphql-codegen` installed globally:
+确保已全局安装 `graphql-codegen`：
 
 ```bash
 pnpm add -g graphql-codegen
 ```
 
-After that you can run:
-* `pnpm run prettier` to check if your code is formatted correctly
-* `pnpm run prettier:fix` to fix it
-* `pnpm run lint` to check if your code is linted correctly
-* `pnpm run lint:fix` to fix it
+然后可以运行：
+* `pnpm run prettier`：检查代码格式
+* `pnpm run prettier:fix`：修复代码格式
+* `pnpm run lint`：检查代码是否通过 lint
+* `pnpm run lint:fix`：修复 lint 问题
 
-For generating SSL certificates you need to run `pnpm run ssl:generate` which using `generate-ssl.ts` file or it will be generated automatically when you run `pnpm run dev`.
+运行 `pnpm run ssl:generate` 可通过 `generate-ssl.ts` 生成 SSL 证书；如果直接运行 `pnpm run dev`，系统会自动生成证书。
 
-#### Backend Configuration
+#### 后端配置
 
-Edit the configuration for `backend` in `.vscode/launch.json` file:
-- `DATABASE_URL` - PostgreSQL database URL (eg. `postgres://postgres:postgres@localhost:5432/pentagidb?sslmode=disable`)
-- `DOCKER_HOST` - Docker SDK API (eg. for macOS `DOCKER_HOST=unix:///Users/<my-user>/Library/Containers/com.docker.docker/Data/docker.raw.sock`) [more info](https://stackoverflow.com/a/62757128/5922857)
+在 `.vscode/launch.json` 文件中修改 `backend` 配置：
+- `DATABASE_URL`：PostgreSQL 数据库 URL（例如 `postgres://postgres:postgres@localhost:5432/pentagidb?sslmode=disable`）
+- `DOCKER_HOST`：Docker SDK API（macOS 示例：`DOCKER_HOST=unix:///Users/<my-user>/Library/Containers/com.docker.docker/Data/docker.raw.sock`），参见[更多信息](https://stackoverflow.com/a/62757128/5922857)
 
-Optional:
-- `SERVER_PORT` - Port to run the server (default: `8443`)
-- `SERVER_USE_SSL` - Enable SSL for the server (default: `false`)
+可选配置：
+- `SERVER_PORT`：服务器运行端口（默认：`8443`）
+- `SERVER_USE_SSL`：是否为服务器启用 SSL（默认：`false`）
 
-##### PostgreSQL / pgvector connection pool sizing
+##### PostgreSQL/pgvector 连接池大小
 
-PentAGI opens two independent connection pools to the same Postgres instance:
+PentAGI 会为同一个 PostgreSQL 实例打开两个相互独立的连接池：
 
-| Pool | Env var | Default | Used by |
+| 连接池 | 环境变量 | 默认值 | 用途 |
 |---|---|---|---|
-| Shared `sql.DB` | `DATABASE_MAX_OPEN_CONNS` | `25` | All sqlc queries and GORM handlers share a single `*sql.DB` |
-| Shared `pgxpool` | `DATABASE_VECTOR_MAX_CONNS` | `10` | All pgvector stores (agent memory + knowledge API) share a single pool |
+| 共享 `sql.DB` | `DATABASE_MAX_OPEN_CONNS` | `25` | 所有 sqlc 查询和 GORM 处理程序共用一个 `*sql.DB` |
+| 共享 `pgxpool` | `DATABASE_VECTOR_MAX_CONNS` | `10` | 所有 pgvector 存储（智能体记忆 + 知识 API）共用一个连接池 |
 
-Additional tuning knob:
-- `DATABASE_MAX_IDLE_CONNS` — maximum idle connections kept open in the `sql.DB` pool between requests (default: `5`).
+其他调优参数：
+- `DATABASE_MAX_IDLE_CONNS`：两次请求之间，`sql.DB` 池中保持打开状态的最大空闲连接数（默认：`5`）。
 
-**Budget for the stock `vxcontrol/pgvector` image** (`max_connections = 100`, `superuser_reserved_connections = 3`):
+**标准 `vxcontrol/pgvector` 镜像的连接预算**（`max_connections = 100`，`superuser_reserved_connections = 3`）：
 
 ```
-Available for client connections  = 97
+客户端可用连接数                        = 97
   pentagi sql.DB  (DATABASE_MAX_OPEN_CONNS)   = 25
   pentagi pgxpool (DATABASE_VECTOR_MAX_CONNS) = 10
   pgexporter                                  =  3
-  autovacuum workers                          =  3
+  autovacuum 工作进程                         =  3
   ─────────────────────────────────────────
-  Total consumed                              = 41
-  Free buffer                                 = 56  (≈ 58 %)
+  已使用连接总数                              = 41
+  空闲余量                                    = 56  (≈ 58 %)
 ```
 
-The defaults are sized for **10 parallel flows** with concurrent API requests. If you run more flows or deploy multiple PentAGI instances against the same Postgres, raise `max_connections` via the `command` override in `docker-compose.yml` and increase the pool sizes proportionally:
+默认值按 **10 个并行任务流**及并发 API 请求进行配置。如果需要运行更多任务流，或让多个 PentAGI 实例共用同一个 PostgreSQL，请在 `docker-compose.yml` 中通过 `command` 覆盖项提高 `max_connections`，并按比例增大连接池：
 
 ```yaml
 pgvector:
@@ -2791,21 +2791,21 @@ pgvector:
   command: postgres -c max_connections=200
 ```
 
-To inspect the live connection budget on a running deployment:
+检查正在运行的部署当前使用的连接预算：
 
 ```bash
-# Postgres limits
+# PostgreSQL 限制
 docker exec pgvector sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
   "SELECT name, setting FROM pg_settings
    WHERE name IN ('"'"'max_connections'"'"', '"'"'superuser_reserved_connections'"'"');"'
 
-# Current usage vs. available
+# 当前用量与可用量
 docker exec pgvector sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
   "SELECT max_conn, used, max_conn - used AS available
    FROM (SELECT current_setting('"'"'max_connections'"'"')::int AS max_conn,
                 count(*) AS used FROM pg_stat_activity) t;"'
 
-# Breakdown by client
+# 按客户端细分
 docker exec pgvector sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
   "SELECT application_name, client_addr, state, count(*)
    FROM pg_stat_activity
@@ -2813,33 +2813,33 @@ docker exec pgvector sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
    GROUP BY 1, 2, 3 ORDER BY count DESC;"'
 ```
 
-#### Frontend Configuration
+#### 前端配置
 
-Edit the configuration for `frontend` in `.vscode/launch.json` file:
-- `VITE_API_URL` - Backend API URL. *Omit* the URL scheme (e.g., `localhost:8080` *NOT* `http://localhost:8080`)
-- `VITE_USE_HTTPS` - Enable SSL for the server (default: `false`)
-- `VITE_PORT` - Port to run the server (default: `8000`)
-- `VITE_HOST` - Host to run the server (default: `0.0.0.0`)
+在 `.vscode/launch.json` 文件中修改 `frontend` 配置：
+- `VITE_API_URL`：后端 API URL。*不要包含* URL 协议部分（例如应填 `localhost:8080`，*不要填* `http://localhost:8080`）
+- `VITE_USE_HTTPS`：是否为服务器启用 SSL（默认：`false`）
+- `VITE_PORT`：服务器运行端口（默认：`8000`）
+- `VITE_HOST`：服务器监听地址（默认：`0.0.0.0`）
 
-### Running the Application
+### 运行应用
 
-#### Backend
+#### 后端
 
-Run the command(s) in `backend` folder:
-- Use `.env` file to set environment variables like a `source .env`
-- Run `go run cmd/pentagi/main.go` to start the server
+在 `backend` 目录中运行以下命令：
+- 使用 `.env` 文件设置环境变量，例如执行 `source .env`
+- 执行 `go run cmd/pentagi/main.go` 启动服务器
 
 > [!NOTE]
-> The first run can take a while as dependencies and docker images need to be downloaded to setup the backend environment.
+> 首次运行需要下载依赖项和 Docker 镜像来设置后端环境，因此可能耗时较长。
 
-#### Frontend
+#### 前端
 
-Run the command(s) in `frontend` folder:
-- Run `pnpm install` to install the dependencies
-- Run `pnpm run dev` to run the web app
-- Run `pnpm run build` to build the web app
+在 `frontend` 目录中运行以下命令：
+- 执行 `pnpm install` 安装依赖项
+- 执行 `pnpm run dev` 运行网页应用
+- 执行 `pnpm run build` 构建网页应用
 
-Open your browser and visit the web app URL.
+在浏览器中打开网页应用的 URL。
 
 ## Testing LLM Agents
 

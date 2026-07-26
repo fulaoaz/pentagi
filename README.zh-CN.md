@@ -663,59 +663,59 @@ unzip installer.zip
 - **安全边界**：通过 TLS 认证保护 Docker-in-Docker
 - **OOB（带外）攻击支持**：为带外技术预留独立的端口范围
 
-### Manual Installation
+### 手动安装
 
-1. Create a working directory or clone the repository:
+1. 创建工作目录，或克隆仓库：
 
 ```bash
 mkdir pentagi && cd pentagi
 ```
 
-2. Copy `.env.example` to `.env` or download it:
+2. 将 `.env.example` 复制为 `.env`，也可直接下载：
 
 ```bash
 curl -o .env https://raw.githubusercontent.com/vxcontrol/pentagi/master/.env.example
 ```
 
-3. Touch examples files (`example.custom.provider.yml`, `example.ollama.provider.yml`) or download it:
+3. 创建示例配置文件（`example.custom.provider.yml`、`example.ollama.provider.yml`），或下载现成配置：
 
 ```bash
 curl -o example.custom.provider.yml https://raw.githubusercontent.com/vxcontrol/pentagi/master/examples/configs/custom-openai.provider.yml
 curl -o example.ollama.provider.yml https://raw.githubusercontent.com/vxcontrol/pentagi/master/examples/configs/ollama-llama318b.provider.yml
 ```
 
-4. Fill in the required API keys in `.env` file.
+4. 在 `.env` 文件中填写所需的 API 密钥。
 
 ```bash
-# Required: At least one of these LLM providers
+# 必填：至少选择下列一个 LLM 提供商
 OPEN_AI_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
 GEMINI_API_KEY=your_gemini_key
 
-# Optional: AWS Bedrock provider (enterprise-grade models)
+# 可选：AWS Bedrock 提供商（企业级模型）
 BEDROCK_REGION=us-east-1
-# Choose one authentication method:
-BEDROCK_DEFAULT_AUTH=true                        # Option 1: Use AWS SDK default credential chain (recommended for EC2/ECS)
-# BEDROCK_BEARER_TOKEN=your_bearer_token         # Option 2: Bearer token authentication
-# BEDROCK_ACCESS_KEY_ID=your_aws_access_key      # Option 3: Static credentials
+# 选择一种认证方式：
+BEDROCK_DEFAULT_AUTH=true                        # 选项 1：使用 AWS SDK 默认凭据链（建议用于 EC2/ECS）
+# BEDROCK_BEARER_TOKEN=your_bearer_token         # 选项 2：Bearer 令牌认证
+# BEDROCK_ACCESS_KEY_ID=your_aws_access_key      # 选项 3：静态凭据
 # BEDROCK_SECRET_ACCESS_KEY=your_aws_secret_key
 
-# Optional: Ollama provider (local or cloud)
-# OLLAMA_SERVER_URL=http://ollama-server:11434   # Local server
-# OLLAMA_SERVER_URL=https://ollama.com           # Cloud service
-# OLLAMA_SERVER_API_KEY=your_ollama_cloud_key    # Required for cloud, empty for local
+# 可选：Ollama 提供商（本地或云端）
+# OLLAMA_SERVER_URL=http://ollama-server:11434   # 本地服务器
+# OLLAMA_SERVER_URL=https://ollama.com           # 云服务
+# OLLAMA_SERVER_API_KEY=your_ollama_cloud_key    # 云服务必填，本地服务留空
 
-# Optional: Chinese AI providers
-# DEEPSEEK_API_KEY=your_deepseek_key             # DeepSeek (strong reasoning)
-# GLM_API_KEY=your_glm_key                       # GLM (Zhipu AI)
-# KIMI_API_KEY=your_kimi_key                     # Kimi (Moonshot AI, ultra-long context)
-# QWEN_API_KEY=your_qwen_key                     # Qwen (Alibaba Cloud, multimodal)
+# 可选：中国 AI 提供商
+# DEEPSEEK_API_KEY=your_deepseek_key             # DeepSeek（推理能力强）
+# GLM_API_KEY=your_glm_key                       # GLM（智谱 AI）
+# KIMI_API_KEY=your_kimi_key                     # Kimi（Moonshot AI，超长上下文）
+# QWEN_API_KEY=your_qwen_key                     # Qwen（阿里云，多模态）
 
-# Optional: Local LLM provider (zero-cost inference)
+# 可选：本地 LLM 提供商（推理不产生 API 费用）
 OLLAMA_SERVER_URL=http://localhost:11434
 OLLAMA_SERVER_MODEL=your_model_name
 
-# Optional: Additional search capabilities
+# 可选：其他搜索能力
 DUCKDUCKGO_ENABLED=true
 DUCKDUCKGO_REGION=us-en
 DUCKDUCKGO_SAFESEARCH=
@@ -729,7 +729,7 @@ PERPLEXITY_API_KEY=your_perplexity_key
 PERPLEXITY_MODEL=sonar-pro
 PERPLEXITY_CONTEXT_SIZE=medium
 
-# Searxng meta search engine (aggregates results from multiple sources)
+# Searxng 元搜索引擎（聚合多个来源的结果）
 SEARXNG_URL=http://your-searxng-instance:8080
 SEARXNG_CATEGORIES=general
 SEARXNG_LANGUAGE=
@@ -737,20 +737,20 @@ SEARXNG_SAFESEARCH=0
 SEARXNG_TIME_RANGE=
 SEARXNG_TIMEOUT=
 
-## Graphiti knowledge graph settings
+## Graphiti 知识图谱设置
 GRAPHITI_ENABLED=true
 GRAPHITI_TIMEOUT=30
 GRAPHITI_URL=http://graphiti:8000
 GRAPHITI_MODEL_NAME=gpt-5-mini
 
-# Neo4j settings (used by Graphiti stack)
+# Neo4j 设置（供 Graphiti 服务使用）
 NEO4J_USER=neo4j
 NEO4J_DATABASE=neo4j
 NEO4J_PASSWORD=devpassword
 NEO4J_URI=bolt://neo4j:7687
 
-# Assistant configuration
-ASSISTANT_USE_AGENTS=false         # Default value for agent usage when creating new assistants
+# 助手配置
+ASSISTANT_USE_AGENTS=false         # 新建助手时“使用智能体”的默认值
 ```
 
 5. 修改 `.env` 文件中所有与安全相关的环境变量，加强系统安全性。
@@ -964,101 +964,101 @@ podman exec -it pentagi wget -O- "http://someuser:somepass@scraper:3000/html?url
 
 PentAGI 允许你为助手配置默认行为：
 
-| Variable               | Default | Description                                                             |
-| ---------------------- | ------- | ----------------------------------------------------------------------- |
-| `ASSISTANT_USE_AGENTS` | `false` | Controls the default value for agent usage when creating new assistants |
+| 变量                   | 默认值  | 说明                                 |
+| ---------------------- | ------- | ------------------------------------ |
+| `ASSISTANT_USE_AGENTS` | `false` | 新建助手时是否默认启用智能体委派     |
 
-The `ASSISTANT_USE_AGENTS` setting affects the initial state of the "Use Agents" toggle when creating a new assistant in the UI:
-- `false` (default): New assistants are created with agent delegation disabled by default
-- `true`: New assistants are created with agent delegation enabled by default
+`ASSISTANT_USE_AGENTS` 决定在界面中新建助手时，“Use Agents（使用智能体）”开关的初始状态：
+- `false`（默认）：新建助手时默认关闭智能体委派
+- `true`：新建助手时默认启用智能体委派
 
-Note that users can always override this setting by toggling the "Use Agents" button in the UI when creating or editing an assistant. This environment variable only controls the initial default state.
+创建或编辑助手时，用户随时可以在界面中切换“Use Agents（使用智能体）”开关。该环境变量只控制初始默认值。
 
-## How to Use PentAGI After Login
+## 登录后如何使用 PentAGI
 
-Once the stack is running and you can sign in to the web UI, the fastest way to start is through the Flows workflow.
+服务启动并登录网页界面后，最快的上手方式是从 Flows（任务流）开始。
 
-### 1. Create your first flow
+### 1. 创建第一个任务流
 
-1. Open **Flows** in the sidebar.
-2. Click **New Flow**.
-3. Choose the mode that fits your goal:
-   - **Automation**: fully autonomous execution for a testing goal you want PentAGI to carry out end-to-end
-   - **Assistant**: interactive back-and-forth help when you want to steer the investigation step by step. In this mode you can also enable the **Use Agents** toggle to let PentAGI delegate subtasks to specialized sub-agents for more complex investigations.
-4. Select the LLM provider you want to use for this flow.
-5. Describe the target and the objective in natural language in the message box.
+1. 在侧边栏中打开 **Flows（任务流）**。
+2. 点击 **New Flow（新建任务流）**。
+3. 根据目标选择运行模式：
+   - **Automation（自动化）**：PentAGI 围绕测试目标自主完成整个流程
+   - **Assistant（助手）**：适合通过交互逐步引导调查。在此模式下，还可以开启 **Use Agents（使用智能体）**，让 PentAGI 将复杂调查中的子任务委派给专职子智能体。
+4. 选择此任务流使用的 LLM 提供商。
+5. 在消息框中用自然语言描述目标和测试目的。
 
-Good first prompts usually include:
+第一条提示词最好包含：
 
-- the target system or URL
-- the type of assessment you want
-- any scope limitations or rules of engagement
-- the result you expect, such as a vulnerability report or validation of a hypothesis
+- 目标系统或 URL
+- 所需的评估类型
+- 测试范围限制或测试规则
+- 预期结果，例如漏洞报告或对某项假设的验证
 
-Example:
+示例：
 
 ```text
-Assess https://target.example for common web application vulnerabilities. Focus on authentication, file handling, and injection issues. Stay within the provided target only and summarize confirmed findings with reproduction steps.
+评估 https://target.example 中常见的 Web 应用漏洞，重点检查身份认证、文件处理和注入问题。测试范围仅限给定目标，并汇总已确认的问题及复现步骤。
 ```
 
-Only test systems you own or are explicitly authorized to assess. See [EULA.md](EULA.md) for the acceptable use requirements.
+仅测试你拥有或明确获准评估的系统。可接受使用要求参见 [EULA.md](EULA.md)。
 
-### 2. Use templates for repeatable workflows
+### 2. 使用模板复用工作流程
 
-The new flow form includes a template picker, which can prefill the message box with a saved flow template. This is useful when you run similar assessments repeatedly.
+新建任务流表单提供模板选择器，可以用已保存的任务流模板预填消息框。需要反复执行类似评估时，可直接复用这些模板。
 
-- Use an existing template if you already have one saved in **Templates**
-- Start from the example prompt in [`examples/prompts/base_web_pentest.md`](examples/prompts/base_web_pentest.md) if you need a practical baseline for web testing
-- Adjust the target, scope, and constraints before starting the flow
+- 如果已在 **Templates（模板）** 中保存模板，可直接选用
+- 如需可直接使用的 Web 测试基线，可从 [`examples/prompts/base_web_pentest.md`](examples/prompts/base_web_pentest.md) 中的示例提示词开始
+- 启动任务流前，按实际情况调整目标、范围和约束条件
 
-Templates are starting points. You do not need special syntax to use PentAGI: plain natural-language instructions work well as long as the target and goal are clear.
+模板只是起点。PentAGI 不要求使用特殊语法，只要目标和目的清楚，直接使用自然语言说明即可。
 
-### 3. Monitor execution and review output
+### 3. 监控执行过程并查看结果
 
-After submitting the flow, PentAGI opens the flow page automatically.
+提交任务流后，PentAGI 会自动打开任务流页面。
 
-- Use the main flow view to follow messages, agent activity, and task progress
-- Inspect tool activity and terminal output as the flow runs
-- Review generated tasks and subtasks to understand what PentAGI is doing
+- 在任务流主视图中查看消息、智能体活动和任务进度
+- 在运行过程中检查工具活动和终端输出
+- 查看生成的任务和子任务，了解 PentAGI 正在执行的操作
 
-Once the flow has enough results, use the **Report** menu on the flow page to:
+任务流产生足够的结果后，可以通过页面上的 **Report（报告）** 菜单：
 
-- open the report in a web view
-- copy the generated report to the clipboard
-- download the report as Markdown
-- download the report as PDF
+- 在网页中打开报告
+- 将生成的报告复制到剪贴板
+- 下载 Markdown 格式的报告
+- 下载 PDF 格式的报告
 
-### 4. Use the Assistant view to steer an active flow
+### 4. 通过助手视图调整进行中的任务流
 
-Each flow also includes an **Assistant** view for interactive guidance. This is useful when the autonomous run uncovers something that needs human direction instead of a hard restart.
+每个任务流都有 **Assistant（助手）** 视图，可通过交互进行引导。当自动化执行遇到需要人工判断的情况时，可以直接介入，无需从头重启任务流。
 
-- Open the **Assistant** view for the same flow when you want to inspect the current state before changing anything.
-- Use the assistant to check flow status, stop the current task, submit follow-up instructions, or patch the remaining planned subtasks before the next step runs.
-- Treat this as an explicit control path for the current flow, not as an invisible background queue. If you want to change direction, say so clearly and keep the new instruction tied to the current engagement scope.
-- This works best for clarifying scope, redirecting priorities after intermediate findings, or answering an automation checkpoint without losing the rest of the flow context.
+- 如需在改动前查看当前状态，请打开同一任务流的 **Assistant（助手）** 视图。
+- 可以通过助手检查任务流状态、停止当前任务、提交后续指令，或在下一步执行前调整尚未运行的计划子任务。
+- 该视图是当前任务流的明确控制入口，并非隐藏的后台队列。需要改变方向时，请清楚说明新要求，并确保新指令仍在当前测试范围内。
+- 它适合用来澄清范围、根据中间结果调整优先级，或响应自动化检查点，同时保留任务流的其余上下文。
 
-### 5. Manage flow-scoped files
+### 5. 管理任务流专属文件
 
-Each flow has its own **Files** tab in the flow page. Files are scoped to the parent flow: they live in `{dataDir}/flow-{id}-data/` on the host and never leak into other flows.
+每个任务流页面都有独立的 **Files（文件）** 标签页。文件仅属于其父任务流，存放在主机的 `{dataDir}/flow-{id}-data/` 目录中，不会进入其他任务流。
 
-The tab exposes three sources of files:
+该标签页包含三类文件来源：
 
-- **Uploads** (`uploads/`): files you provide from the web UI. Use the **Upload files** action, or drag and drop directly onto the Files tab. While the agent container is running, uploaded files are also pushed into it at `/work/uploads/` so the agent can read them with normal shell tools.
-- **Resources** (`resources/`): files attached from your saved user resources library via **Attach resources from library**. Attached resources are copied into the flow and pushed into the running container at `/work/resources/`.
-- **Container** (`container/`): snapshots pulled from the running agent container via **Pull file or directory from container**. These are read-only on the flow side and are never sent back to the container.
+- **Uploads（上传文件）**（`uploads/`）：从网页界面上传的文件。可以使用 **Upload files（上传文件）** 操作，也可以直接将文件拖放到 Files 标签页。智能体容器运行期间，上传的文件还会同步到容器内的 `/work/uploads/`，供智能体使用常规 shell 工具读取。
+- **Resources（资源）**（`resources/`）：通过 **Attach resources from library（从资源库附加资源）** 从用户资源库附加的文件。这些资源会复制到任务流中，并同步到运行中容器的 `/work/resources/`。
+- **Container（容器）**（`container/`）：通过 **Pull file or directory from container（从容器拉取文件或目录）** 从运行中的智能体容器获取的快照。这些文件在任务流端为只读，且不会传回容器。
 
-Per-file actions in the Files tab include **Download**, **Copy path**, **Save as resource** (promote a flow file into your reusable resources library), and **Delete**. The Pull action is disabled when the container is not running, with the tooltip "Container is not running".
+Files 标签页为每个文件提供 **Download（下载）**、**Copy path（复制路径）**、**Save as resource（另存为资源）** 和 **Delete（删除）** 操作。“另存为资源”会把任务流文件加入可复用的用户资源库。容器未运行时，Pull（拉取）操作会被禁用，并显示“Container is not running（容器未运行）”提示。
 
-Uploaded files and attached resources are listed automatically in the agent's system prompts via the `{{.UserFiles}}` template variable, which renders a compact `<task_files>` XML block (with nested `<uploads>` and `<resources>` sections), so the assistant and automation agents can reference them by path without you pasting the contents into chat. Container snapshots are visible in the UI only and are not auto-injected back into the prompt.
+`{{.UserFiles}}` 模板变量会将上传文件和附加资源自动列入智能体的系统提示词，并生成紧凑的 `<task_files>` XML 块，其中包含 `<uploads>` 和 `<resources>` 子节。这样，助手和自动化智能体可以直接按路径引用文件，无需把文件内容粘贴到对话中。容器快照只在界面中可见，不会自动加入提示词。
 
-Current limits and limitations to be aware of:
+目前有以下限制：
 
-- Maximum upload file size is 300 MB; per upload request up to 1000 files and 2 GB total. File names are capped at 255 bytes (roughly 255 ASCII characters; non-ASCII names use multiple bytes per character).
-- Uploads and resources are mirrored into the running container at the fixed paths `/work/uploads/` and `/work/resources/`; files written to other container paths are not auto-mirrored back into the flow file model. Container snapshots can originate from any container path you pull (for example `/etc/...`) and are cached on the flow side under `container/`; they are not pushed back into the container.
-- Container snapshots are point-in-time pulls. Editing a snapshot in the UI does not write back into the running container.
-- Deleting a flow today removes the flow record and its long-term memory entries, but does not yet archive or remove the flow's `flow-{id}-data/` directory on disk. Operators are still expected to clean up the data directory manually if they want to reclaim the space.
+- 单个上传文件最大为 300 MB；每次上传最多包含 1000 个文件，总大小不超过 2 GB。文件名最长 255 字节，约等于 255 个 ASCII 字符；非 ASCII 字符通常占用多个字节。
+- 上传文件和资源会分别同步到运行中容器的固定路径 `/work/uploads/` 和 `/work/resources/`。写入容器其他路径的文件不会自动同步回任务流文件模型。可以从容器内任意指定路径拉取快照，例如 `/etc/...`；快照会缓存在任务流端的 `container/` 目录下，但不会再推送回容器。
+- 容器快照只记录拉取时的状态。在界面中编辑快照不会写回运行中的容器。
+- 目前删除任务流只会移除任务流记录及其长期记忆条目，不会归档或删除磁盘上的 `flow-{id}-data/` 目录。如需回收空间，运维人员仍需手动清理该数据目录。
 
-For early testing, start with a narrow target and a single clear objective. This makes the output easier to review and helps you refine your prompts before running larger assessments.
+初次测试时，建议从范围较小的目标和单一、明确的目的开始。这样更容易检查输出，也便于在执行更大规模的评估前完善提示词。
 
 ## API Access
 

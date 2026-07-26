@@ -16,7 +16,7 @@ interface LocaleProviderState {
 export const LocaleProviderContext = createContext<LocaleProviderState>({
     locale: defaultLocale,
     setLocale: () => null,
-    t: (key) => key,
+    t: (key, values) => translate(dictionaries[fallbackLocale], dictionaries[fallbackLocale], key, values),
 });
 
 interface LocaleProviderProps {

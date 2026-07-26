@@ -3200,196 +3200,196 @@ simple_json:
 
 ## 嵌入模型配置与测试
 
-PentAGI uses vector embeddings for semantic search, knowledge storage, and memory management. The system supports multiple embedding providers that can be configured according to your needs and preferences.
+PentAGI 使用向量嵌入实现语义搜索、知识存储和记忆管理。系统支持多种嵌入模型提供商，可按实际需求进行配置。
 
-### Supported Embedding Providers
+### 支持的嵌入模型提供商
 
-PentAGI supports the following embedding providers:
+PentAGI 支持以下嵌入模型提供商：
 
-- **OpenAI** (default): Uses OpenAI's text embedding models
-- **Ollama**: Local embedding model through Ollama
-- **Mistral**: Mistral AI's embedding models
-- **Jina**: Jina AI's embedding service
-- **HuggingFace**: Models from HuggingFace
-- **GoogleAI**: Google's embedding models
-- **VoyageAI**: VoyageAI's embedding models
+- **OpenAI**（默认）：使用 OpenAI 文本嵌入模型
+- **Ollama**：通过 Ollama 运行本地嵌入模型
+- **Mistral**：使用 Mistral AI 嵌入模型
+- **Jina**：使用 Jina AI 嵌入服务
+- **HuggingFace**：使用 HuggingFace 模型
+- **GoogleAI**：使用 Google 嵌入模型
+- **VoyageAI**：使用 VoyageAI 嵌入模型
 
-> **OpenAI-compatible third parties**: any provider exposing OpenAI's `/embeddings` API can be plugged in via `EMBEDDING_PROVIDER=openai` with a custom `EMBEDDING_URL`. For example, **Qwen DashScope** offers `text-embedding-v4` through the `/compatible-mode/v1` endpoint (International and Chinese Mainland regions only — the US region does not expose embeddings). See the [Qwen Alternative Integrations](#alternative-integrations) subsection for the full configuration snippet.
+> **兼容 OpenAI 的第三方服务**：任何提供 OpenAI `/embeddings` API 的服务都可以接入。设置 `EMBEDDING_PROVIDER=openai`，并在 `EMBEDDING_URL` 中填写自定义地址即可。例如，**Qwen DashScope** 通过 `/compatible-mode/v1` 端点提供 `text-embedding-v4`，但仅限国际站和中国大陆区域，美国区域没有嵌入接口。完整配置片段参见 Qwen 章节的[其他集成方式](#其他集成方式)。
 
 <details>
-<summary><b>Embedding Provider Configuration</b> (click to expand)</summary>
+<summary><b>嵌入模型提供商配置</b>（点击展开）</summary>
 
-### Environment Variables
+### 环境变量
 
-To configure the embedding provider, set the following environment variables in your `.env` file:
+在 `.env` 文件中设置以下环境变量，配置嵌入模型提供商：
 
 ```bash
-# Primary embedding configuration
-EMBEDDING_PROVIDER=openai       # Provider type (openai, ollama, mistral, jina, huggingface, googleai, voyageai)
-EMBEDDING_MODEL=text-embedding-3-small  # Model name to use
-EMBEDDING_URL=                  # Optional custom API endpoint
-EMBEDDING_KEY=                  # API key for the provider (if required)
-EMBEDDING_BATCH_SIZE=100        # Number of documents to process in a batch
-EMBEDDING_STRIP_NEW_LINES=true  # Whether to remove new lines from text before embedding
-EMBEDDING_MAX_TEXT_BYTES=8192   # Max bytes of text sent to embedding model per document (byte proxy for token limit)
+# 主要嵌入配置
+EMBEDDING_PROVIDER=openai       # 提供商类型（openai、ollama、mistral、jina、huggingface、googleai、voyageai）
+EMBEDDING_MODEL=text-embedding-3-small  # 使用的模型名称
+EMBEDDING_URL=                  # 可选的自定义 API 端点
+EMBEDDING_KEY=                  # 提供商 API 密钥（如需要）
+EMBEDDING_BATCH_SIZE=100        # 每批处理的文档数
+EMBEDDING_STRIP_NEW_LINES=true  # 嵌入前是否移除文本中的换行符
+EMBEDDING_MAX_TEXT_BYTES=8192   # 每份文档发送给嵌入模型的最大字节数（以字节数近似限制令牌量）
 
-# Advanced settings
-PROXY_URL=                      # Optional proxy for all API calls
-HTTP_CLIENT_TIMEOUT=600         # Timeout in seconds for external API calls (default: 600, 0 = no timeout)
-TERMINAL_TOOL_TIMEOUT=1200      # Default timeout in seconds for terminal tool commands when timeout=0 or negative (range: 1–10800; values <= 0 or above 10800 are clamped to 10800 = 3 hours)
+# 高级设置
+PROXY_URL=                      # 所有 API 调用使用的可选代理
+HTTP_CLIENT_TIMEOUT=600         # 外部 API 调用超时时间，单位为秒（默认：600；0 表示不超时）
+TERMINAL_TOOL_TIMEOUT=1200      # 终端工具命令在 timeout=0 或负数时使用的默认超时秒数（范围：1～10800；小于等于 0 或超过 10800 的值会限制为 10800，即 3 小时）
 
-# SSL/TLS Certificate Configuration (for external communication with LLM backends and tool servers)
-EXTERNAL_SSL_CA_PATH=           # Path to custom CA certificate file (PEM format) inside the container
-                                # Must point to /opt/pentagi/ssl/ directory (e.g., /opt/pentagi/ssl/ca-bundle.pem)
-EXTERNAL_SSL_INSECURE=false     # Skip certificate verification (use only for testing)
+# SSL/TLS 证书配置（用于同 LLM 后端和工具服务器进行外部通信）
+EXTERNAL_SSL_CA_PATH=           # 容器内自定义 CA 证书文件的路径（PEM 格式）
+                                # 必须指向 /opt/pentagi/ssl/ 目录（例如 /opt/pentagi/ssl/ca-bundle.pem）
+EXTERNAL_SSL_INSECURE=false     # 跳过证书验证（仅用于测试）
 ```
 
 <details>
-<summary><b>How to Add Custom CA Certificates</b> (click to expand)</summary>
+<summary><b>如何添加自定义 CA 证书</b>（点击展开）</summary>
 
-If you see this error: `tls: failed to verify certificate: x509: certificate signed by unknown authority`
+如果遇到以下错误：`tls: failed to verify certificate: x509: certificate signed by unknown authority`
 
-**Step 1:** Get your CA certificate bundle in PEM format (can contain multiple certificates)
+**第 1 步：** 获取 PEM 格式的 CA 证书包（可包含多个证书）。
 
-**Step 2:** Place the file in the SSL directory on your host machine:
+**第 2 步：** 将文件放入宿主机的 SSL 目录：
 ```bash
-# Default location (if PENTAGI_SSL_DIR is not set)
+# 默认位置（未设置 PENTAGI_SSL_DIR 时）
 cp ca-bundle.pem ./pentagi-ssl/
 
-# Or custom location (if using PENTAGI_SSL_DIR in docker-compose.yml)
+# 或自定义位置（在 docker-compose.yml 中使用 PENTAGI_SSL_DIR 时）
 cp ca-bundle.pem /path/to/your/ssl/dir/
 ```
 
-**Step 3:** Set the path in `.env` file (path must be inside the container):
+**第 3 步：** 在 `.env` 文件中设置路径（必须是容器内路径）：
 ```bash
-# The volume pentagi-ssl is mounted to /opt/pentagi/ssl inside the container
+# pentagi-ssl 卷挂载到容器内的 /opt/pentagi/ssl
 EXTERNAL_SSL_CA_PATH=/opt/pentagi/ssl/ca-bundle.pem
 EXTERNAL_SSL_INSECURE=false
 ```
 
-**Step 4:** Restart PentAGI:
+**第 4 步：** 重启 PentAGI：
 ```bash
 docker compose restart pentagi
 ```
 
-**Notes:**
-- The `pentagi-ssl` volume is mounted to `/opt/pentagi/ssl` inside the container
-- You can change host directory using `PENTAGI_SSL_DIR` variable in docker-compose.yml
-- File supports multiple certificates and intermediate CAs in one PEM file
-- Use `EXTERNAL_SSL_INSECURE=true` only for testing (not recommended for production)
+**注意事项：**
+- `pentagi-ssl` 卷挂载到容器内的 `/opt/pentagi/ssl`
+- 可以通过 docker-compose.yml 中的 `PENTAGI_SSL_DIR` 变量更改宿主机目录
+- 一个 PEM 文件可以包含多个证书和中间 CA
+- `EXTERNAL_SSL_INSECURE=true` 仅用于测试，不建议在生产环境中使用
 
 </details>
 
-### Provider-Specific Limitations
+### 各提供商的限制
 
-Each provider has specific limitations and supported features:
+各提供商支持的功能和限制如下：
 
-- **OpenAI**: Supports all configuration options
-- **Ollama**: Does not support `EMBEDDING_KEY` as it uses local models
-- **Mistral**: Does not support `EMBEDDING_MODEL` or custom HTTP client
-- **Jina**: Does not support custom HTTP client
-- **HuggingFace**: Requires `EMBEDDING_KEY` and supports all other options
-- **GoogleAI**: Does not support `EMBEDDING_URL`, requires `EMBEDDING_KEY`
-- **VoyageAI**: Supports all configuration options
+- **OpenAI**：支持所有配置选项
+- **Ollama**：使用本地模型，因此不使用 `EMBEDDING_KEY`
+- **Mistral**：不支持 `EMBEDDING_MODEL` 或自定义 HTTP 客户端
+- **Jina**：不支持自定义 HTTP 客户端
+- **HuggingFace**：必须设置 `EMBEDDING_KEY`，支持其他所有选项
+- **GoogleAI**：不支持 `EMBEDDING_URL`，必须设置 `EMBEDDING_KEY`
+- **VoyageAI**：支持所有配置选项
 
-If `EMBEDDING_URL` and `EMBEDDING_KEY` are not specified, the system will attempt to use the corresponding LLM provider settings (e.g., `OPEN_AI_KEY` when `EMBEDDING_PROVIDER=openai`).
+如果未指定 `EMBEDDING_URL` 和 `EMBEDDING_KEY`，系统会尝试使用对应 LLM 提供商的设置。例如，`EMBEDDING_PROVIDER=openai` 时使用 `OPEN_AI_KEY`。
 
-### Why Consistent Embedding Providers Matter
+### 为什么要保持嵌入模型提供商一致
 
-It's crucial to use the same embedding provider consistently because:
+必须持续使用同一个嵌入模型提供商，原因如下：
 
-1. **Vector Compatibility**: Different providers produce vectors with different dimensions and mathematical properties
-2. **Semantic Consistency**: Changing providers can break semantic similarity between previously embedded documents
-3. **Memory Corruption**: Mixed embeddings can lead to poor search results and broken knowledge base functionality
+1. **向量兼容性**：不同提供商生成的向量在维度和数学性质上有所不同
+2. **语义一致性**：更换提供商会破坏之前已嵌入文档之间的语义相似关系
+3. **记忆数据失效**：混用不同嵌入向量会降低搜索质量，并使知识库功能异常
 
-If you change your embedding provider, you should flush and reindex your entire knowledge base (see `etester` utility below).
+更换嵌入模型提供商后，应清空整个知识库并重新建立索引（参见下文的 `etester` 工具）。
 
 </details>
 
-### Embedding Tester Utility (etester)
+### 嵌入测试工具（etester）
 
-PentAGI includes a specialized `etester` utility for testing, managing, and debugging embedding functionality. This tool is essential for diagnosing and resolving issues related to vector embeddings and knowledge storage.
+PentAGI 提供专用的 `etester` 工具，用于测试、管理和调试嵌入功能，以及排查向量嵌入与知识存储问题。
 
 <details>
-<summary><b>Etester Commands</b> (click to expand)</summary>
+<summary><b>etester 命令</b>（点击展开）</summary>
 
 ```bash
-# Test embedding provider and database connection
+# 测试嵌入模型提供商和数据库连接
 cd backend
 go run cmd/etester/main.go test -verbose
 
-# Show statistics about the embedding database
+# 显示嵌入数据库的统计信息
 go run cmd/etester/main.go info
 
-# Delete all documents from the embedding database (use with caution!)
+# 删除嵌入数据库中的所有文档（请谨慎操作）
 go run cmd/etester/main.go flush
 
-# Recalculate embeddings for all documents (after changing provider)
+# 为所有文档重新计算嵌入向量（更换提供商后使用）
 go run cmd/etester/main.go reindex
 
-# Search for documents in the embedding database
-go run cmd/etester/main.go search -query "How to install PostgreSQL" -limit 5
+# 在嵌入数据库中搜索文档
+go run cmd/etester/main.go search -query "如何安装 PostgreSQL" -limit 5
 ```
 
-### Using Docker
+### 使用 Docker
 
-If you're running PentAGI in Docker, you can use etester from within the container:
+如果 PentAGI 在 Docker 中运行，可以从容器内使用 etester：
 
 ```bash
-# Test embedding provider
+# 测试嵌入模型提供商
 docker exec -it pentagi /opt/pentagi/bin/etester test
 
-# Show detailed database information
+# 显示详细的数据库信息
 docker exec -it pentagi /opt/pentagi/bin/etester info -verbose
 ```
 
-### Advanced Search Options
+### 高级搜索选项
 
-The `search` command supports various filters to narrow down results:
+`search` 命令支持多种筛选条件，可缩小结果范围：
 
 ```bash
-# Filter by document type
-docker exec -it pentagi /opt/pentagi/bin/etester search -query "Security vulnerability" -doc_type guide -threshold 0.8
+# 按文档类型筛选
+docker exec -it pentagi /opt/pentagi/bin/etester search -query "安全漏洞" -doc_type guide -threshold 0.8
 
-# Filter by flow ID
-docker exec -it pentagi /opt/pentagi/bin/etester search -query "Code examples" -doc_type code -flow_id 42
+# 按任务流 ID 筛选
+docker exec -it pentagi /opt/pentagi/bin/etester search -query "代码示例" -doc_type code -flow_id 42
 
-# All available search options
+# 所有可用搜索选项
 docker exec -it pentagi /opt/pentagi/bin/etester search -help
 ```
 
-Available search parameters:
-- `-query STRING`: Search query text (required)
-- `-doc_type STRING`: Filter by document type (answer, memory, guide, code)
-- `-flow_id NUMBER`: Filter by flow ID (positive number)
-- `-answer_type STRING`: Filter by answer type (guide, vulnerability, code, tool, other)
-- `-guide_type STRING`: Filter by guide type (install, configure, use, pentest, development, other)
-- `-limit NUMBER`: Maximum number of results (default: 3)
-- `-threshold NUMBER`: Similarity threshold (0.0-1.0, default: 0.7)
+可用的搜索参数：
+- `-query STRING`：搜索查询文本（必填）
+- `-doc_type STRING`：按文档类型筛选（answer、memory、guide、code）
+- `-flow_id NUMBER`：按任务流 ID 筛选（正数）
+- `-answer_type STRING`：按答案类型筛选（guide、vulnerability、code、tool、other）
+- `-guide_type STRING`：按指南类型筛选（install、configure、use、pentest、development、other）
+- `-limit NUMBER`：最大结果数（默认：3）
+- `-threshold NUMBER`：相似度阈值（0.0～1.0，默认：0.7）
 
-### Memory Lifecycle Across Flows
+### 跨任务流的记忆生命周期
 
-PentAGI stores several kinds of vector documents, and they serve different purposes:
+PentAGI 存储多种向量文档，各自用途不同：
 
-- `memory` captures flow-specific execution history such as tool results and agent observations
-- `guide`, `answer`, and `code` are intended for reusable knowledge that can help future runs
+- `memory` 记录任务流专属的执行历史，例如工具结果和智能体观察
+- `guide`、`answer` 和 `code` 用于存储可复用知识，为后续运行提供帮助
 
-If you want to inspect what happened in one engagement, search the vector store with the related `flow_id`. If you want knowledge to survive beyond a single run, store the durable result explicitly as a `guide`, `answer`, or `code` document instead of relying on execution memory alone.
+如需查看某次评估的执行过程，请使用对应的 `flow_id` 搜索向量存储。如果希望知识在单次运行结束后仍可复用，应将长期有效的结果明确保存为 `guide`、`answer` 或 `code` 文档，不要只依赖执行记忆。
 
-For example, if a target has recurring setup notes, authentication quirks, or target-specific testing methodology, instruct the agent to save that information as a `guide` and search for it at the beginning of the next engagement. This is the safest current workflow when you want a new flow to start with reusable context.
+例如，如果某个目标有需要反复使用的设置说明、认证注意事项或目标专用测试方法，可以要求智能体将这些信息保存为 `guide`，并在下一次评估开始时进行搜索。如果希望新任务流从可复用上下文开始，目前建议采用这种工作方式。
 
-Flow deletion removes the flow from normal queries through PentAGI's soft-delete mechanism, so reusable knowledge should be treated as a separate concern from per-flow execution history. If you enable the optional Graphiti knowledge graph described earlier in this README, treat its current search context as scoped to the active flow or engagement unless you explicitly build a separate cross-flow reuse workflow.
+删除任务流时，PentAGI 的软删除机制会使其不再出现在常规查询中，因此可复用知识应与单个任务流的执行历史分开管理。如果启用了本文前述的可选 Graphiti 知识图谱，除非另外构建跨任务流复用机制，否则应将其当前搜索上下文视为仅限正在进行的任务流或评估。
 
-### Common Troubleshooting Scenarios
+### 常见故障排查场景
 
-1. **After changing embedding provider**: Always run `flush` or `reindex` to ensure consistency
-2. **Poor search results**: Try adjusting the similarity threshold or check if embeddings are correctly generated
-3. **Database connection issues**: Verify PostgreSQL is running with pgvector extension installed
-4. **Missing API keys**: Check environment variables for your chosen embedding provider
+1. **更换嵌入模型提供商后**：务必运行 `flush` 或 `reindex`，保持数据一致
+2. **搜索结果不理想**：尝试调整相似度阈值，或检查嵌入向量是否正确生成
+3. **数据库连接问题**：确认 PostgreSQL 正在运行且已安装 pgvector 扩展
+4. **缺少 API 密钥**：检查所选嵌入模型提供商的环境变量
 
 </details>
 
-## Function Testing with ftester
+## 使用 ftester 测试函数
 
 PentAGI includes a versatile utility called `ftester` for debugging, testing, and developing specific functions and AI agent behaviors. While `ctester` focuses on testing LLM model capabilities, `ftester` allows you to directly invoke individual system functions and AI agent components with precise control over execution context.
 

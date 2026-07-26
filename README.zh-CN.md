@@ -2841,185 +2841,185 @@ docker exec pgvector sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c \
 
 在浏览器中打开网页应用的 URL。
 
-## Testing LLM Agents
+## 测试 LLM 智能体
 
-PentAGI includes a powerful utility called `ctester` for testing and validating LLM agent capabilities. This tool helps ensure your LLM provider configurations work correctly with different agent types, allowing you to optimize model selection for each specific agent role.
+PentAGI 提供 `ctester` 工具，用于测试和验证 LLM 智能体的能力。它可以检查 LLM 提供商配置能否适配不同类型的智能体，并帮助为各个角色选择合适的模型。
 
-The utility features parallel testing of multiple agents, detailed reporting, and flexible configuration options.
+该工具支持并行测试多个智能体、生成详细报告，并提供灵活的配置选项。
 
-### Key Features
+### 主要功能
 
-- **Parallel Testing**: Tests multiple agents simultaneously for faster results
-- **Comprehensive Test Suite**: Evaluates basic completion, JSON responses, function calling, and penetration testing knowledge
-- **Detailed Reporting**: Generates markdown reports with success rates and performance metrics
-- **Flexible Configuration**: Test specific agents or test groups as needed
-- **Specialized Test Groups**: Includes domain-specific tests for cybersecurity and penetration testing scenarios
+- **并行测试**：同时测试多个智能体，更快获得结果
+- **完整的测试套件**：评估基本补全、JSON 响应、函数调用和渗透测试知识
+- **详细报告**：生成包含成功率和性能指标的 Markdown 报告
+- **灵活配置**：按需选择特定智能体或测试组
+- **专项测试组**：包含针对网络安全和渗透测试场景的领域测试
 
-### Usage Scenarios
+### 使用场景
 
-#### For Developers (with local Go environment)
+#### 开发人员（使用本地 Go 环境）
 
-If you've cloned the repository and have Go installed:
+如果已经克隆仓库并安装 Go，可以使用以下命令：
 
 ```bash
-# Default configuration with .env file
+# 使用 .env 文件中的默认配置
 cd backend
 go run cmd/ctester/*.go -verbose
 
-# Custom provider configuration
+# 自定义提供商配置
 go run cmd/ctester/*.go -config ../examples/configs/openrouter.provider.yml -verbose
 
-# Generate a report file
+# 生成报告文件
 go run cmd/ctester/*.go -config ../examples/configs/deepinfra.provider.yml -report ../test-report.md
 
-# Test specific agent types only
+# 仅测试指定类型的智能体
 go run cmd/ctester/*.go -agents simple,simple_json,primary_agent -verbose
 
-# Test specific test groups only
+# 仅运行指定测试组
 go run cmd/ctester/*.go -groups basic,advanced -verbose
 ```
 
-#### For Users (using Docker image)
+#### 普通用户（使用 Docker 镜像）
 
-If you prefer to use the pre-built Docker image without setting up a development environment:
+如果不想搭建开发环境，可以直接使用预构建 Docker 镜像：
 
 ```bash
-# Using Docker to test with default environment
+# 使用 Docker 和默认环境进行测试
 docker run --rm -v $(pwd)/.env:/opt/pentagi/.env vxcontrol/pentagi /opt/pentagi/bin/ctester -verbose
 
-# Test with your custom provider configuration
+# 使用自定义提供商配置进行测试
 docker run --rm \
   -v $(pwd)/.env:/opt/pentagi/.env \
   -v $(pwd)/my-config.yml:/opt/pentagi/config.yml \
   vxcontrol/pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/config.yml -agents simple,primary_agent,coder -verbose
 
-# Generate a detailed report
+# 生成详细报告
 docker run --rm \
   -v $(pwd)/.env:/opt/pentagi/.env \
   -v $(pwd):/opt/pentagi/output \
   vxcontrol/pentagi /opt/pentagi/bin/ctester -report /opt/pentagi/output/report.md
 ```
 
-#### Using Pre-configured Providers
+#### 使用预配置提供商
 
-The Docker image comes with built-in support for major providers (OpenAI, Anthropic, Gemini, Ollama) and pre-configured provider files for additional services (OpenRouter, DeepInfra, DeepSeek, Moonshot, Novita):
+Docker 镜像内置了对主要提供商（OpenAI、Anthropic、Gemini、Ollama）的支持，还包含其他服务（OpenRouter、DeepInfra、DeepSeek、Moonshot、Novita）的预配置文件：
 
 ```bash
-# Test with OpenRouter configuration
+# 测试 OpenRouter 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/openrouter.provider.yml
 
-# Test with DeepInfra configuration
+# 测试 DeepInfra 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/deepinfra.provider.yml
 
-# Test with DeepSeek configuration
+# 测试 DeepSeek 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -provider deepseek
 
-# Test with GLM configuration
+# 测试 GLM 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -provider glm
 
-# Test with Kimi configuration
+# 测试 Kimi 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -provider kimi
 
-# Test with Qwen configuration
+# 测试 Qwen 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -provider qwen
 
-# Test with DeepSeek configuration file for custom provider
+# 使用自定义提供商的 DeepSeek 配置文件进行测试
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/deepseek.provider.yml
 
-# Test with Moonshot configuration file for custom provider
+# 使用自定义提供商的 Moonshot 配置文件进行测试
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/moonshot.provider.yml
 
-# Test with Novita configuration
+# 测试 Novita 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/novita.provider.yml
 
-# Test with OpenAI configuration
+# 测试 OpenAI 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -type openai
 
-# Test with Anthropic configuration
+# 测试 Anthropic 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -type anthropic
 
-# Test with Gemini configuration
+# 测试 Gemini 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -type gemini
 
-# Test with AWS Bedrock configuration
+# 测试 AWS Bedrock 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -type bedrock
 
-# Test with Custom OpenAI configuration
+# 测试自定义 OpenAI 配置
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/custom-openai.provider.yml
 
-# Test with Ollama configuration (local inference)
+# 测试 Ollama 配置（本地推理）
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/ollama-llama318b.provider.yml
 
-# Test with Ollama Qwen3 32B configuration (requires custom model creation)
+# 测试 Ollama Qwen3 32B 配置（需要创建自定义模型）
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/ollama-qwen332b-fp16-tc.provider.yml
 
-# Test with Ollama QwQ 32B configuration (requires custom model creation and 71.3GB VRAM)
+# 测试 Ollama QwQ 32B 配置（需要创建自定义模型，并准备 71.3 GB 显存）
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/ollama-qwq32b-fp16-tc.provider.yml
 ```
 
-To use these configurations, your `.env` file only needs to contain:
+要使用这些配置，`.env` 文件只需包含以下内容：
 
 ```
-LLM_SERVER_URL=https://openrouter.ai/api/v1      # or https://api.deepinfra.com/v1/openai or https://api.openai.com/v1 or https://api.novita.ai/openai
+LLM_SERVER_URL=https://openrouter.ai/api/v1      # 或 https://api.deepinfra.com/v1/openai、https://api.openai.com/v1、https://api.novita.ai/openai
 LLM_SERVER_KEY=your_api_key
-LLM_SERVER_MODEL=                                # Leave empty, as models are specified in the config
-LLM_SERVER_CONFIG_PATH=/opt/pentagi/conf/openrouter.provider.yml  # or deepinfra.provider.ymll or custom-openai.provider.yml or novita.provider.yml
-LLM_SERVER_PROVIDER=                             # Provider name for LiteLLM proxy (e.g., openrouter, deepseek, moonshot, novita)
-LLM_SERVER_LEGACY_REASONING=false                # Controls reasoning format, for OpenAI must be true (default: false)
-LLM_SERVER_PRESERVE_REASONING=false              # Preserve reasoning content in multi-turn conversations (required by Moonshot, default: false)
+LLM_SERVER_MODEL=                                # 留空，模型已在配置文件中指定
+LLM_SERVER_CONFIG_PATH=/opt/pentagi/conf/openrouter.provider.yml  # 或 deepinfra.provider.ymll、custom-openai.provider.yml、novita.provider.yml
+LLM_SERVER_PROVIDER=                             # LiteLLM 代理使用的提供商名称（例如 openrouter、deepseek、moonshot、novita）
+LLM_SERVER_LEGACY_REASONING=false                # 控制推理格式；OpenAI 必须设为 true（默认：false）
+LLM_SERVER_PRESERVE_REASONING=false              # 在多轮对话中保留推理内容（Moonshot 要求开启，默认：false）
 
-# For OpenAI (official API)
-OPEN_AI_KEY=your_openai_api_key                  # Your OpenAI API key
-OPEN_AI_SERVER_URL=https://api.openai.com/v1     # OpenAI API endpoint
+# OpenAI（官方 API）
+OPEN_AI_KEY=your_openai_api_key                  # OpenAI API 密钥
+OPEN_AI_SERVER_URL=https://api.openai.com/v1     # OpenAI API 端点
 
-# For Anthropic (Claude models)
-ANTHROPIC_API_KEY=your_anthropic_api_key         # Your Anthropic API key
-ANTHROPIC_SERVER_URL=https://api.anthropic.com/v1  # Anthropic API endpoint
+# Anthropic（Claude 模型）
+ANTHROPIC_API_KEY=your_anthropic_api_key         # Anthropic API 密钥
+ANTHROPIC_SERVER_URL=https://api.anthropic.com/v1  # Anthropic API 端点
 
-# For Gemini (Google AI)
-GEMINI_API_KEY=your_gemini_api_key               # Your Google AI API key
-GEMINI_SERVER_URL=https://generativelanguage.googleapis.com  # Google AI API endpoint
+# Gemini（Google AI）
+GEMINI_API_KEY=your_gemini_api_key               # Google AI API 密钥
+GEMINI_SERVER_URL=https://generativelanguage.googleapis.com  # Google AI API 端点
 
-# For AWS Bedrock (enterprise foundation models)
-BEDROCK_REGION=us-east-1                         # AWS region for Bedrock service
-# Authentication (choose one method, priority: DefaultAuth > BearerToken > AccessKey):
-BEDROCK_DEFAULT_AUTH=false                       # Use AWS SDK credential chain (env vars, EC2 role, ~/.aws/credentials)
-BEDROCK_BEARER_TOKEN=                            # Bearer token authentication (takes priority over static credentials)
-BEDROCK_ACCESS_KEY_ID=your_aws_access_key        # AWS access key ID (static credentials)
-BEDROCK_SECRET_ACCESS_KEY=your_aws_secret_key    # AWS secret access key (static credentials)
-BEDROCK_SESSION_TOKEN=                           # AWS session token (optional, for temporary credentials with static auth)
-BEDROCK_SERVER_URL=                              # Optional custom Bedrock endpoint (VPC endpoints, local testing)
+# AWS Bedrock（企业基础模型）
+BEDROCK_REGION=us-east-1                         # Bedrock 服务所在的 AWS 区域
+# 认证（选择一种方式，优先级：DefaultAuth > BearerToken > AccessKey）：
+BEDROCK_DEFAULT_AUTH=false                       # 使用 AWS SDK 凭证链（环境变量、EC2 角色、~/.aws/credentials）
+BEDROCK_BEARER_TOKEN=                            # Bearer 令牌认证（优先级高于静态凭证）
+BEDROCK_ACCESS_KEY_ID=your_aws_access_key        # AWS 访问密钥 ID（静态凭证）
+BEDROCK_SECRET_ACCESS_KEY=your_aws_secret_key    # AWS 秘密访问密钥（静态凭证）
+BEDROCK_SESSION_TOKEN=                           # AWS 会话令牌（可选，与静态认证配合使用的临时凭证）
+BEDROCK_SERVER_URL=                              # 可选的自定义 Bedrock 端点（VPC 端点、本地测试）
 
-# For Ollama (local server or cloud)
-OLLAMA_SERVER_URL=                               # Local: http://ollama-server:11434, Cloud: https://ollama.com
-OLLAMA_SERVER_API_KEY=                           # Required for Ollama Cloud (https://ollama.com/settings/keys), leave empty for local
+# Ollama（本地服务器或云服务）
+OLLAMA_SERVER_URL=                               # 本地：http://ollama-server:11434，云服务：https://ollama.com
+OLLAMA_SERVER_API_KEY=                           # Ollama Cloud 需要填写（https://ollama.com/settings/keys），本地使用时留空
 OLLAMA_SERVER_MODEL=
 OLLAMA_SERVER_CONFIG_PATH=
 OLLAMA_SERVER_PULL_MODELS_TIMEOUT=
 OLLAMA_SERVER_PULL_MODELS_ENABLED=
 OLLAMA_SERVER_LOAD_MODELS_ENABLED=
 
-# For DeepSeek (Chinese AI with strong reasoning)
-DEEPSEEK_API_KEY=                                # DeepSeek API key
-DEEPSEEK_SERVER_URL=https://api.deepseek.com     # DeepSeek API endpoint
-DEEPSEEK_PROVIDER=                               # Optional: LiteLLM prefix (e.g., 'deepseek')
+# DeepSeek（推理能力较强的中文 AI）
+DEEPSEEK_API_KEY=                                # DeepSeek API 密钥
+DEEPSEEK_SERVER_URL=https://api.deepseek.com     # DeepSeek API 端点
+DEEPSEEK_PROVIDER=                               # 可选：LiteLLM 前缀（例如 'deepseek'）
 
-# For GLM (Zhipu AI)
-GLM_API_KEY=                                     # GLM API key
-GLM_SERVER_URL=https://api.z.ai/api/paas/v4      # GLM API endpoint (international)
-GLM_PROVIDER=                                    # Optional: LiteLLM prefix (e.g., 'zai')
+# GLM（智谱 AI）
+GLM_API_KEY=                                     # GLM API 密钥
+GLM_SERVER_URL=https://api.z.ai/api/paas/v4      # GLM API 端点（国际站）
+GLM_PROVIDER=                                    # 可选：LiteLLM 前缀（例如 'zai'）
 
-# For Kimi (Moonshot AI)
-KIMI_API_KEY=                                    # Kimi API key
-KIMI_SERVER_URL=https://api.moonshot.ai/v1       # Kimi API endpoint (international)
-KIMI_PROVIDER=                                   # Optional: LiteLLM prefix (e.g., 'moonshot')
+# Kimi（Moonshot AI）
+KIMI_API_KEY=                                    # Kimi API 密钥
+KIMI_SERVER_URL=https://api.moonshot.ai/v1       # Kimi API 端点（国际站）
+KIMI_PROVIDER=                                   # 可选：LiteLLM 前缀（例如 'moonshot'）
 
-# For Qwen (Alibaba Cloud DashScope)
-QWEN_API_KEY=                                    # Qwen API key
-QWEN_SERVER_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1  # Qwen API endpoint (US)
-QWEN_PROVIDER=                                   # Optional: LiteLLM prefix (e.g., 'dashscope')
+# Qwen（阿里云 DashScope）
+QWEN_API_KEY=                                    # Qwen API 密钥
+QWEN_SERVER_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1  # Qwen API 端点（美国）
+QWEN_PROVIDER=                                   # 可选：LiteLLM 前缀（例如 'dashscope'）
 
-# For Ollama (local inference) use variables above
+# Ollama（本地推理）使用上方变量
 OLLAMA_SERVER_URL=http://localhost:11434
 OLLAMA_SERVER_MODEL=llama3.1:8b-instruct-q8_0
 OLLAMA_SERVER_CONFIG_PATH=/opt/pentagi/conf/ollama-llama318b.provider.yml
@@ -3027,145 +3027,145 @@ OLLAMA_SERVER_PULL_MODELS_ENABLED=false
 OLLAMA_SERVER_LOAD_MODELS_ENABLED=false
 ```
 
-#### Using OpenAI with Unverified Organizations
+#### 在组织未验证时使用 OpenAI
 
-For OpenAI accounts with unverified organizations that don't have access to the latest reasoning models (o1, o3, o4-mini), you need to use a custom configuration.
+如果 OpenAI 账号所属组织尚未验证，且尚未获得最新推理模型（o1、o3、o4-mini）的访问权限，需要改用自定义配置。
 
-To use OpenAI with unverified organization accounts, configure your `.env` file as follows:
+使用此类 OpenAI 账号时，请按以下内容配置 `.env` 文件：
 
 ```bash
 LLM_SERVER_URL=https://api.openai.com/v1
 LLM_SERVER_KEY=your_openai_api_key
-LLM_SERVER_MODEL=                                # Leave empty, models are specified in config
+LLM_SERVER_MODEL=                                # 留空，模型已在配置文件中指定
 LLM_SERVER_CONFIG_PATH=/opt/pentagi/conf/custom-openai.provider.yml
-LLM_SERVER_LEGACY_REASONING=true                 # Required for OpenAI reasoning format
+LLM_SERVER_LEGACY_REASONING=true                 # OpenAI 推理格式要求开启
 ```
 
-This configuration uses the pre-built `custom-openai.provider.yml` file that maps all agent types to models available for unverified organizations, using `o3-mini` instead of models like `o1`, `o3`, and `o4-mini`.
+此配置使用预构建的 `custom-openai.provider.yml` 文件，将所有智能体类型映射到组织未验证时可用的模型，并用 `o3-mini` 替代 `o1`、`o3` 和 `o4-mini` 等模型。
 
-You can test this configuration using:
+可以运行以下命令测试配置：
 
 ```bash
-# Test with custom OpenAI configuration for unverified accounts
+# 使用适合未验证账号的自定义 OpenAI 配置进行测试
 docker exec -it pentagi /opt/pentagi/bin/ctester -config /opt/pentagi/conf/custom-openai.provider.yml
 ```
 
 > [!NOTE]
-> The `LLM_SERVER_LEGACY_REASONING=true` setting is crucial for OpenAI compatibility as it ensures reasoning parameters are sent in the format expected by OpenAI's API.
+> 必须设置 `LLM_SERVER_LEGACY_REASONING=true` 才能兼容 OpenAI，它会按 OpenAI API 要求的格式发送推理参数。
 
-#### Using LiteLLM Proxy
+#### 使用 LiteLLM 代理
 
-When using LiteLLM proxy to access various LLM providers, model names are prefixed with the provider name (e.g., `moonshot/kimi-2.5` instead of `kimi-2.5`). To use the same provider configuration files with both direct API access and LiteLLM proxy, set the `LLM_SERVER_PROVIDER` variable:
+通过 LiteLLM 代理访问不同 LLM 提供商时，模型名称前会加上提供商名称（例如使用 `moonshot/kimi-2.5`，而不是 `kimi-2.5`）。如果希望同一份提供商配置文件既能直连 API，也能通过 LiteLLM 代理使用，请设置 `LLM_SERVER_PROVIDER` 变量：
 
 ```bash
-# Direct access to Moonshot API
+# 直连 Moonshot API
 LLM_SERVER_URL=https://api.moonshot.ai/v1
 LLM_SERVER_KEY=your_moonshot_api_key
 LLM_SERVER_CONFIG_PATH=/opt/pentagi/conf/moonshot.provider.yml
-LLM_SERVER_PROVIDER=                             # Empty for direct access
+LLM_SERVER_PROVIDER=                             # 直连时留空
 
-# Access via LiteLLM proxy
+# 通过 LiteLLM 代理访问
 LLM_SERVER_URL=http://litellm-proxy:4000
 LLM_SERVER_KEY=your_litellm_api_key
 LLM_SERVER_CONFIG_PATH=/opt/pentagi/conf/moonshot.provider.yml
-LLM_SERVER_PROVIDER=moonshot                     # Provider prefix for LiteLLM
+LLM_SERVER_PROVIDER=moonshot                     # LiteLLM 的提供商前缀
 ```
 
-With `LLM_SERVER_PROVIDER=moonshot`, the system automatically prefixes all model names from the configuration file with `moonshot/`, making them compatible with LiteLLM's model naming convention.
+设置 `LLM_SERVER_PROVIDER=moonshot` 后，系统会自动为配置文件中的所有模型名称添加 `moonshot/` 前缀，使其符合 LiteLLM 的模型命名规则。
 
-**LiteLLM Provider Name Mapping:**
+**LiteLLM 提供商名称映射：**
 
-When using LiteLLM proxy, set the corresponding `*_PROVIDER` variable to enable model prefixing:
+使用 LiteLLM 代理时，设置对应的 `*_PROVIDER` 变量即可启用模型前缀：
 
-- `deepseek` - for DeepSeek models (`DEEPSEEK_PROVIDER=deepseek` → `deepseek/deepseek-v4-flash`)
-- `zai` - for GLM models (`GLM_PROVIDER=zai` → `zai/glm-4`)
-- `moonshot` - for Kimi models (`KIMI_PROVIDER=moonshot` → `moonshot/kimi-k2.5`)
-- `dashscope` - for Qwen models (`QWEN_PROVIDER=dashscope` → `dashscope/qwen-plus`)
-- `openai`, `anthropic`, `gemini` - for major cloud providers
-- `openrouter` - for OpenRouter aggregator
-- `deepinfra` - for DeepInfra hosting
-- `novita` - for Novita AI
-- Any other provider name configured in your LiteLLM instance
+- `deepseek`：用于 DeepSeek 模型（`DEEPSEEK_PROVIDER=deepseek` → `deepseek/deepseek-v4-flash`）
+- `zai`：用于 GLM 模型（`GLM_PROVIDER=zai` → `zai/glm-4`）
+- `moonshot`：用于 Kimi 模型（`KIMI_PROVIDER=moonshot` → `moonshot/kimi-k2.5`）
+- `dashscope`：用于 Qwen 模型（`QWEN_PROVIDER=dashscope` → `dashscope/qwen-plus`）
+- `openai`、`anthropic`、`gemini`：用于主要云服务提供商
+- `openrouter`：用于 OpenRouter 聚合服务
+- `deepinfra`：用于 DeepInfra 托管服务
+- `novita`：用于 Novita AI
+- LiteLLM 实例中配置的其他任意提供商名称
 
-**Example with LiteLLM:**
+**LiteLLM 示例：**
 ```bash
-# Use DeepSeek models via LiteLLM proxy with model prefixing
+# 通过 LiteLLM 代理使用 DeepSeek 模型，并添加模型前缀
 DEEPSEEK_API_KEY=your_litellm_proxy_key
 DEEPSEEK_SERVER_URL=http://litellm-proxy:4000
-DEEPSEEK_PROVIDER=deepseek  # Models become deepseek/deepseek-v4-flash, deepseek/deepseek-v4-pro for LiteLLM
+DEEPSEEK_PROVIDER=deepseek  # 在 LiteLLM 中，模型名称变为 deepseek/deepseek-v4-flash、deepseek/deepseek-v4-pro
 
-# Direct DeepSeek API usage (no prefix needed)
+# 直连 DeepSeek API（无需前缀）
 DEEPSEEK_API_KEY=your_deepseek_api_key
 DEEPSEEK_SERVER_URL=https://api.deepseek.com
-# Leave DEEPSEEK_PROVIDER empty
+# DEEPSEEK_PROVIDER 留空
 ```
 
-This approach allows you to:
-- Use the same configuration files for both direct and proxied access
-- Switch between providers without modifying configuration files
-- Easily test different routing strategies with LiteLLM
+这种方式可以：
+- 让直连和代理访问共用同一份配置文件
+- 无需修改配置文件即可切换提供商
+- 通过 LiteLLM 方便地测试不同路由策略
 
-#### Running Tests in a Production Environment
+#### 在生产环境中运行测试
 
-If you already have a running PentAGI container and want to test the current configuration:
+如果已有正在运行的 PentAGI 容器，可以按以下方式测试当前配置：
 
 ```bash
-# Run ctester in an existing container using current environment variables
+# 在现有容器中使用当前环境变量运行 ctester
 docker exec -it pentagi /opt/pentagi/bin/ctester -verbose
 
-# Test specific agent types with deterministic ordering
+# 按固定顺序测试指定类型的智能体
 docker exec -it pentagi /opt/pentagi/bin/ctester -agents simple,primary_agent,pentester -groups basic,knowledge -verbose
 
-# Generate a report file inside the container
+# 在容器内生成报告文件
 docker exec -it pentagi /opt/pentagi/bin/ctester -report /opt/pentagi/data/agent-test-report.md
 
-# Access the report from the host
+# 从宿主机获取报告
 docker cp pentagi:/opt/pentagi/data/agent-test-report.md ./
 ```
 
-### Command-line Options
+### 命令行选项
 
-The utility accepts several options:
+该工具支持以下选项：
 
-- `-env <path>` - Path to environment file (default: `.env`)
-- `-type <provider>` - Provider type: `custom`, `openai`, `anthropic`, `ollama`, `bedrock`, `gemini` (default: `custom`)
-- `-config <path>` - Path to custom provider config (default: from `LLM_SERVER_CONFIG_PATH` env variable)
-- `-tests <path>` - Path to custom tests YAML file (optional)
-- `-report <path>` - Path to write the report file (optional)
-- `-agents <list>` - Comma-separated list of agent types to test (default: `all`)
-- `-groups <list>` - Comma-separated list of test groups to run (default: `all`)
-- `-verbose` - Enable verbose output with detailed test results for each agent
+- `-env <path>`：环境文件路径（默认：`.env`）
+- `-type <provider>`：提供商类型，可选 `custom`、`openai`、`anthropic`、`ollama`、`bedrock`、`gemini`（默认：`custom`）
+- `-config <path>`：自定义提供商配置的路径（默认读取环境变量 `LLM_SERVER_CONFIG_PATH`）
+- `-tests <path>`：自定义测试 YAML 文件的路径（可选）
+- `-report <path>`：报告文件的写入路径（可选）
+- `-agents <list>`：要测试的智能体类型，以逗号分隔（默认：`all`）
+- `-groups <list>`：要运行的测试组，以逗号分隔（默认：`all`）
+- `-verbose`：启用详细输出，显示各智能体的具体测试结果
 
-### Available Agent Types
+### 可用的智能体类型
 
-Agents are tested in the following deterministic order:
+智能体按以下固定顺序进行测试：
 
-1. **simple** - Basic completion tasks
-2. **simple_json** - JSON-structured responses
-3. **primary_agent** - Main reasoning agent
-4. **assistant** - Interactive assistant mode
-5. **generator** - Content generation
-6. **refiner** - Content refinement and improvement
-7. **adviser** - Expert advice and consultation
-8. **reflector** - Self-reflection and analysis
-9. **searcher** - Information gathering and search
-10. **enricher** - Data enrichment and expansion
-11. **coder** - Code generation and analysis
-12. **installer** - Installation and setup tasks
-13. **pentester** - Penetration testing and security assessment
+1. **simple**：基本补全任务
+2. **simple_json**：JSON 结构化响应
+3. **primary_agent**：主推理智能体
+4. **assistant**：交互式助手模式
+5. **generator**：内容生成
+6. **refiner**：内容优化和改进
+7. **adviser**：专家建议和咨询
+8. **reflector**：自我反思和分析
+9. **searcher**：信息收集和搜索
+10. **enricher**：数据补充和扩展
+11. **coder**：代码生成和分析
+12. **installer**：安装和设置任务
+13. **pentester**：渗透测试和安全评估
 
-### Available Test Groups
+### 可用的测试组
 
-- **basic** - Fundamental completion and prompt response tests
-- **advanced** - Complex reasoning and function calling tests
-- **json** - JSON format validation and structure tests (specifically designed for `simple_json` agent)
-- **knowledge** - Domain-specific cybersecurity and penetration testing knowledge tests
+- **basic**：基本补全和提示词响应测试
+- **advanced**：复杂推理和函数调用测试
+- **json**：JSON 格式验证和结构测试（专为 `simple_json` 智能体设计）
+- **knowledge**：网络安全和渗透测试领域的专项知识测试
 
-> **Note**: The `json` test group is specifically designed for the `simple_json` agent type, while all other agents are tested with `basic`, `advanced`, and `knowledge` groups. This specialization ensures optimal testing coverage for each agent's intended purpose.
+> **注意**：`json` 测试组专为 `simple_json` 智能体设计，其他所有智能体使用 `basic`、`advanced` 和 `knowledge` 测试组。这样的划分可以覆盖各智能体的预期用途。
 
-### Example Provider Configuration
+### 提供商配置示例
 
-Provider configuration defines which models to use for different agent types:
+提供商配置用于指定不同类型智能体所使用的模型：
 
 ```yaml
 simple:
@@ -3183,22 +3183,22 @@ simple_json:
   max_tokens: 4000
   json: true
 
-# ... other agent types ...
+# ... 其他智能体类型 ...
 ```
 
-### Optimization Workflow
+### 优化流程
 
-1. **Create a baseline**: Run tests with default configuration to establish benchmark performance
-2. **Analyze agent-specific performance**: Review the deterministic agent ordering to identify underperforming agents
-3. **Test specialized configurations**: Experiment with different models for each agent type using provider-specific configs
-4. **Focus on domain knowledge**: Pay special attention to knowledge group tests for cybersecurity expertise
-5. **Validate function calling**: Ensure tool-based tests pass consistently for critical agent types
-6. **Compare results**: Look for the best success rate and performance across all test groups
-7. **Deploy optimal configuration**: Use in production with your optimized setup
+1. **建立基线**：使用默认配置运行测试，记录基准性能
+2. **分析各智能体的性能**：按固定测试顺序检查结果，找出表现较差的智能体
+3. **测试专项配置**：通过提供商专用配置，为各类智能体尝试不同模型
+4. **关注领域知识**：重点检查用于评估网络安全知识的 `knowledge` 测试组
+5. **验证函数调用**：确认关键智能体类型能够稳定通过工具类测试
+6. **比较结果**：比较所有测试组的成功率和性能，选出效果最好的方案
+7. **部署最优配置**：将优化后的设置用于生产环境
 
-This tool helps ensure your AI agents are using the most effective models for their specific tasks, improving reliability while optimizing costs.
+借助该工具，可以为不同 AI 智能体选择更适合其任务的模型，在提高可靠性的同时控制成本。
 
-## Embedding Configuration and Testing
+## 嵌入模型配置与测试
 
 PentAGI uses vector embeddings for semantic search, knowledge storage, and memory management. The system supports multiple embedding providers that can be configured according to your needs and preferences.
 

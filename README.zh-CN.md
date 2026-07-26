@@ -24,25 +24,25 @@
 - [登录后如何使用 PentAGI](#登录后如何使用-pentagi)
 - [API 访问](#api-访问)
   - [LLM 提供商配置](#自定义-llm-提供商配置)
-    - [Ollama](#ollama-provider-configuration)
-    - [OpenAI](#openai-provider-configuration)
-    - [Anthropic](#anthropic-provider-configuration)
-    - [Google AI (Gemini)](#google-ai-gemini-provider-configuration)
-    - [AWS Bedrock](#aws-bedrock-provider-configuration)
-    - [DeepSeek](#deepseek-provider-configuration)
-    - [GLM](#glm-provider-configuration)
-    - [Kimi](#kimi-provider-configuration)
-    - [Qwen](#qwen-provider-configuration)
-- [进阶配置](#进阶配置)
-  - [Langfuse 集成](#langfuse-集成)
+    - [Ollama](#ollama-提供商配置)
+    - [OpenAI](#openai-提供商配置)
+    - [Anthropic](#anthropic-提供商配置)
+    - [Google AI（Gemini）](#google-aigemini提供商配置)
+    - [AWS Bedrock](#aws-bedrock-提供商配置)
+    - [DeepSeek](#deepseek-提供商配置)
+    - [GLM](#glm-提供商配置)
+    - [Kimi](#kimi-提供商配置)
+    - [Qwen](#qwen-提供商配置)
+- [高级设置](#高级设置)
+  - [集成 Langfuse](#集成-langfuse)
   - [监控与可观测性](#监控与可观测性)
-  - [知识图谱（Graphiti）](#知识图谱集成graphiti)
-  - [OAuth 集成](#github-与-google-oauth-集成)
+  - [集成知识图谱（Graphiti）](#集成知识图谱graphiti)
+  - [集成 GitHub 与 Google OAuth](#集成-github-与-google-oauth)
   - [Docker 镜像配置](#docker-镜像配置)
 - [开发](#开发)
 - [测试 LLM 智能体](#测试-llm-智能体)
 - [嵌入模型配置与测试](#嵌入模型配置与测试)
-- [使用 ftester 进行函数测试](#使用-ftester-进行函数测试)
+- [使用 ftester 测试函数](#使用-ftester-测试函数)
 - [构建](#构建)
 - [致谢](#致谢)
 - [许可证](#许可证)
@@ -504,7 +504,7 @@ PentAGI 内置多层智能体监管机制，能够提高任务执行效率、防
 ### 面向开源模型的建议
 
 **参数量 < 32B 的模型必备**：
-Qwen3.5-27B-FP8 的测试表明，对参数量较小的开源模型而言，同时启用执行监控与任务规划**至关重要**：
+Qwen3.5-27B-FP8 的测试表明，对参数量较小的开源模型而言，同时启用执行监控与任务规划是取得稳定结果的必要条件：
 - **质量提升**：与未启用监管的基线执行相比，结果质量约为基线的 2 倍
 - **防止循环**：显著减少无限循环和重复工作
 - **攻击多样性**：鼓励探索多种攻击向量，避免固守单一思路
@@ -571,7 +571,7 @@ PentAGI 的架构遵循模块化、可扩展和安全的设计原则，主要组
 
 ### 系统要求
 
-- Docker 与 Docker Compose（或 Podman，参见 [Podman 配置](#running-pentagi-with-podman)）
+- Docker 与 Docker Compose（或 Podman，参见 [Podman 配置](#使用-podman-运行-pentagi)）
 - 至少 2 个 vCPU
 - 至少 4GB 内存
 - 20GB 可用磁盘空间
@@ -1003,7 +1003,7 @@ PentAGI 允许你为助手配置默认行为：
 
 仅测试你拥有或明确获准评估的系统。可接受使用要求参见 [EULA.md](EULA.md)。
 
-### 2. 使用模板复用工作流程
+### 2. 使用模板复用任务流
 
 新建任务流表单提供模板选择器，可以用已保存的任务流模板预填消息框。需要反复执行类似评估时，可直接复用这些模板。
 
@@ -1062,7 +1062,7 @@ Files 标签页为每个文件提供 **Download（下载）**、**Copy path（�
 
 ## API 访问
 
-PentAGI 同时提供 REST 与 GraphQL API，可通过程序调用其功能，并将渗透测试工作流程集成到自动化管道、CI/CD 流程和自定义应用中。
+PentAGI 同时提供 REST 与 GraphQL API，可通过程序调用其功能，并将渗透测试任务流集成到自动化管道、CI/CD 流程和自定义应用中。
 
 ### 生成 API 令牌
 
@@ -1664,7 +1664,7 @@ PentAGI 支持 31 个 OpenAI 模型，可使用工具调用、流式输出、推
 - **代码专用模型**：Codex 模型专门用于漏洞发现和漏洞利用开发
 - **多模态支持**：GPT-4o 系列可执行基于视觉信息的安全评估
 - **工具调用**：所有模型均提供可靠的函数调用，可编排渗透测试工具
-- **流式输出**：为交互式工作流程实时返回响应
+- **流式输出**：为交互式任务流实时返回响应
 - **实际成果**：这些模型已用于发现 CVE，并应用于真实安全场景
 
 ### Anthropic 提供商配置
@@ -3642,30 +3642,30 @@ PentAGI 专用提示词指南参见 [`backend/docs/prompt_engineering_pentagi.md
 
 ## 构建
 
-### Building Docker Image
+### 构建 Docker 镜像
 
-The Docker build process automatically embeds version information from git tags. To properly version your build, use the provided scripts:
+Docker 构建过程会自动嵌入 Git 标签中的版本信息。请使用项目提供的脚本为构建设置正确版本：
 
 #### Linux/macOS
 
 ```bash
-# Load version variables
+# 加载版本变量
 source ./scripts/version.sh
 
-# Standard build
+# 标准构建
 docker build \
   --build-arg PACKAGE_VER=$PACKAGE_VER \
   --build-arg PACKAGE_REV=$PACKAGE_REV \
   -t pentagi:$PACKAGE_VER .
 
-# Multi-platform build
+# 多平台构建
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --build-arg PACKAGE_VER=$PACKAGE_VER \
   --build-arg PACKAGE_REV=$PACKAGE_REV \
   -t pentagi:$PACKAGE_VER .
 
-# Build and push
+# 构建并推送
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --build-arg PACKAGE_VER=$PACKAGE_VER \
@@ -3674,19 +3674,19 @@ docker buildx build \
   --push .
 ```
 
-#### Windows (PowerShell)
+#### Windows（PowerShell）
 
 ```powershell
-# Load version variables
+# 加载版本变量
 . .\scripts\version.ps1
 
-# Standard build
+# 标准构建
 docker build `
   --build-arg PACKAGE_VER=$env:PACKAGE_VER `
   --build-arg PACKAGE_REV=$env:PACKAGE_REV `
   -t pentagi:$env:PACKAGE_VER .
 
-# Multi-platform build
+# 多平台构建
 docker buildx build `
   --platform linux/amd64,linux/arm64 `
   --build-arg PACKAGE_VER=$env:PACKAGE_VER `
@@ -3694,41 +3694,41 @@ docker buildx build `
   -t pentagi:$env:PACKAGE_VER .
 ```
 
-#### Quick build without version
+#### 不含版本信息的快速构建
 
-For development builds without version tracking:
+如需构建不跟踪版本的开发镜像：
 
 ```bash
 docker build -t pentagi:dev .
 ```
 
 > [!NOTE]
-> - The build scripts automatically determine version from git tags
-> - Release builds (on tag commit) have no revision suffix
-> - Development builds (after tag) include commit hash as revision (e.g., `1.1.0-bc6e800`)
-> - To use the built image locally, update the image name in `docker-compose.yml` or use the `build` option
+> - 构建脚本会根据 Git 标签自动确定版本
+> - 发布构建（标签所指提交）不含修订版本后缀
+> - 开发构建（标签之后的提交）将提交哈希作为修订版本，例如 `1.1.0-bc6e800`
+> - 如需在本地使用构建的镜像，请更新 `docker-compose.yml` 中的镜像名称，或使用 `build` 选项
 
-## Credits
+## 致谢
 
-This project is made possible thanks to the following research and developments:
-- [Emerging Architectures for LLM Applications](https://lilianweng.github.io/posts/2023-06-23-agent)
-- [A Survey of Autonomous LLM Agents](https://arxiv.org/abs/2403.08299)
-- [Codel](https://github.com/semanser/codel) by Andriy Semenets - initial architectural inspiration for agent-based automation
+本项目参考了以下研究与项目：
+- [LLM 应用的新兴架构（Emerging Architectures for LLM Applications）](https://lilianweng.github.io/posts/2023-06-23-agent)
+- [自主 LLM 智能体综述（A Survey of Autonomous LLM Agents）](https://arxiv.org/abs/2403.08299)
+- Andriy Semenets 开发的 [Codel](https://github.com/semanser/codel)：为基于智能体的自动化提供了早期架构思路
 
-## License
+## 许可证
 
-**PentAGI** is licensed under the [MIT License](LICENSE).
+**PentAGI** 采用 [MIT 许可证](LICENSE)。
 
-Copyright (c) 2025 PentAGI Development Team
+版权所有 (c) 2025 PentAGI 开发团队
 
-### Third-Party Dependencies
+### 第三方依赖项
 
-All third-party dependencies use MIT-compatible licenses. See [licenses/](licenses/) directory for detailed license reports.
+所有第三方依赖项均使用与 MIT 兼容的许可证。详细许可证报告参见 [licenses/](licenses/) 目录。
 
-### VXControl Cloud Services
+### VXControl 云服务
 
-⚠️ **Note:** While the VXControl Cloud SDK code is MIT licensed, accessing **VXControl Cloud Services** (threat intelligence, AI support, premium features) requires a separate License Key and compliance with [Terms of Service](https://github.com/vxcontrol/cloud#license-and-terms).
+⚠️ **注意：** VXControl Cloud SDK 代码采用 MIT 许可证，但访问 **VXControl 云服务**（威胁情报、AI 支持、高级功能）需要单独的许可证密钥，并须遵守[服务条款](https://github.com/vxcontrol/cloud#license-and-terms)。
 
-The SDK code itself is free to use - service access requires registration.
+SDK 代码本身可免费使用，访问服务需要注册。
 
-For questions contact: **info@pentagi.com** or **info@vxcontrol.com**
+如有问题，请联系 **info@pentagi.com** 或 **info@vxcontrol.com**。

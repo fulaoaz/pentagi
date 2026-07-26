@@ -1060,89 +1060,89 @@ Files 标签页为每个文件提供 **Download（下载）**、**Copy path（�
 
 初次测试时，建议从范围较小的目标和单一、明确的目的开始。这样更容易检查输出，也便于在执行更大规模的评估前完善提示词。
 
-## API Access
+## API 访问
 
-PentAGI provides comprehensive programmatic access through both REST and GraphQL APIs, allowing you to integrate penetration testing workflows into your automation pipelines, CI/CD processes, and custom applications.
+PentAGI 同时提供 REST 与 GraphQL API，可通过程序调用其功能，并将渗透测试工作流程集成到自动化管道、CI/CD 流程和自定义应用中。
 
-### Generating API Tokens
+### 生成 API 令牌
 
-API tokens are managed through the PentAGI web interface:
+API 令牌通过 PentAGI 网页界面管理：
 
-1. Navigate to **Settings** → **API Tokens** in the web UI
-2. Click **Create Token** to generate a new API token
-3. Configure token properties:
-   - **Name** (optional): A descriptive name for the token
-   - **Expiration Date**: When the token will expire (minimum 1 minute, maximum 3 years)
-4. Click **Create** and **copy the token immediately** - it will only be shown once for security reasons
-5. Use the token as a Bearer token in your API requests
+1. 在网页界面中打开 **Settings -> API Tokens（设置 -> API 令牌）**
+2. 点击 **Create Token（创建令牌）** 生成新的 API 令牌
+3. 设置令牌属性：
+   - **Name（名称）**（可选）：便于识别令牌的名称
+   - **Expiration Date（到期日期）**：令牌的到期时间，最短 1 分钟，最长 3 年
+4. 点击 **Create（创建）** 后**立即复制令牌**。出于安全考虑，令牌只会显示一次
+5. 在 API 请求中将该令牌用作 Bearer 令牌
 
-Each token is associated with your user account and inherits your role's permissions.
+每个令牌都与用户账号关联，并继承该账号所属角色的权限。
 
-### Using API Tokens
+### 使用 API 令牌
 
-Include the API token in the `Authorization` header of your HTTP requests:
+在 HTTP 请求的 `Authorization` 请求头中加入 API 令牌：
 
 ```bash
-# GraphQL API example
+# GraphQL API 示例
 curl -X POST https://your-pentagi-instance:8443/api/v1/graphql \
   -H "Authorization: Bearer YOUR_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query": "{ flows { id title status } }"}'
 
-# REST API example
+# REST API 示例
 curl https://your-pentagi-instance:8443/api/v1/flows \
   -H "Authorization: Bearer YOUR_API_TOKEN"
 ```
 
-### API Exploration and Testing
+### 浏览和测试 API
 
-PentAGI provides interactive documentation for exploring and testing API endpoints:
+PentAGI 提供交互式文档，可用于浏览和测试 API 端点：
 
 #### GraphQL Playground
 
-Access the GraphQL Playground at `https://your-pentagi-instance:8443/api/v1/graphql/playground`
+通过 `https://your-pentagi-instance:8443/api/v1/graphql/playground` 打开 GraphQL Playground。
 
-1. Click the **HTTP Headers** tab at the bottom
-2. Add your authorization header:
+1. 点击底部的 **HTTP Headers（HTTP 请求头）** 标签
+2. 添加认证请求头：
    ```json
    {
      "Authorization": "Bearer YOUR_API_TOKEN"
    }
    ```
-3. Explore the schema, run queries, and test mutations interactively
+3. 以交互方式浏览 schema、运行查询并测试 mutation
 
 #### Swagger UI
 
-Access the REST API documentation at `https://your-pentagi-instance:8443/api/v1/swagger/index.html`
+通过 `https://your-pentagi-instance:8443/api/v1/swagger/index.html` 打开 REST API 文档。
 
-1. Click the **Authorize** button
-2. Enter your token in the format: `Bearer YOUR_API_TOKEN`
-3. Click **Authorize** to apply
-4. Test endpoints directly from the Swagger UI
+1. 点击 **Authorize（认证）** 按钮
+2. 按以下格式输入令牌：`Bearer YOUR_API_TOKEN`
+3. 点击 **Authorize（认证）** 应用令牌
+4. 直接在 Swagger UI 中测试端点
 
-### Generating API Clients
+### 生成 API 客户端
 
-You can generate type-safe API clients for your preferred programming language using the schema files included with PentAGI:
+可以使用 PentAGI 附带的 schema 文件，为所需编程语言生成类型安全的 API 客户端：
 
-#### GraphQL Clients
+#### GraphQL 客户端
 
-The GraphQL schema is available at:
-- **Web UI**: Navigate to Settings to download `schema.graphqls`
-- **Direct file**: `backend/pkg/graph/schema.graphqls` in the repository
+可通过以下方式获取 GraphQL schema：
+- **网页界面**：进入 Settings（设置）下载 `schema.graphqls`
+- **仓库文件**：`backend/pkg/graph/schema.graphqls`
 
-Generate clients using tools like:
-- **GraphQL Code Generator** (JavaScript/TypeScript): [https://the-guild.dev/graphql/codegen](https://the-guild.dev/graphql/codegen)
-- **genqlient** (Go): [https://github.com/Khan/genqlient](https://github.com/Khan/genqlient)
-- **Apollo iOS** (Swift): [https://www.apollographql.com/docs/ios](https://www.apollographql.com/docs/ios)
+可使用以下工具生成客户端：
+- **GraphQL Code Generator**（JavaScript/TypeScript）：[https://the-guild.dev/graphql/codegen](https://the-guild.dev/graphql/codegen)
+- **genqlient**（Go）：[https://github.com/Khan/genqlient](https://github.com/Khan/genqlient)
+- **Apollo iOS**（Swift）：[https://www.apollographql.com/docs/ios](https://www.apollographql.com/docs/ios)
 
-#### REST API Clients
+#### REST API 客户端
 
-The OpenAPI specification is available at:
-- **Swagger JSON**: `https://your-pentagi-instance:8443/api/v1/swagger/doc.json`
-- **Swagger YAML**: Available in `backend/pkg/server/docs/swagger.yaml`
+可通过以下方式获取 OpenAPI 规范：
+- **Swagger JSON**：`https://your-pentagi-instance:8443/api/v1/swagger/doc.json`
+- **Swagger YAML**：仓库中的 `backend/pkg/server/docs/swagger.yaml`
 
-Generate clients using:
-- **OpenAPI Generator**: [https://openapi-generator.tech](https://openapi-generator.tech)
+可使用以下工具生成客户端：
+- **OpenAPI Generator**：[https://openapi-generator.tech](https://openapi-generator.tech)
   ```bash
   openapi-generator-cli generate \
     -i https://your-pentagi-instance:8443/api/v1/swagger/doc.json \
@@ -1150,7 +1150,7 @@ Generate clients using:
     -o ./pentagi-client
   ```
 
-- **Swagger Codegen**: [https://github.com/swagger-api/swagger-codegen](https://github.com/swagger-api/swagger-codegen)
+- **Swagger Codegen**：[https://github.com/swagger-api/swagger-codegen](https://github.com/swagger-api/swagger-codegen)
   ```bash
   swagger-codegen generate \
     -i https://your-pentagi-instance:8443/api/v1/swagger/doc.json \
@@ -1158,7 +1158,7 @@ Generate clients using:
     -o ./pentagi-client
   ```
 
-- **swagger-typescript-api** (TypeScript): [https://github.com/acacode/swagger-typescript-api](https://github.com/acacode/swagger-typescript-api)
+- **swagger-typescript-api**（TypeScript）：[https://github.com/acacode/swagger-typescript-api](https://github.com/acacode/swagger-typescript-api)
   ```bash
   npx swagger-typescript-api \
     -p https://your-pentagi-instance:8443/api/v1/swagger/doc.json \
@@ -1166,16 +1166,16 @@ Generate clients using:
     -n pentagi-api.ts
   ```
 
-### API Usage Examples
+### API 使用示例
 
 <details>
-<summary><b>Creating a New Flow (GraphQL)</b></summary>
+<summary><b>创建新任务流（GraphQL）</b></summary>
 
 ```graphql
 mutation CreateFlow {
   createFlow(
     modelProvider: "openai"
-    input: "Test the security of https://example.com"
+    input: "测试 https://example.com 的安全性"
   ) {
     id
     title
@@ -1188,7 +1188,7 @@ mutation CreateFlow {
 </details>
 
 <details>
-<summary><b>Listing Flows (REST API)</b></summary>
+<summary><b>列出任务流（REST API）</b></summary>
 
 ```bash
 curl https://your-pentagi-instance:8443/api/v1/flows \
@@ -1199,7 +1199,7 @@ curl https://your-pentagi-instance:8443/api/v1/flows \
 </details>
 
 <details>
-<summary><b>Python Client Example</b></summary>
+<summary><b>Python 客户端示例</b></summary>
 
 ```python
 import requests
@@ -1242,25 +1242,25 @@ class PentAGIClient:
         )
         return response.json()
 
-# Usage
+# 使用方法
 client = PentAGIClient(
     "https://your-pentagi-instance:8443",
     "your_api_token_here"
 )
 
-# Create a new flow
-flow = client.create_flow("openai", "Scan https://example.com for vulnerabilities")
-print(f"Created flow: {flow}")
+# 创建新任务流
+flow = client.create_flow("openai", "扫描 https://example.com 中的漏洞")
+print(f"已创建任务流：{flow}")
 
-# List all flows
+# 列出所有任务流
 flows = client.get_flows()
-print(f"Total flows: {len(flows['flows'])}")
+print(f"任务流总数：{len(flows['flows'])}")
 ```
 
 </details>
 
 <details>
-<summary><b>TypeScript Client Example</b></summary>
+<summary><b>TypeScript 客户端示例</b></summary>
 
 ```typescript
 import axios, { AxiosInstance } from 'axios';
@@ -1316,50 +1316,50 @@ class PentAGIClient {
   }
 }
 
-// Usage
+// 使用方法
 const client = new PentAGIClient(
   'https://your-pentagi-instance:8443',
   'your_api_token_here'
 );
 
-// Create a new flow
+// 创建新任务流
 const flow = await client.createFlow(
   'openai',
-  'Perform penetration test on https://example.com'
+  '对 https://example.com 执行渗透测试'
 );
-console.log('Created flow:', flow);
+console.log('已创建任务流：', flow);
 
-// List all flows
+// 列出所有任务流
 const flows = await client.getFlows();
-console.log(`Total flows: ${flows.length}`);
+console.log(`任务流总数：${flows.length}`);
 ```
 
 </details>
 
-### Security Best Practices
+### 安全最佳实践
 
-When working with API tokens:
+使用 API 令牌时：
 
-- **Never commit tokens to version control** - use environment variables or secrets management
-- **Rotate tokens regularly** - set appropriate expiration dates and create new tokens periodically
-- **Use separate tokens for different applications** - makes it easier to revoke access if needed
-- **Monitor token usage** - review API token activity in the Settings page
-- **Revoke unused tokens** - disable or delete tokens that are no longer needed
-- **Use HTTPS only** - never send API tokens over unencrypted connections
+- **切勿将令牌提交到版本控制系统**：请使用环境变量或密钥管理系统
+- **定期轮换令牌**：设置合适的到期日期，并定期创建新令牌
+- **为不同应用分配独立令牌**：需要收回访问权限时更容易单独吊销
+- **监控令牌使用情况**：在 Settings（设置）页面查看 API 令牌活动
+- **吊销不再使用的令牌**：禁用或删除不再需要的令牌
+- **仅使用 HTTPS**：不要通过未加密连接发送 API 令牌
 
-### Token Management
+### 令牌管理
 
-- **View tokens**: See all your active tokens in Settings → API Tokens
-- **Edit tokens**: Update token names or revoke tokens
-- **Delete tokens**: Permanently remove tokens (this action cannot be undone)
-- **Token ID**: Each token has a unique ID that can be copied for reference
+- **查看令牌**：在 Settings -> API Tokens（设置 -> API 令牌）中查看所有有效令牌
+- **编辑令牌**：更新令牌名称或吊销令牌
+- **删除令牌**：永久删除令牌，此操作不可撤销
+- **令牌 ID**：每个令牌都有唯一 ID，可复制留作参考
 
-The token list shows:
-- Token name (if provided)
-- Token ID (unique identifier)
-- Status (active/revoked/expired)
-- Creation date
-- Expiration date
+令牌列表显示以下信息：
+- 令牌名称（如已填写）
+- 令牌 ID（唯一标识符）
+- 状态（有效/已吊销/已过期）
+- 创建日期
+- 到期日期
 
 ### Custom LLM Provider Configuration
 

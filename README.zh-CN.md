@@ -633,35 +633,35 @@ unzip installer.zip
 5. **安全加固**：生成安全凭据并配置 SSL 证书
 6. **部署**：通过 docker-compose 启动 PentAGI
 
-### Current Web Settings Coverage
+### 当前网页端可配置的内容
 
-The PentAGI web console already manages several settings areas after the server is up and running:
+服务器启动后，可直接在 PentAGI 网页控制台管理以下设置：
 
-- **Settings -> Providers**: Create, edit, delete, and test user-defined provider profiles for supported provider types. These profiles control per-agent model selection, runtime parameters, reasoning options, and pricing metadata.
-- **Settings -> Prompts**: Manage system, human, and tool prompt templates.
-- **Settings -> PentAGI API**: Create and manage PentAGI Bearer tokens for REST and GraphQL access.
-- **Other UI-managed preferences**: Favorite flows are stored as user preferences, and theme selection is handled from the main sidebar/profile controls rather than the Settings pages.
+- **Settings -> Providers（设置 -> 提供商）**：为受支持的提供商类型创建、编辑、删除和测试用户自定义配置。每项配置可指定各智能体使用的模型、运行参数、推理选项和价格元数据。
+- **Settings -> Prompts（设置 -> 提示词）**：管理系统、用户和工具提示词模板。
+- **Settings -> PentAGI API（设置 -> PentAGI API）**：创建和管理用于访问 REST 与 GraphQL API 的 PentAGI Bearer 令牌。
+- **其他由界面管理的偏好**：收藏的任务流会保存到用户偏好中；主题则从主侧边栏的个人资料菜单中选择，不在设置页面中配置。
 
-### Still Server-Managed
+### 仍需在服务端配置的内容
 
-The following configuration areas still need to be set on the server through environment variables, compose files, or mounted config files:
+以下项目仍需通过环境变量、Compose 文件或挂载的配置文件在服务端设置：
 
-- **LLM credentials and connection details**: API keys, endpoints, auth modes, and provider-specific connection settings for OpenAI, Anthropic, Bedrock, Ollama, custom providers, and similar backends; config-path settings apply only where supported, such as `OLLAMA_SERVER_CONFIG_PATH` and `LLM_SERVER_CONFIG_PATH`.
-- **Search provider credentials and options**: Settings such as `DUCKDUCKGO_*`, `GOOGLE_*`, `TAVILY_API_KEY`, `TRAVERSAAL_API_KEY`, `PERPLEXITY_*`, `SEARXNG_*`, and `SPLOITUS_ENABLED`.
-- **Third-party integrations**: Langfuse, Graphiti, and similar external services remain server-side configuration.
-- **MCP server management**: MCP settings pages are not currently exposed as a live web-console feature.
+- **LLM 凭据和连接信息**：OpenAI、Anthropic、Bedrock、Ollama、自定义提供商及类似后端所需的 API 密钥、端点、认证方式和提供商专用连接设置。仅部分提供商支持通过配置文件路径加载设置，例如 `OLLAMA_SERVER_CONFIG_PATH` 和 `LLM_SERVER_CONFIG_PATH`。
+- **搜索提供商凭据和选项**：包括 `DUCKDUCKGO_*`、`GOOGLE_*`、`TAVILY_API_KEY`、`TRAVERSAAL_API_KEY`、`PERPLEXITY_*`、`SEARXNG_*` 和 `SPLOITUS_ENABLED` 等设置。
+- **第三方集成**：Langfuse、Graphiti 及类似外部服务仍需在服务端配置。
+- **MCP 服务器管理**：网页控制台目前尚未提供可直接使用的 MCP 设置页面。
 
-**For Production & Enhanced Security:**
+**生产环境与更高安全要求：**
 
-For production deployments or security-sensitive environments, we **strongly recommend** using a distributed two-node architecture where worker operations are isolated on a separate server. This prevents untrusted code execution and network access issues on your main system.
+对于生产部署或安全敏感环境，**强烈建议**采用分布式双节点架构，将 Worker 操作隔离到另一台服务器。这样可避免不受信任的代码执行和网络访问给主系统带来风险。
 
-**See detailed guide**: [Worker Node Setup](examples/guides/worker_node.md)
+**详细指南**：[Worker 节点配置](examples/guides/worker_node.md)
 
-The two-node setup provides:
-- **Isolated Execution**: Worker containers run on dedicated hardware
-- **Network Isolation**: Separate network boundaries for penetration testing
-- **Security Boundaries**: Docker-in-Docker with TLS authentication
-- **OOB Attack Support**: Dedicated port ranges for out-of-band techniques
+双节点方案具有以下特点：
+- **隔离执行**：Worker 容器运行在专用硬件上
+- **网络隔离**：为渗透测试划分独立的网络边界
+- **安全边界**：通过 TLS 认证保护 Docker-in-Docker
+- **OOB（带外）攻击支持**：为带外技术预留独立的端口范围
 
 ### Manual Installation
 

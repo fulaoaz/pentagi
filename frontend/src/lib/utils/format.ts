@@ -1,3 +1,5 @@
+import type { Locale as DateFnsLocale } from 'date-fns';
+
 import { format, isThisYear, isToday } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
@@ -7,16 +9,16 @@ export const formatName = (name?: string): string =>
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-export const formatDate = (date: Date) => {
+export const formatDate = (date: Date, locale: DateFnsLocale = enUS) => {
     if (isToday(date)) {
         return format(date, 'HH:mm:ss');
     }
 
     if (isThisYear(date)) {
-        return format(date, 'HH:mm, d MMM', { locale: enUS });
+        return format(date, locale.code === 'zh-CN' ? 'M月d日 HH:mm' : 'HH:mm, d MMM', { locale });
     }
 
-    return format(date, 'HH:mm, d MMM yyyy', { locale: enUS });
+    return format(date, locale.code === 'zh-CN' ? 'yyyy年M月d日 HH:mm' : 'HH:mm, d MMM yyyy', { locale });
 };
 
 export const formatNumber = (value: number): string => new Intl.NumberFormat('en-US').format(value);

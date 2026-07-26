@@ -5,7 +5,7 @@ export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'zh-CN';
 
 export const localeNames: Record<Locale, string> = {
-    'en': 'English',
+    en: 'English',
     'zh-CN': '简体中文',
 };
 

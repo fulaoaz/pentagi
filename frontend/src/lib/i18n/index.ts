@@ -23,6 +23,6 @@ export {
 export const fallbackLocale: Locale = 'en';
 
 export const dictionaries: Record<Locale, Dictionary> = {
-    'en': en,
+    en: en,
     'zh-CN': zhCN,
 };

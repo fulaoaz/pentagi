@@ -69,7 +69,7 @@ export const routeTitles = {
     oauth: { title: 'title.oauth' },
     prompt: {
         title: (params: RouteParams, t: Translate) =>
-            params.promptId ? formatPromptId(params.promptId) : t('title.prompt'),
+            params.promptId ? formatPromptId(params.promptId, t) : t('title.prompt'),
     },
     prompts: { title: 'title.prompts' },
 

@@ -17,13 +17,14 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { useLocale } from '@/hooks/use-locale';
 
 export interface MenuItem {
     icon?: React.ReactNode;
     id: string;
     isActive?: boolean;
     path: string;
-    title: string;
+    titleKey: string;
 }
 
 interface SettingsSidebarMenuItemProps {
@@ -35,49 +36,50 @@ const menuItems: readonly MenuItem[] = [
         icon: <Plug className="size-4" />,
         id: 'providers',
         path: '/settings/providers',
-        title: 'Providers',
+        titleKey: 'nav.providers',
     },
     {
         icon: <FileText className="size-4" />,
         id: 'prompts',
         path: '/settings/prompts',
-        title: 'Prompts',
+        titleKey: 'nav.prompts',
     },
     {
         icon: <Key className="size-4" />,
         id: 'api-tokens',
         path: '/settings/api-tokens',
-        title: 'API Tokens',
+        titleKey: 'nav.apiTokens',
     },
 ] as const;
 
 function SettingsHeader() {
     const location = useLocation();
     const params = useParams();
+    const { t } = useLocale();
 
     const title = useMemo(() => {
         const path = location.pathname;
 
         if (path === '/settings/providers/new') {
-            return 'Create Provider';
+            return t('settings.createProvider');
         }
 
         if (path.startsWith('/settings/providers/') && params.providerId && params.providerId !== 'new') {
-            return 'Edit Provider';
+            return t('settings.editProvider');
         }
 
         if (path === '/settings/prompts/new') {
-            return 'Create Prompt';
+            return t('settings.createPrompt');
         }
 
         if (path.startsWith('/settings/prompts/') && params.promptId && params.promptId !== 'new') {
-            return 'Edit Prompt';
+            return t('settings.editPrompt');
         }
 
         const activeItem = menuItems.find((item) => path.startsWith(item.path));
 
-        return activeItem?.title ?? 'Settings';
-    }, [location.pathname, params]);
+        return activeItem ? t(activeItem.titleKey) : t('nav.settings');
+    }, [location.pathname, params, t]);
 
     return (
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -108,6 +110,8 @@ function SettingsLayout() {
 }
 
 function SettingsSidebar() {
+    const { t } = useLocale();
+
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
@@ -117,7 +121,7 @@ function SettingsSidebar() {
                             <SettingsIcon className="size-6" />
                         </div>
                         <div className="grid flex-1 text-left leading-tight">
-                            <span className="truncate font-semibold">Settings</span>
+                            <span className="truncate font-semibold">{t('nav.settings')}</span>
                         </div>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -140,7 +144,7 @@ function SettingsSidebar() {
                 <SidebarMenuButton asChild>
                     <NavLink to="/flows">
                         <ArrowLeft className="size-4" />
-                        Back to App
+                        {t('settings.backToApp')}
                     </NavLink>
                 </SidebarMenuButton>
             </SidebarFooter>
@@ -151,6 +155,7 @@ function SettingsSidebar() {
 function SettingsSidebarMenuItem({ item }: SettingsSidebarMenuItemProps) {
     const location = useLocation();
     const isActive = location.pathname.startsWith(item.path);
+    const { t } = useLocale();
 
     return (
         <SidebarMenuItem>
@@ -160,7 +165,7 @@ function SettingsSidebarMenuItem({ item }: SettingsSidebarMenuItemProps) {
             >
                 <NavLink to={item.path}>
                     {item.icon}
-                    {item.title}
+                    {t(item.titleKey)}
                 </NavLink>
             </SidebarMenuButton>
         </SidebarMenuItem>

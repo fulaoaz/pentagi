@@ -24,6 +24,7 @@ import type {
     ProviderConfigFragmentFragment,
     ProviderType,
 } from '@/graphql/types';
+import type { Translate } from '@/lib/i18n';
 
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -47,6 +48,8 @@ import {
     useTestProviderMutation,
     useUpdateProviderMutation,
 } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
+import { translateAgentName, translateProviderFieldPath } from '@/lib/i18n/settings-labels';
 import { cn } from '@/lib/utils';
 
 interface BaseFieldProps extends ControllerProps {
@@ -112,6 +115,7 @@ function FormComboboxItem({
     options,
     placeholder,
 }: FormComboboxItemProps) {
+    const { t } = useLocale();
     const { field, fieldState } = useController({
         control,
         defaultValue: undefined,
@@ -156,13 +160,17 @@ function FormComboboxItem({
                             <CommandInput
                                 className="h-9"
                                 onValueChange={setSearch}
-                                placeholder={`Search ${label.toLowerCase()}...`}
+                                placeholder={t('settings.provider.searchField', { field: label.toLocaleLowerCase() })}
                                 value={search}
                             />
                             <CommandList>
                                 <CommandEmpty>
                                     <div className="py-2 text-center">
-                                        <p className="text-muted-foreground text-sm">No {label.toLowerCase()} found.</p>
+                                        <p className="text-muted-foreground text-sm">
+                                            {t('settings.provider.noFieldFound', {
+                                                field: label.toLocaleLowerCase(),
+                                            })}
+                                        </p>
                                         {search && allowCustom && (
                                             <Button
                                                 className="mt-2"
@@ -174,7 +182,10 @@ function FormComboboxItem({
                                                 size="sm"
                                                 variant="ghost"
                                             >
-                                                Use "{search}" as custom {label.toLowerCase()}
+                                                {t('settings.provider.useCustomValue', {
+                                                    field: label.toLocaleLowerCase(),
+                                                    value: search,
+                                                })}
                                             </Button>
                                         )}
                                     </div>
@@ -304,6 +315,7 @@ function FormModelComboboxItem({
     options,
     placeholder,
 }: FormModelComboboxItemProps) {
+    const { t } = useLocale();
     const { field, fieldState } = useController({
         control,
         defaultValue: undefined,
@@ -322,7 +334,7 @@ function FormModelComboboxItem({
         price?: null | { cacheRead: number; cacheWrite: number; input: number; output: number },
     ): string => {
         if (!price || ((!price.input || price.input === 0) && (!price.output || price.output === 0))) {
-            return 'free';
+            return t('settings.provider.free');
         }
 
         const formatValue = (value: number): string => {
@@ -386,14 +398,18 @@ function FormModelComboboxItem({
                                 <CommandInput
                                     className="h-9"
                                     onValueChange={setSearch}
-                                    placeholder={`Search ${label.toLowerCase()}...`}
+                                    placeholder={t('settings.provider.searchField', {
+                                        field: label.toLocaleLowerCase(),
+                                    })}
                                     value={search}
                                 />
                                 <CommandList>
                                     <CommandEmpty>
                                         <div className="py-2 text-center">
                                             <p className="text-muted-foreground text-sm">
-                                                No {label.toLowerCase()} found.
+                                                {t('settings.provider.noFieldFound', {
+                                                    field: label.toLocaleLowerCase(),
+                                                })}
                                             </p>
                                             {search && allowCustom && (
                                                 <Button
@@ -406,7 +422,10 @@ function FormModelComboboxItem({
                                                     size="sm"
                                                     variant="ghost"
                                                 >
-                                                    Use "{search}" as custom {label.toLowerCase()}
+                                                    {t('settings.provider.useCustomValue', {
+                                                        field: label.toLocaleLowerCase(),
+                                                        value: search,
+                                                    })}
                                                 </Button>
                                             )}
                                         </div>
@@ -455,96 +474,96 @@ function FormModelComboboxItem({
     );
 }
 
-const agentConfigSchema = z
-    .object({
-        frequencyPenalty: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        maxLength: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        maxTokens: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        minLength: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        model: z.preprocess((value) => value || '', z.string().min(1, 'Model is required')),
-        presencePenalty: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        price: z
-            .object({
-                cacheRead: z.preprocess(
-                    (value) => (value === '' || value === undefined ? null : value),
-                    z.number().nullable().optional(),
-                ),
-                cacheWrite: z.preprocess(
-                    (value) => (value === '' || value === undefined ? null : value),
-                    z.number().nullable().optional(),
-                ),
-                input: z.preprocess(
-                    (value) => (value === '' || value === undefined ? null : value),
-                    z.number().nullable().optional(),
-                ),
-                output: z.preprocess(
-                    (value) => (value === '' || value === undefined ? null : value),
-                    z.number().nullable().optional(),
-                ),
-            })
-            .nullable()
-            .optional(),
-        reasoning: z
-            .object({
-                effort: z.preprocess(
-                    (value) => (value === '' || value === undefined ? null : value),
-                    z.string().nullable().optional(),
-                ),
-                maxTokens: z.preprocess(
-                    (value) => (value === '' || value === undefined ? null : value),
-                    z.number().nullable().optional(),
-                ),
-            })
-            .nullable()
-            .optional(),
-        repetitionPenalty: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        temperature: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        topK: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-        topP: z.preprocess(
-            (value) => (value === '' || value === undefined ? null : value),
-            z.number().nullable().optional(),
-        ),
-    })
-    .optional();
+const buildAgentConfigSchema = (t: Translate) =>
+    z
+        .object({
+            frequencyPenalty: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            maxLength: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            maxTokens: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            minLength: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            model: z.preprocess((value) => value || '', z.string().min(1, t('settings.provider.modelRequired'))),
+            presencePenalty: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            price: z
+                .object({
+                    cacheRead: z.preprocess(
+                        (value) => (value === '' || value === undefined ? null : value),
+                        z.number().nullable().optional(),
+                    ),
+                    cacheWrite: z.preprocess(
+                        (value) => (value === '' || value === undefined ? null : value),
+                        z.number().nullable().optional(),
+                    ),
+                    input: z.preprocess(
+                        (value) => (value === '' || value === undefined ? null : value),
+                        z.number().nullable().optional(),
+                    ),
+                    output: z.preprocess(
+                        (value) => (value === '' || value === undefined ? null : value),
+                        z.number().nullable().optional(),
+                    ),
+                })
+                .nullable()
+                .optional(),
+            reasoning: z
+                .object({
+                    effort: z.preprocess(
+                        (value) => (value === '' || value === undefined ? null : value),
+                        z.string().nullable().optional(),
+                    ),
+                    maxTokens: z.preprocess(
+                        (value) => (value === '' || value === undefined ? null : value),
+                        z.number().nullable().optional(),
+                    ),
+                })
+                .nullable()
+                .optional(),
+            repetitionPenalty: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            temperature: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            topK: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+            topP: z.preprocess(
+                (value) => (value === '' || value === undefined ? null : value),
+                z.number().nullable().optional(),
+            ),
+        })
+        .optional();
 
-const formSchema = z.object({
-    agents: z.record(z.string(), agentConfigSchema).optional(),
-    name: z.preprocess(
-        (value) => value || '',
-        z.string().min(1, 'Provider name is required').max(50, 'Maximum 50 characters allowed'),
-    ),
-    type: z.preprocess((value) => value || '', z.string().min(1, 'Provider type is required')),
-});
+const buildFormSchema = (t: Translate) =>
+    z.object({
+        agents: z.record(z.string(), buildAgentConfigSchema(t)).optional(),
+        name: z.preprocess(
+            (value) => value || '',
+            z.string().min(1, t('settings.provider.nameRequired')).max(50, t('settings.provider.maxCharacters')),
+        ),
+        type: z.preprocess((value) => value || '', z.string().min(1, t('settings.provider.typeRequired'))),
+    });
 
 type FormAgents = FormData['agents'];
 
-type FormData = z.infer<typeof formSchema>;
-
-const getName = (key: string): string => key.replaceAll(/([A-Z])/g, ' $1').replace(/^./, (item) => item.toUpperCase());
+type FormData = z.infer<ReturnType<typeof buildFormSchema>>;
 
 const getReasoningEffort = (effort: null | string | undefined): null | ReasoningEffort => {
     if (!effort) {
@@ -649,6 +668,8 @@ interface TestResultsDialogProps {
 }
 
 function TestResultsDialog({ handleOpenChange, isOpen, results }: TestResultsDialogProps) {
+    const { t } = useLocale();
+
     if (!results) {
         return null;
     }
@@ -687,7 +708,7 @@ function TestResultsDialog({ handleOpenChange, isOpen, results }: TestResultsDia
         >
             <DialogContent className="flex max-h-[80vh] max-w-4xl flex-col">
                 <DialogHeader className="shrink-0">
-                    <DialogTitle>Provider Test Results</DialogTitle>
+                    <DialogTitle>{t('settings.provider.testResults')}</DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
                     <Accordion
@@ -705,9 +726,14 @@ function TestResultsDialog({ handleOpenChange, isOpen, results }: TestResultsDia
                                 >
                                     <AccordionTrigger className="text-left">
                                         <div className="mr-4 flex w-full items-center justify-between">
-                                            <span className="text-lg font-semibold capitalize">{agentType}</span>
+                                            <span className="text-lg font-semibold">
+                                                {translateAgentName(agentType, t)}
+                                            </span>
                                             <span className="text-muted-foreground text-sm">
-                                                {successTestsCount}/{testsCount} tests passed
+                                                {t('settings.provider.testsPassed', {
+                                                    passed: successTestsCount,
+                                                    total: testsCount,
+                                                })}
                                             </span>
                                         </div>
                                     </AccordionTrigger>
@@ -730,34 +756,47 @@ function TestResultsDialog({ handleOpenChange, isOpen, results }: TestResultsDia
                                                         </div>
                                                         <div className="text-muted-foreground flex items-center gap-3 text-sm">
                                                             {test.reasoning !== undefined && (
-                                                                <span>Reasoning: {test.reasoning ? 'Yes' : 'No'}</span>
+                                                                <span>
+                                                                    {t('settings.provider.reasoning')}{' '}
+                                                                    {test.reasoning ? t('common.yes') : t('common.no')}
+                                                                </span>
                                                             )}
                                                             {test.streaming !== undefined && (
-                                                                <span>Streaming: {test.streaming ? 'Yes' : 'No'}</span>
+                                                                <span>
+                                                                    {t('settings.provider.streaming')}{' '}
+                                                                    {test.streaming ? t('common.yes') : t('common.no')}
+                                                                </span>
                                                             )}
-                                                            {test.latency && <span>Latency: {test.latency}ms</span>}
+                                                            {test.latency && (
+                                                                <span>
+                                                                    {t('settings.provider.latency')}{' '}
+                                                                    {t('settings.provider.latencyValue', {
+                                                                        value: test.latency,
+                                                                    })}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                     <div
                                                         className={`text-sm font-medium ${getStatusColor(test.result)}`}
                                                     >
-                                                        Result:{' '}
+                                                        {t('settings.provider.result')}{' '}
                                                         {test.result === true
-                                                            ? 'Success'
+                                                            ? t('common.success')
                                                             : test.result === false
-                                                              ? 'Failed'
-                                                              : 'Unknown'}
+                                                              ? t('common.failed')
+                                                              : t('common.unknown')}
                                                     </div>
                                                     {test.error && (
                                                         <div className="mt-2 rounded border border-red-200 bg-red-50 p-2 text-sm text-red-700">
-                                                            <strong>Error:</strong> {test.error}
+                                                            <strong>{t('common.error')}:</strong> {test.error}
                                                         </div>
                                                     )}
                                                 </div>
                                             ))}
                                             {tests.length === 0 && (
                                                 <div className="text-muted-foreground py-4 text-center">
-                                                    No tests available for this agent
+                                                    {t('settings.provider.noAgentTests')}
                                                 </div>
                                             )}
                                         </div>
@@ -801,7 +840,30 @@ const extractAgentTypes = (agents: unknown): null | string[] => {
     return types.length > 0 ? types : null;
 };
 
+const formatValidationErrors = (errors: Record<string, unknown>, t: Translate): string => {
+    const collectMessages = (value: unknown, path: string[]): string[] => {
+        if (!value || typeof value !== 'object') {
+            return [];
+        }
+
+        const error = value as Record<string, unknown>;
+
+        if (typeof error.message === 'string') {
+            return [`• ${translateProviderFieldPath(path.join('.'), t)}: ${error.message}`];
+        }
+
+        return Object.entries(error)
+            .filter(([key]) => !['ref', 'type', 'types'].includes(key))
+            .flatMap(([key, nestedError]) => collectMessages(nestedError, [...path, key]));
+    };
+
+    return Object.entries(errors)
+        .flatMap(([field, error]) => collectMessages(error, [field]))
+        .join('\n');
+};
+
 function SettingsProvider() {
+    const { t } = useLocale();
     const { providerId } = useParams<{ providerId: string }>();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -823,6 +885,7 @@ function SettingsProvider() {
 
     const isNew = providerId === 'new';
     const isLoading = isCreateLoading || isUpdateLoading || isDeleteLoading;
+    const formSchema = useMemo(() => buildFormSchema(t), [t]);
 
     const form = useForm<FormData>({
         defaultValues: {
@@ -1011,7 +1074,7 @@ function SettingsProvider() {
 
                     reset({
                         agents: agents ? (normalizeGraphQLData(agents) as FormAgents) : {},
-                        name: `${name} (Copy)`,
+                        name: t('settings.provider.copyName', { name }),
                         type: sourceType ?? undefined,
                     });
 
@@ -1086,7 +1149,7 @@ function SettingsProvider() {
             navigate('/settings/providers');
         } catch (error) {
             console.error('Submit error:', error);
-            setSubmitError(error instanceof Error ? error.message : 'An error occurred while saving');
+            setSubmitError(error instanceof Error ? error.message : t('settings.provider.saveError'));
         }
     };
 
@@ -1114,7 +1177,7 @@ function SettingsProvider() {
             navigate('/settings/providers');
         } catch (error) {
             console.error('Delete error:', error);
-            setSubmitError(error instanceof Error ? error.message : 'An error occurred while deleting');
+            setSubmitError(error instanceof Error ? error.message : t('settings.provider.deleteError'));
         }
     };
 
@@ -1123,54 +1186,9 @@ function SettingsProvider() {
 
         if (!isValid) {
             const { errors } = formState;
+            const errorMessages = formatValidationErrors(errors, t);
 
-            const formatFieldName = (fieldPath: string): string => {
-                return fieldPath
-                    .split('.')
-                    .map((part) => {
-                        return part.charAt(0).toUpperCase() + part.slice(1).replaceAll(/([A-Z])/g, ' $1');
-                    })
-                    .join(' → ');
-            };
-
-            const errorMessages = Object.entries(errors)
-                .map(([field, error]: [string, any]) => {
-                    if (error?.message) {
-                        return `• ${formatFieldName(field)}: ${error.message}`;
-                    }
-
-                    if (error && typeof error === 'object') {
-                        return Object.entries(error)
-                            .map(([subField, subError]: [string, any]) => {
-                                if (subError?.message) {
-                                    return `• ${formatFieldName(`${field}.${subField}`)}: ${subError.message}`;
-                                }
-
-                                if (subError && typeof subError === 'object') {
-                                    return Object.entries(subError)
-                                        .map(([nestedField, nestedError]: [string, any]) => {
-                                            if (nestedError?.message) {
-                                                return `• ${formatFieldName(`${field}.${subField}.${nestedField}`)}: ${nestedError.message}`;
-                                            }
-
-                                            return null;
-                                        })
-                                        .filter(Boolean)
-                                        .join('\n');
-                                }
-
-                                return null;
-                            })
-                            .filter(Boolean)
-                            .join('\n');
-                    }
-
-                    return null;
-                })
-                .filter(Boolean)
-                .join('\n');
-
-            setSubmitError(`Please fix the following validation errors:\n\n${errorMessages}`);
+            setSubmitError(`${t('settings.provider.formValidationErrors')}\n\n${errorMessages}`);
 
             return;
         }
@@ -1191,7 +1209,7 @@ function SettingsProvider() {
             setIsTestDialogOpen(true);
         } catch (error) {
             console.error('Test error:', error);
-            setSubmitError(error instanceof Error ? error.message : 'An error occurred while testing');
+            setSubmitError(error instanceof Error ? error.message : t('settings.provider.testError'));
         }
     };
 
@@ -1200,50 +1218,9 @@ function SettingsProvider() {
 
         if (!isValid) {
             const { errors } = formState;
-            const formatFieldName = (fieldPath: string): string =>
-                fieldPath
-                    .split('.')
-                    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).replaceAll(/([A-Z])/g, ' $1'))
-                    .join(' → ');
+            const errorMessages = formatValidationErrors(errors, t);
 
-            const errorMessages = Object.entries(errors)
-                .map(([field, error]: [string, any]) => {
-                    if (error?.message) {
-                        return `• ${formatFieldName(field)}: ${error.message}`;
-                    }
-
-                    if (error && typeof error === 'object') {
-                        return Object.entries(error)
-                            .map(([subField, subError]: [string, any]) => {
-                                if (subError?.message) {
-                                    return `• ${formatFieldName(`${field}.${subField}`)}: ${subError.message}`;
-                                }
-
-                                if (subError && typeof subError === 'object') {
-                                    return Object.entries(subError)
-                                        .map(([nestedField, nestedError]: [string, any]) => {
-                                            if (nestedError?.message) {
-                                                return `• ${formatFieldName(`${field}.${subField}.${nestedField}`)}: ${nestedError.message}`;
-                                            }
-
-                                            return null;
-                                        })
-                                        .filter(Boolean)
-                                        .join('\n');
-                                }
-
-                                return null;
-                            })
-                            .filter(Boolean)
-                            .join('\n');
-                    }
-
-                    return null;
-                })
-                .filter(Boolean)
-                .join('\n');
-
-            setSubmitError(`Please fix the following validation errors:\n\n${errorMessages}`);
+            setSubmitError(`${t('settings.provider.formValidationErrors')}\n\n${errorMessages}`);
 
             return;
         }
@@ -1267,7 +1244,7 @@ function SettingsProvider() {
             return;
         } catch (error) {
             console.error('Test error:', error);
-            setSubmitError(error instanceof Error ? error.message : 'An error occurred while testing');
+            setSubmitError(error instanceof Error ? error.message : t('settings.provider.testError'));
             setCurrentAgentKey(null);
         }
     };
@@ -1306,9 +1283,9 @@ function SettingsProvider() {
     if (loading) {
         return (
             <StatusCard
-                description="Please wait while we fetch provider configuration"
+                description={t('settings.provider.loadingDescription')}
                 icon={<Loader2 className="text-muted-foreground size-16 animate-spin" />}
-                title="Loading provider data..."
+                title={t('settings.provider.loadingTitle')}
             />
         );
     }
@@ -1317,7 +1294,7 @@ function SettingsProvider() {
         return (
             <Alert variant="destructive">
                 <AlertCircle className="size-4" />
-                <AlertTitle>Error loading provider data</AlertTitle>
+                <AlertTitle>{t('settings.provider.loadingError')}</AlertTitle>
                 <AlertDescription>{error.message}</AlertDescription>
             </Alert>
         );
@@ -1335,13 +1312,11 @@ function SettingsProvider() {
                 <div className="flex flex-col gap-2">
                     <h2 className="flex items-center gap-2 text-lg font-semibold">
                         <Cpu className="text-muted-foreground size-5" />
-                        {isNew ? 'New Provider' : 'Provider Settings'}
+                        {isNew ? t('settings.provider.newTitle') : t('settings.provider.settingsTitle')}
                     </h2>
 
                     <div className="text-muted-foreground">
-                        {isNew
-                            ? 'Configure a new language model provider'
-                            : 'Update provider settings and configuration'}
+                        {isNew ? t('settings.provider.configureNew') : t('settings.provider.updateDescription')}
                     </div>
                 </div>
 
@@ -1355,7 +1330,7 @@ function SettingsProvider() {
                         {mutationError && (
                             <Alert variant="destructive">
                                 <AlertCircle className="size-4" />
-                                <AlertTitle>Error</AlertTitle>
+                                <AlertTitle>{t('common.error')}</AlertTitle>
                                 <AlertDescription>
                                     {mutationError instanceof Error ? (
                                         mutationError.message
@@ -1370,28 +1345,30 @@ function SettingsProvider() {
                         <FormComboboxItem
                             allowCustom={false}
                             control={control}
-                            description="The type of language model provider"
+                            description={t('settings.provider.typeDescription')}
                             disabled={isLoading || !!selectedType}
-                            label="Type"
+                            label={t('settings.provider.type')}
                             name="type"
                             options={providers}
-                            placeholder="Select provider"
+                            placeholder={t('settings.provider.selectType')}
                         />
 
                         <FormInputStringItem
                             control={control}
-                            description="A unique name for your provider configuration"
+                            description={t('settings.provider.nameDescription')}
                             disabled={isLoading}
-                            label="Name"
+                            label={t('settings.provider.name')}
                             name="name"
-                            placeholder="Enter provider name"
+                            placeholder={t('settings.provider.namePlaceholder')}
                         />
 
                         {/* Agents Configuration Section */}
                         <div className="flex flex-col gap-4">
                             <div>
-                                <h3 className="text-lg font-medium">Agent Configurations</h3>
-                                <p className="text-muted-foreground text-sm">Configure settings for each agent type</p>
+                                <h3 className="text-lg font-medium">{t('settings.provider.agentConfigurations')}</h3>
+                                <p className="text-muted-foreground text-sm">
+                                    {t('settings.provider.agentConfigurationsDescription')}
+                                </p>
                             </div>
 
                             <Accordion
@@ -1405,7 +1382,9 @@ function SettingsProvider() {
                                     >
                                         <AccordionTrigger className="group text-left hover:no-underline">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <span className="group-hover:underline">{getName(agentKey)}</span>
+                                                <span className="group-hover:underline">
+                                                    {translateAgentName(agentKey, t)}
+                                                </span>
                                                 <span
                                                     className={cn(
                                                         'hover:bg-accent hover:text-accent-foreground mr-2 flex items-center gap-1 rounded border px-2 py-1 text-xs',
@@ -1428,8 +1407,8 @@ function SettingsProvider() {
                                                     )}
                                                     <span className="no-underline! hover:no-underline!">
                                                         {isAgentTestLoading && currentAgentKey === agentKey
-                                                            ? 'Testing...'
-                                                            : 'Test'}
+                                                            ? t('common.testing')
+                                                            : t('common.test')}
                                                     </span>
                                                 </span>
                                             </div>
@@ -1440,7 +1419,7 @@ function SettingsProvider() {
                                                 <FormModelComboboxItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Model"
+                                                    label={t('settings.provider.model')}
                                                     name={`agents.${agentKey}.model`}
                                                     onOptionSelect={(option) => {
                                                         {
@@ -1467,14 +1446,14 @@ function SettingsProvider() {
                                                         );
                                                     }}
                                                     options={availableModels}
-                                                    placeholder="Select or enter model name"
+                                                    placeholder={t('settings.provider.modelPlaceholder')}
                                                 />
 
                                                 {/* Temperature field */}
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Temperature"
+                                                    label={t('settings.provider.temperature')}
                                                     max="2"
                                                     min="0"
                                                     name={`agents.${agentKey}.temperature`}
@@ -1486,7 +1465,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Max Tokens"
+                                                    label={t('settings.provider.maxTokens')}
                                                     min="1"
                                                     name={`agents.${agentKey}.maxTokens`}
                                                     placeholder="1000"
@@ -1497,7 +1476,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Top P"
+                                                    label={t('settings.provider.topP')}
                                                     max="1"
                                                     min="0"
                                                     name={`agents.${agentKey}.topP`}
@@ -1509,7 +1488,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Top K"
+                                                    label={t('settings.provider.topK')}
                                                     min="1"
                                                     name={`agents.${agentKey}.topK`}
                                                     placeholder="40"
@@ -1520,7 +1499,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Min Length"
+                                                    label={t('settings.provider.minLength')}
                                                     min="0"
                                                     name={`agents.${agentKey}.minLength`}
                                                     placeholder="0"
@@ -1531,7 +1510,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Max Length"
+                                                    label={t('settings.provider.maxLength')}
                                                     min="1"
                                                     name={`agents.${agentKey}.maxLength`}
                                                     placeholder="2000"
@@ -1542,7 +1521,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Repetition Penalty"
+                                                    label={t('settings.provider.repetitionPenalty')}
                                                     max="2"
                                                     min="0"
                                                     name={`agents.${agentKey}.repetitionPenalty`}
@@ -1554,7 +1533,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Frequency Penalty"
+                                                    label={t('settings.provider.frequencyPenalty')}
                                                     max="2"
                                                     min="0"
                                                     name={`agents.${agentKey}.frequencyPenalty`}
@@ -1566,7 +1545,7 @@ function SettingsProvider() {
                                                 <FormInputNumberItem
                                                     control={control}
                                                     disabled={isLoading}
-                                                    label="Presence Penalty"
+                                                    label={t('settings.provider.presencePenalty')}
                                                     max="2"
                                                     min="0"
                                                     name={`agents.${agentKey}.presencePenalty`}
@@ -1578,7 +1557,9 @@ function SettingsProvider() {
                                             {/* Reasoning Configuration */}
                                             <div className="col-span-full p-px">
                                                 <div className="mt-6 flex flex-col gap-4">
-                                                    <h4 className="text-sm font-medium">Reasoning Configuration</h4>
+                                                    <h4 className="text-sm font-medium">
+                                                        {t('settings.provider.reasoningConfiguration')}
+                                                    </h4>
                                                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                                         {/* Reasoning Effort field */}
                                                         <FormField
@@ -1586,7 +1567,9 @@ function SettingsProvider() {
                                                             name={`agents.${agentKey}.reasoning.effort`}
                                                             render={({ field }) => (
                                                                 <FormItem>
-                                                                    <FormLabel>Reasoning Effort</FormLabel>
+                                                                    <FormLabel>
+                                                                        {t('settings.provider.reasoningEffort')}
+                                                                    </FormLabel>
                                                                     <Select
                                                                         defaultValue={field.value ?? 'none'}
                                                                         disabled={isLoading}
@@ -1598,21 +1581,25 @@ function SettingsProvider() {
                                                                     >
                                                                         <FormControl>
                                                                             <SelectTrigger>
-                                                                                <SelectValue placeholder="Select effort level (optional)" />
+                                                                                <SelectValue
+                                                                                    placeholder={t(
+                                                                                        'settings.provider.selectEffort',
+                                                                                    )}
+                                                                                />
                                                                             </SelectTrigger>
                                                                         </FormControl>
                                                                         <SelectContent>
                                                                             <SelectItem value="none">
-                                                                                Not selected
+                                                                                {t('common.notSelected')}
                                                                             </SelectItem>
                                                                             <SelectItem value={ReasoningEffort.Low}>
-                                                                                Low
+                                                                                {t('common.low')}
                                                                             </SelectItem>
                                                                             <SelectItem value={ReasoningEffort.Medium}>
-                                                                                Medium
+                                                                                {t('common.medium')}
                                                                             </SelectItem>
                                                                             <SelectItem value={ReasoningEffort.High}>
-                                                                                High
+                                                                                {t('common.high')}
                                                                             </SelectItem>
                                                                         </SelectContent>
                                                                     </Select>
@@ -1625,7 +1612,7 @@ function SettingsProvider() {
                                                         <FormInputNumberItem
                                                             control={control}
                                                             disabled={isLoading}
-                                                            label="Reasoning Max Tokens"
+                                                            label={t('settings.provider.reasoningMaxTokens')}
                                                             min="1"
                                                             name={`agents.${agentKey}.reasoning.maxTokens`}
                                                             placeholder="1000"
@@ -1638,14 +1625,16 @@ function SettingsProvider() {
                                             {/* Price Configuration */}
                                             <div className="col-span-full p-px">
                                                 <div className="mt-6 flex flex-col gap-4">
-                                                    <h4 className="text-sm font-medium">Price Configuration</h4>
+                                                    <h4 className="text-sm font-medium">
+                                                        {t('settings.provider.priceConfiguration')}
+                                                    </h4>
                                                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                                         {/* Price Input field */}
                                                         <FormInputNumberItem
                                                             control={control}
-                                                            description="Price per 1M input tokens"
+                                                            description={t('settings.provider.inputPriceDescription')}
                                                             disabled={isLoading}
-                                                            label="Input Price"
+                                                            label={t('settings.provider.inputPrice')}
                                                             min="0"
                                                             name={`agents.${agentKey}.price.input`}
                                                             placeholder="0.001"
@@ -1655,9 +1644,9 @@ function SettingsProvider() {
                                                         {/* Price Output field */}
                                                         <FormInputNumberItem
                                                             control={control}
-                                                            description="Price per 1M output tokens"
+                                                            description={t('settings.provider.outputPriceDescription')}
                                                             disabled={isLoading}
-                                                            label="Output Price"
+                                                            label={t('settings.provider.outputPrice')}
                                                             min="0"
                                                             name={`agents.${agentKey}.price.output`}
                                                             placeholder="0.002"
@@ -1667,9 +1656,11 @@ function SettingsProvider() {
                                                         {/* Cache Read Price field */}
                                                         <FormInputNumberItem
                                                             control={control}
-                                                            description="Price per 1M cached read tokens"
+                                                            description={t(
+                                                                'settings.provider.cacheReadPriceDescription',
+                                                            )}
                                                             disabled={isLoading}
-                                                            label="Cache Read Price"
+                                                            label={t('settings.provider.cacheReadPrice')}
                                                             min="0"
                                                             name={`agents.${agentKey}.price.cacheRead`}
                                                             placeholder="0.0001"
@@ -1679,9 +1670,11 @@ function SettingsProvider() {
                                                         {/* Cache Write Price field */}
                                                         <FormInputNumberItem
                                                             control={control}
-                                                            description="Price per 1M cache write tokens"
+                                                            description={t(
+                                                                'settings.provider.cacheWritePriceDescription',
+                                                            )}
                                                             disabled={isLoading}
-                                                            label="Cache Write Price"
+                                                            label={t('settings.provider.cacheWritePrice')}
                                                             min="0"
                                                             name={`agents.${agentKey}.price.cacheWrite`}
                                                             placeholder="0.00015"
@@ -1715,7 +1708,7 @@ function SettingsProvider() {
                             ) : (
                                 <Trash2 className="size-4" />
                             )}
-                            {isDeleteLoading ? 'Deleting...' : 'Delete'}
+                            {isDeleteLoading ? t('common.deleting') : t('common.delete')}
                         </Button>
                     )}
                     <Button
@@ -1725,7 +1718,7 @@ function SettingsProvider() {
                         variant="outline"
                     >
                         {isTestLoading ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-                        {isTestLoading ? 'Testing...' : 'Test'}
+                        {isTestLoading ? t('common.testing') : t('common.test')}
                     </Button>
                 </div>
 
@@ -1736,7 +1729,7 @@ function SettingsProvider() {
                         type="button"
                         variant="outline"
                     >
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <FormSubmitButton
                         form="provider-form"
@@ -1744,7 +1737,11 @@ function SettingsProvider() {
                         loading={isLoading}
                         variant="secondary"
                     >
-                        {isLoading ? 'Saving...' : isNew ? 'Create Provider' : 'Update Provider'}
+                        {isLoading
+                            ? t('common.saving')
+                            : isNew
+                              ? t('settings.createProvider')
+                              : t('settings.updateProvider')}
                     </FormSubmitButton>
                 </div>
             </div>
@@ -1756,25 +1753,27 @@ function SettingsProvider() {
             />
 
             <ConfirmationDialog
-                cancelText="Cancel"
-                confirmText="Delete"
+                cancelText={t('common.cancel')}
+                confirmText={t('common.delete')}
+                description={t('settings.provider.deleteDescription', { name: providerName ?? '' })}
                 handleConfirm={handleConfirmDelete}
                 handleOpenChange={setIsDeleteDialogOpen}
                 isOpen={isDeleteDialogOpen}
                 itemName={providerName}
                 itemType="provider"
+                title={t('settings.provider.deleteTitle')}
             />
 
             <ConfirmationDialog
-                cancelText="Stay"
+                cancelText={t('common.stay')}
                 confirmIcon={undefined}
-                confirmText="Leave"
+                confirmText={t('common.leave')}
                 confirmVariant="destructive"
-                description="You have unsaved changes. Are you sure you want to leave without saving?"
+                description={t('settings.unsavedDescription')}
                 handleConfirm={handleConfirmLeave}
                 handleOpenChange={handleLeaveDialogOpenChange}
                 isOpen={isLeaveDialogOpen}
-                title="Discard changes?"
+                title={t('settings.unsavedTitle')}
             />
         </>
     );

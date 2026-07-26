@@ -29,8 +29,7 @@ describe('dictionaries', () => {
     });
 
     it('uses the same placeholders across locales', () => {
-        const placeholders = (template: string) =>
-            [...template.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort();
+        const placeholders = (template: string) => [...template.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort();
 
         for (const [key, template] of Object.entries(dictionaries[fallbackLocale])) {
             for (const locale of locales) {

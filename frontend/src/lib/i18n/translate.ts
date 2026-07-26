@@ -9,9 +9,7 @@ export const interpolate = (template: string, values?: TranslationValues): strin
         return template;
     }
 
-    return template.replaceAll(/\{(\w+)\}/g, (match, name: string) =>
-        name in values ? String(values[name]) : match,
-    );
+    return template.replaceAll(/\{(\w+)\}/g, (match, name: string) => (name in values ? String(values[name]) : match));
 };
 
 /**

@@ -3391,128 +3391,128 @@ PentAGI 存储多种向量文档，各自用途不同：
 
 ## 使用 ftester 测试函数
 
-PentAGI includes a versatile utility called `ftester` for debugging, testing, and developing specific functions and AI agent behaviors. While `ctester` focuses on testing LLM model capabilities, `ftester` allows you to directly invoke individual system functions and AI agent components with precise control over execution context.
+PentAGI 提供 `ftester` 工具，用于调试、测试和开发特定函数及 AI 智能体行为。`ctester` 侧重测试 LLM 模型能力，而 `ftester` 可以直接调用单个系统函数和 AI 智能体组件，并精确控制执行上下文。
 
-### Key Features
+### 主要功能
 
-- **Direct Function Access**: Test individual functions without running the entire system
-- **Mock Mode**: Test functions without a live PentAGI deployment using built-in mocks
-- **Interactive Input**: Fill function arguments interactively for exploratory testing
-- **Detailed Output**: Color-coded terminal output with formatted responses and errors
-- **Context-Aware Testing**: Debug AI agents within the context of specific flows, tasks, and subtasks
-- **Observability Integration**: All function calls are logged to Langfuse and Observability stack
+- **直接访问函数**：无需运行整个系统即可测试单个函数
+- **模拟模式**：通过内置模拟对象测试函数，无需使用正在运行的 PentAGI 部署
+- **交互式输入**：通过交互方式填写函数参数，进行探索性测试
+- **详细输出**：使用颜色区分终端输出，并格式化响应和错误
+- **上下文感知测试**：在指定任务流、任务和子任务的上下文中调试 AI 智能体
+- **可观测性集成**：所有函数调用都会记录到 Langfuse 和可观测性服务栈
 
-### Usage Modes
+### 使用模式
 
-#### Command Line Arguments
+#### 命令行参数
 
-Run ftester with specific function and arguments directly from the command line:
+可以直接从命令行运行 ftester，并指定函数和参数：
 
 ```bash
-# Basic usage with mock mode
+# 模拟模式的基本用法
 cd backend
 go run cmd/ftester/main.go [function_name] -[arg1] [value1] -[arg2] [value2]
 
-# Example: Test terminal command in mock mode
-go run cmd/ftester/main.go terminal -command "ls -la" -message "List files"
+# 示例：在模拟模式下测试终端命令
+go run cmd/ftester/main.go terminal -command "ls -la" -message "列出文件"
 
-# Using a real flow context
-go run cmd/ftester/main.go -flow 123 terminal -command "whoami" -message "Check user"
+# 使用真实任务流上下文
+go run cmd/ftester/main.go -flow 123 terminal -command "whoami" -message "检查用户"
 
-# Testing AI agent in specific task/subtask context
-go run cmd/ftester/main.go -flow 123 -task 456 -subtask 789 pentester -message "Find vulnerabilities"
+# 在指定任务/子任务上下文中测试 AI 智能体
+go run cmd/ftester/main.go -flow 123 -task 456 -subtask 789 pentester -message "查找漏洞"
 ```
 
-#### Interactive Mode
+#### 交互模式
 
-Run ftester without arguments for a guided interactive experience:
+不带参数运行 ftester，即可进入引导式交互模式：
 
 ```bash
-# Start interactive mode
+# 启动交互模式
 go run cmd/ftester/main.go [function_name]
 
-# For example, to interactively fill browser tool arguments
+# 示例：以交互方式填写浏览器工具参数
 go run cmd/ftester/main.go browser
 ```
 
 <details>
-<summary><b>Available Functions</b> (click to expand)</summary>
+<summary><b>可用函数</b>（点击展开）</summary>
 
-### Environment Functions
-- **terminal**: Execute commands in a container and return the output
-- **file**: Perform file operations (read, write, list) in a container
+### 环境函数
+- **terminal**：在容器中执行命令并返回输出
+- **file**：在容器中执行文件操作（读取、写入、列出）
 
-### Search Functions
-- **browser**: Access websites and capture screenshots
-- **google**: Search the web using Google Custom Search
-- **duckduckgo**: Search the web using DuckDuckGo
-- **tavily**: Search using Tavily AI search engine
-- **traversaal**: Search using Traversaal AI search engine
-- **perplexity**: Search using Perplexity AI
-- **sploitus**: Search for security exploits, vulnerabilities (CVEs), and pentesting tools
-- **searxng**: Search using Searxng meta search engine (aggregates results from multiple engines)
+### 搜索函数
+- **browser**：访问网站并捕获截图
+- **google**：使用 Google 自定义搜索来搜索网页
+- **duckduckgo**：使用 DuckDuckGo 搜索网页
+- **tavily**：使用 Tavily AI 搜索引擎
+- **traversaal**：使用 Traversaal AI 搜索引擎
+- **perplexity**：使用 Perplexity AI 搜索
+- **sploitus**：搜索安全漏洞利用、漏洞（CVE）和渗透测试工具
+- **searxng**：使用 Searxng 元搜索引擎，聚合多个搜索引擎的结果
 
-### Vector Database Functions
-- **search_in_memory**: Search for information in vector database
-- **search_guide**: Find guidance documents in vector database
-- **search_answer**: Find answers to questions in vector database
-- **search_code**: Find code examples in vector database
+### 向量数据库函数
+- **search_in_memory**：在向量数据库中搜索信息
+- **search_guide**：在向量数据库中查找指南文档
+- **search_answer**：在向量数据库中查找问题答案
+- **search_code**：在向量数据库中查找代码示例
 
-### AI Agent Functions
-- **advice**: Get expert advice from an AI agent
-- **coder**: Request code generation or modification
-- **maintenance**: Run system maintenance tasks
-- **memorist**: Store and organize information in vector database
-- **pentester**: Perform security tests and vulnerability analysis
-- **search**: Complex search across multiple sources
+### AI 智能体函数
+- **advice**：从 AI 智能体获取专家建议
+- **coder**：请求生成或修改代码
+- **maintenance**：运行系统维护任务
+- **memorist**：在向量数据库中存储和整理信息
+- **pentester**：执行安全测试和漏洞分析
+- **search**：在多个来源中执行复杂搜索
 
-### Utility Functions
-- **describe**: Show information about flows, tasks, and subtasks
+### 实用函数
+- **describe**：显示任务流、任务和子任务的信息
 
 </details>
 
 <details>
-<summary><b>Debugging Flow Context</b> (click to expand)</summary>
+<summary><b>调试任务流上下文</b>（点击展开）</summary>
 
-The `describe` function provides detailed information about tasks and subtasks within a flow. This is particularly useful for diagnosing issues when PentAGI encounters problems or gets stuck.
+`describe` 函数提供任务流内各任务和子任务的详细信息，适合在 PentAGI 出现问题或卡住时进行诊断。
 
 ```bash
-# List all flows in the system
+# 列出系统中的所有任务流
 go run cmd/ftester/main.go describe
 
-# Show all tasks and subtasks for a specific flow
+# 显示指定任务流的所有任务和子任务
 go run cmd/ftester/main.go -flow 123 describe
 
-# Show detailed information for a specific task
+# 显示指定任务的详细信息
 go run cmd/ftester/main.go -flow 123 -task 456 describe
 
-# Show detailed information for a specific subtask
+# 显示指定子任务的详细信息
 go run cmd/ftester/main.go -flow 123 -task 456 -subtask 789 describe
 
-# Show verbose output with full descriptions and results
+# 显示包含完整说明和结果的详细输出
 go run cmd/ftester/main.go -flow 123 describe -verbose
 ```
 
-This function allows you to identify the exact point where a flow might be stuck and resume processing by directly invoking the appropriate agent function.
+该函数可以定位任务流卡住的具体位置，再通过直接调用相应的智能体函数来恢复处理。
 
 </details>
 
 <details>
-<summary><b>Function Help and Discovery</b> (click to expand)</summary>
+<summary><b>函数帮助与发现</b>（点击展开）</summary>
 
-Each function has a help mode that shows available parameters:
+每个函数都提供帮助模式，用于显示可用参数：
 
 ```bash
-# Get help for a specific function
+# 获取指定函数的帮助
 go run cmd/ftester/main.go [function_name] -help
 
-# Examples:
+# 示例：
 go run cmd/ftester/main.go terminal -help
 go run cmd/ftester/main.go browser -help
 go run cmd/ftester/main.go describe -help
 ```
 
-You can also run ftester without arguments to see a list of all available functions:
+也可以不带参数运行 ftester，查看所有可用函数：
 
 ```bash
 go run cmd/ftester/main.go
@@ -3521,126 +3521,126 @@ go run cmd/ftester/main.go
 </details>
 
 <details>
-<summary><b>Output Format</b> (click to expand)</summary>
+<summary><b>输出格式</b>（点击展开）</summary>
 
-The `ftester` utility uses color-coded output to make interpretation easier:
+`ftester` 使用不同颜色标记输出，方便阅读：
 
-- **Blue headers**: Section titles and key names
-- **Cyan [INFO]**: General information messages
-- **Green [SUCCESS]**: Successful operations
-- **Red [ERROR]**: Error messages
-- **Yellow [WARNING]**: Warning messages
-- **Yellow [MOCK]**: Indicates mock mode operation
-- **Magenta values**: Function arguments and results
+- **蓝色标题**：章节标题和键名
+- **青色 [INFO]**：一般信息
+- **绿色 [SUCCESS]**：操作成功
+- **红色 [ERROR]**：错误信息
+- **黄色 [WARNING]**：警告信息
+- **黄色 [MOCK]**：表示模拟模式操作
+- **品红色值**：函数参数和结果
 
-JSON and Markdown responses are automatically formatted for readability.
+JSON 和 Markdown 响应会自动格式化，便于阅读。
 
 </details>
 
 <details>
-<summary><b>Advanced Usage Scenarios</b> (click to expand)</summary>
+<summary><b>高级使用场景</b>（点击展开）</summary>
 
-### Debugging Stuck AI Flows
+### 调试卡住的 AI 任务流
 
-When PentAGI gets stuck in a flow:
+PentAGI 在任务流中卡住时：
 
-1. Pause the flow through the UI
-2. Use `describe` to identify the current task and subtask
-3. Directly invoke the agent function with the same task/subtask IDs
-4. Examine the detailed output to identify the issue
-5. Resume the flow or manually intervene as needed
+1. 通过界面暂停任务流
+2. 使用 `describe` 确定当前任务和子任务
+3. 使用相同的任务/子任务 ID 直接调用智能体函数
+4. 检查详细输出，定位问题
+5. 根据需要恢复任务流或手动干预
 
-### Testing Environment Variables
+### 测试环境变量
 
-Verify that API keys and external services are configured correctly:
+验证 API 密钥和外部服务是否配置正确：
 
 ```bash
-# Test Google search API configuration
-go run cmd/ftester/main.go google -query "pentesting tools"
+# 测试 Google 搜索 API 配置
+go run cmd/ftester/main.go google -query "渗透测试工具"
 
-# Test browser access to external websites
+# 测试浏览器能否访问外部网站
 go run cmd/ftester/main.go browser -url "https://example.com"
 ```
 
-### Developing New AI Agent Behaviors
+### 开发新的 AI 智能体行为
 
-When developing new prompt templates or agent behaviors:
+开发新的提示词模板或智能体行为时：
 
-1. Create a test flow in the UI
-2. Use ftester to directly invoke the agent with different prompts
-3. Observe responses and adjust prompts accordingly
-4. Check Langfuse for detailed traces of all function calls
+1. 在界面中创建测试任务流
+2. 使用 ftester 直接调用智能体，并尝试不同提示词
+3. 观察响应并相应调整提示词
+4. 在 Langfuse 中查看所有函数调用的详细追踪记录
 
-### Verifying Docker Container Setup
+### 验证 Docker 容器设置
 
-Ensure containers are properly configured:
+确认容器配置正确：
 
 ```bash
-go run cmd/ftester/main.go -flow 123 terminal -command "env | grep -i proxy" -message "Check proxy settings"
+go run cmd/ftester/main.go -flow 123 terminal -command "env | grep -i proxy" -message "检查代理设置"
 ```
 
 </details>
 
 <details>
-<summary><b>Docker Container Usage</b> (click to expand)</summary>
+<summary><b>在 Docker 容器中使用</b>（点击展开）</summary>
 
-If you have PentAGI running in Docker, you can use ftester from within the container:
+如果 PentAGI 在 Docker 中运行，可以从容器内使用 ftester：
 
 ```bash
-# Run ftester inside the running PentAGI container
+# 在运行中的 PentAGI 容器内执行 ftester
 docker exec -it pentagi /opt/pentagi/bin/ftester [arguments]
 
-# Examples:
+# 示例：
 docker exec -it pentagi /opt/pentagi/bin/ftester -flow 123 describe
-docker exec -it pentagi /opt/pentagi/bin/ftester -flow 123 terminal -command "ps aux" -message "List processes"
+docker exec -it pentagi /opt/pentagi/bin/ftester -flow 123 terminal -command "ps aux" -message "列出进程"
 ```
 
-This is particularly useful for production deployments where you don't have a local development environment.
+生产部署没有本地开发环境时，这种方式很方便。
 
 </details>
 
 <details>
-<summary><b>Integration with Observability Tools</b> (click to expand)</summary>
+<summary><b>集成可观测性工具</b>（点击展开）</summary>
 
-All function calls made through ftester are logged to:
+通过 ftester 发出的所有函数调用都会记录到：
 
-1. **Langfuse**: Captures the entire AI agent interaction chain, including prompts, responses, and function calls
-2. **OpenTelemetry**: Records metrics, traces, and logs for system performance analysis
-3. **Terminal Output**: Provides immediate feedback on function execution
+1. **Langfuse**：捕获完整的 AI 智能体交互链，包括提示词、响应和函数调用
+2. **OpenTelemetry**：记录指标、追踪数据和日志，用于分析系统性能
+3. **终端输出**：即时反馈函数执行情况
 
-To access detailed logs:
+查看详细日志：
 
-- Check Langfuse UI for AI agent traces (typically at `http://localhost:4000`)
-- Use Grafana dashboards for system metrics (typically at `http://localhost:3000`)
-- Examine terminal output for immediate function results and errors
+- 在 Langfuse 界面中查看 AI 智能体追踪记录（通常位于 `http://localhost:4000`）
+- 通过 Grafana 仪表板查看系统指标（通常位于 `http://localhost:3000`）
+- 检查终端输出，获取即时函数结果和错误
 
 </details>
 
-### Command-line Options
+### 命令行选项
 
-The main utility accepts several options:
+主工具支持以下选项：
 
-- `-env <path>` - Path to environment file (optional, default: `.env`)
-- `-provider <type>` - Provider type to use (default: `custom`, options: `openai`, `anthropic`, `ollama`, `bedrock`, `gemini`, `custom`)
-- `-flow <id>` - Flow ID for testing (0 means using mocks, default: `0`)
-- `-task <id>` - Task ID for agent context (optional)
-- `-subtask <id>` - Subtask ID for agent context (optional)
+- `-env <path>`：环境文件路径（可选，默认：`.env`）
+- `-provider <type>`：使用的提供商类型（默认：`custom`；可选：`openai`、`anthropic`、`ollama`、`bedrock`、`gemini`、`custom`）
+- `-flow <id>`：用于测试的任务流 ID（0 表示使用模拟模式，默认：`0`）
+- `-task <id>`：智能体上下文中的任务 ID（可选）
+- `-subtask <id>`：智能体上下文中的子任务 ID（可选）
 
-Function-specific arguments are passed after the function name using `-name value` format.
+函数专用参数放在函数名后，并使用 `-name value` 格式传入。
 
-### Pentesting Prompt Methodology
+### 渗透测试提示词方法论
 
-When refining prompts for offensive security work, give the agent a clear methodology instead of a flat list of payloads:
+为攻击性安全工作优化提示词时，应向智能体提供清晰的方法论，而不是简单罗列 payload（载荷）：
 
-1. Start with explicit scope, authorization, and success criteria
-2. Map the application first: roles, routes, parameters, uploads, integrations, and trust boundaries
-3. Prioritize attack surfaces systematically instead of testing everything at once
-4. Validate findings with reproducible evidence before escalating to deeper exploitation
-5. Finish with report-ready notes that capture impact, prerequisites, and next steps
+1. 首先明确范围、授权和成功标准
+2. 先梳理应用：角色、路由、参数、上传功能、集成和信任边界
+3. 系统地确定攻击面的优先级，不要一次测试所有内容
+4. 先用可复现证据验证发现，再开展更深入的漏洞利用
+5. 最后整理可直接用于报告的记录，写明影响、前提条件和后续步骤
 
-For PentAGI-specific prompt guidance, see [`backend/docs/prompt_engineering_pentagi.md`](backend/docs/prompt_engineering_pentagi.md). For a practical starting point, reuse and adapt [`examples/prompts/base_web_pentest.md`](examples/prompts/base_web_pentest.md) to match the target application, technology stack, and engagement scope.
+PentAGI 专用提示词指南参见 [`backend/docs/prompt_engineering_pentagi.md`](backend/docs/prompt_engineering_pentagi.md)。如需从实际示例入手，可以复用并调整 [`examples/prompts/base_web_pentest.md`](examples/prompts/base_web_pentest.md)，使其符合目标应用、技术栈和评估范围。
 
-## Building
+## 构建
 
 ### Building Docker Image
 

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FileNode } from '@/components/shared/file-manager';
 
 import { buildPathsQuery } from '@/features/resources/resources-utils';
+import { useLocale } from '@/hooks/use-locale';
 import { api, getApiErrorMessage, unwrapApiResponse } from '@/lib/axios';
 
 import { FLOW_FILES_CONTAINER_API_PATH } from './flow-files-constants';
@@ -45,6 +46,7 @@ interface UseFlowContainerFilesResult {
  * is issued, `files` stays an empty array, `isLoading` stays `false`.
  */
 export function useFlowContainerFiles({ flowId, paths }: UseFlowContainerFilesParams): UseFlowContainerFilesResult {
+    const { t } = useLocale();
     const [files, setFiles] = useState<FileNode[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -94,14 +96,14 @@ export function useFlowContainerFiles({ flowId, paths }: UseFlowContainerFilesPa
                 return;
             }
 
-            setError(new Error(getApiErrorMessage(caught, 'Failed to load container files')));
+            setError(new Error(getApiErrorMessage(caught, t('flow.files.loadContainerFailed'))));
             setFiles([]);
         } finally {
             if (token === currentTokenRef.current) {
                 setIsLoading(false);
             }
         }
-    }, [flowId, paths]);
+    }, [flowId, paths, t]);
 
     useEffect(() => {
         // fetchListing is an async callback that handles its own loading state via setState

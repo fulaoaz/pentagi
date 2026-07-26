@@ -25,6 +25,13 @@ export interface UploadValidationLimits {
     rejectEmpty?: boolean;
 }
 
+export interface UploadValidationMessages {
+    emptyFile: (name: string) => string;
+    fileTooLarge: (name: string, maxFileSizeMb: number) => string;
+    tooManyFiles: (maxFiles: number) => string;
+    totalTooLarge: (maxTotalSizeMb: number) => string;
+}
+
 const MEGABYTE = 1024 * 1024;
 
 /**
@@ -36,9 +43,13 @@ const MEGABYTE = 1024 * 1024;
  * Empty batches are treated as a no-op (`null`); callers usually short-circuit
  * before reaching the validator anyway.
  */
-export const validateUploadBatch = (files: readonly File[], limits: UploadValidationLimits): null | string => {
+export const validateUploadBatch = (
+    files: readonly File[],
+    limits: UploadValidationLimits,
+    messages?: UploadValidationMessages,
+): null | string => {
     if (files.length > limits.maxFiles) {
-        return `Too many files: max ${limits.maxFiles} per upload`;
+        return messages?.tooManyFiles(limits.maxFiles) ?? `Too many files: max ${limits.maxFiles} per upload`;
     }
 
     const maxBytesPerFile = limits.maxFileSizeMb * MEGABYTE;
@@ -48,18 +59,24 @@ export const validateUploadBatch = (files: readonly File[], limits: UploadValida
 
     for (const file of files) {
         if (rejectEmpty && file.size === 0) {
-            return `File "${file.name}" is empty`;
+            return messages?.emptyFile(file.name) ?? `File "${file.name}" is empty`;
         }
 
         if (file.size > maxBytesPerFile) {
-            return `File "${file.name}" is larger than ${limits.maxFileSizeMb} MB`;
+            return (
+                messages?.fileTooLarge(file.name, limits.maxFileSizeMb) ??
+                `File "${file.name}" is larger than ${limits.maxFileSizeMb} MB`
+            );
         }
 
         totalBytes += file.size;
     }
 
     if (totalBytes > maxTotalBytes) {
-        return `Total upload size exceeds the ${limits.maxTotalSizeMb} MB limit`;
+        return (
+            messages?.totalTooLarge(limits.maxTotalSizeMb) ??
+            `Total upload size exceeds the ${limits.maxTotalSizeMb} MB limit`
+        );
     }
 
     return null;

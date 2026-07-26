@@ -83,9 +83,9 @@ PentAGI 是一款用于自动化安全测试的创新工具，采用了前沿的
 - 当前的任务流报告界面支持网页查看、复制到剪贴板、下载 Markdown 和下载 PDF。JSON 格式的任务流报告导出目前不在已支持的输出格式之列。
 - 提供商的灵活性目前通过内置提供商以及自定义 / OpenAI 兼容端点来实现。参见[自定义 LLM 提供商配置](#自定义-llm-提供商配置)和 [vLLM + Qwen3.5-27B-FP8 指南](examples/guides/vllm-qwen35-27b-fp8.md)。
 
-## Architecture
+## 架构
 
-### System Context
+### 系统上下文
 
 ```mermaid
 flowchart TB
@@ -127,7 +127,7 @@ flowchart TB
 ```
 
 <details>
-<summary><b>Container Architecture</b> (click to expand)</summary>
+<summary><b>容器架构</b>（点击展开）</summary>
 
 ```mermaid
 graph TB
@@ -203,7 +203,7 @@ graph TB
 </details>
 
 <details>
-<summary><b>Entity Relationship</b> (click to expand)</summary>
+<summary><b>实体关系</b>（点击展开）</summary>
 
 ```mermaid
 erDiagram
@@ -278,7 +278,7 @@ erDiagram
 </details>
 
 <details>
-<summary><b>Agent Interaction</b> (click to expand)</summary>
+<summary><b>智能体交互</b>（点击展开）</summary>
 
 ```mermaid
 sequenceDiagram
@@ -323,7 +323,7 @@ sequenceDiagram
 </details>
 
 <details>
-<summary><b>Memory System</b> (click to expand)</summary>
+<summary><b>记忆系统</b>（点击展开）</summary>
 
 ```mermaid
 graph TB
@@ -419,16 +419,16 @@ flowchart TD
 
 助手实例可使用单独的摘要设置，以便更精细地调节上下文管理行为：
 
-| Parameter          | Environment Variable                    | Default | Description                                                          |
-| ------------------ | --------------------------------------- | ------- | -------------------------------------------------------------------- |
-| Preserve Last      | `ASSISTANT_SUMMARIZER_PRESERVE_LAST`    | `true`  | Whether to preserve all messages in the assistant's last section     |
-| Last Section Size  | `ASSISTANT_SUMMARIZER_LAST_SEC_BYTES`   | `76800` | Maximum byte size for assistant's last section (75KB)                |
-| Max Body Pair Size | `ASSISTANT_SUMMARIZER_MAX_BP_BYTES`     | `16384` | Maximum byte size for a single body pair in assistant context (16KB) |
-| Max QA Sections    | `ASSISTANT_SUMMARIZER_MAX_QA_SECTIONS`  | `7`     | Maximum QA sections to preserve in assistant context                 |
-| Max QA Size        | `ASSISTANT_SUMMARIZER_MAX_QA_BYTES`     | `76800` | Maximum byte size for assistant's QA sections (75KB)                 |
-| Keep QA Sections   | `ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS` | `3`     | Number of recent QA sections to preserve without summarization       |
+| 参数             | 环境变量                                | 默认值  | 说明                                        |
+| ---------------- | --------------------------------------- | ------- | ------------------------------------------- |
+| 保留最后一节     | `ASSISTANT_SUMMARIZER_PRESERVE_LAST`    | `true`  | 是否完整保留助手最后一节中的所有消息        |
+| 最后一节大小     | `ASSISTANT_SUMMARIZER_LAST_SEC_BYTES`   | `76800` | 助手最后一节的最大字节数（75KB）            |
+| 单条正文对上限   | `ASSISTANT_SUMMARIZER_MAX_BP_BYTES`     | `16384` | 助手上下文中单个正文对的最大字节数（16KB）  |
+| 最大问答节数     | `ASSISTANT_SUMMARIZER_MAX_QA_SECTIONS`  | `7`     | 助手上下文中最多保留的问答节数              |
+| 问答内容上限     | `ASSISTANT_SUMMARIZER_MAX_QA_BYTES`     | `76800` | 助手问答内容的最大总字节数（75KB）          |
+| 免摘要问答节数   | `ASSISTANT_SUMMARIZER_KEEP_QA_SECTIONS` | `3`     | 最近多少节问答内容不做摘要                  |
 
-The assistant summarizer configuration provides more memory for context retention compared to the global settings, preserving more recent conversation history while still ensuring efficient token usage.
+与全局设置相比，助手摘要器配置为上下文保留分配了更多空间，既能保存更多近期对话历史，也能保证 token 的高效使用。
 
 ### 摘要器环境变量配置
 
@@ -473,99 +473,99 @@ PentAGI 内置多层次的智能体监管机制，用于保证任务高效执行
 
 **性能影响**：执行时间与 token 消耗增加 2-3 倍，但根据 Qwen3.5-27B-FP8 的测试，**结果质量提升 2 倍**。
 
-### Intelligent Task Planning (Beta)
-- **Automated Decomposition**: Planner (adviser in planning mode) generates 3-7 specific, actionable steps before specialist agents begin work
-- **Context-Aware Plans**: Analyzes full execution context via enricher agent to create informed plans
-- **Structured Assignment**: Original request wrapped in `<task_assignment>` structure with execution plan and instructions
-- **Scope Management**: Prevents scope creep by keeping agents focused on current subtask only
-- **Enriched Instructions**: Plans highlight critical actions, potential pitfalls, and verification points
-- **Configurable**: Enable via `AGENT_PLANNING_STEP_ENABLED` (default: false)
+### 智能任务规划（测试版）
+- **自动拆解**：在专业智能体开始工作前，由规划器（处于规划模式的顾问）生成 3-7 个具体且可执行的步骤
+- **上下文感知规划**：通过信息增强智能体分析完整的执行上下文，制定有依据的计划
+- **结构化分配**：将原始请求封装进 `<task_assignment>` 结构，并附带执行计划与说明
+- **范围管理**：让智能体仅专注于当前子任务，防止任务范围不断扩张
+- **增强说明**：在计划中标明关键操作、潜在陷阱和验证点
+- **可配置**：通过 `AGENT_PLANNING_STEP_ENABLED` 启用（默认关闭）
 
-**Best for**: Models < 32B parameters, complex penetration testing workflows, improving success rates on sophisticated tasks
+**适用场景**：参数量 < 32B 的模型、复杂的渗透测试工作流，以及需要提高复杂任务成功率的场景
 
-**Enhanced Adviser Configuration**: Works exceptionally well when adviser agent uses stronger model or enhanced settings. Example: using same base model with maximum reasoning mode for adviser (see [`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)) enables comprehensive task analysis and strategic planning from identical model architecture.
+**强化顾问配置**：当顾问智能体使用更强的模型或增强设置时，效果尤为明显。例如，让顾问使用同一个基础模型并开启最大推理模式（参见 [`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)），即可用相同的模型架构完成全面的任务分析与策略规划。
 
-**Performance Impact**: Adds planning overhead but significantly improves completion rates and reduces redundant work
+**性能影响**：会增加规划开销，但能显著提高任务完成率并减少重复工作
 
-### Tool Call Limits (Always Active)
-- **Hard Limits**: Prevent runaway executions regardless of supervision mode status
-- **Differentiated by Agent Type**:
-  - General agents (Assistant, Primary Agent, Pentester, Coder, Installer): `MAX_GENERAL_AGENT_TOOL_CALLS` (default: 100)
-  - Limited agents (Searcher, Enricher, Memorist, Generator, Reporter, Adviser, Reflector, Planner): `MAX_LIMITED_AGENT_TOOL_CALLS` (default: 20)
-- **Graceful Termination**: Reflector guides agents to proper completion when approaching limits
-- **Resource Protection**: Ensures system stability and prevents resource exhaustion
+### 工具调用上限（始终生效）
+- **硬性上限**：无论监管模式是否启用，都能防止任务失控执行
+- **按智能体类型区分**：
+  - 通用智能体（Assistant、Primary Agent、Pentester、Coder、Installer）：`MAX_GENERAL_AGENT_TOOL_CALLS`（默认 100）
+  - 受限智能体（Searcher、Enricher、Memorist、Generator、Reporter、Adviser、Reflector、Planner）：`MAX_LIMITED_AGENT_TOOL_CALLS`（默认 20）
+- **平稳终止**：接近上限时，由 Reflector 引导智能体妥善结束任务
+- **资源保护**：保障系统稳定，防止资源耗尽
 
-### Reflector Integration (Always Active)
-- **Automatic Correction**: Invoked when LLM fails to generate tool calls after 3 attempts
-- **Strategic Guidance**: Analyzes failures and guides agents toward proper tool usage or barrier tools (`done`, `ask`)
-- **Recovery Mechanism**: Provides contextual guidance based on specific failure patterns
-- **Limit Enforcement**: Coordinates graceful termination when tool call limits are reached
+### Reflector 集成（始终生效）
+- **自动纠正**：LLM 连续 3 次未能生成工具调用时自动触发
+- **策略指导**：分析失败原因，引导智能体正确使用工具或屏障工具（`done`、`ask`）
+- **恢复机制**：针对具体的失败模式提供结合上下文的指导
+- **上限执行**：达到工具调用上限时，协调智能体平稳终止任务
 
-### Recommendations for Open Source Models
+### 面向开源模型的建议
 
-**Must-Have for Models < 32B Parameters**:
-Testing with Qwen3.5-27B-FP8 demonstrates that enabling both Execution Monitoring and Task Planning is **essential** for smaller open source models:
-- **Quality Improvement**: 2x better results compared to baseline execution without supervision
-- **Loop Prevention**: Significantly reduces infinite loops and redundant work
-- **Attack Diversity**: Encourages exploration of multiple attack vectors instead of fixating on single approach
-- **Air-Gapped Deployments**: Enables production-grade autonomous pentesting in closed network environments with local LLM inference
+**参数量 < 32B 的模型必备**：
+Qwen3.5-27B-FP8 的测试表明，对较小的开源模型而言，同时启用执行监控与任务规划**至关重要**：
+- **质量提升**：与未启用监管的基线执行相比，结果质量提高 2 倍
+- **防止循环**：显著减少无限循环和重复工作
+- **攻击多样性**：鼓励探索多种攻击向量，避免固守单一思路
+- **隔离网络部署**：配合本地 LLM 推理，可在封闭网络环境中实现生产级自主渗透测试
 
-**Trade-offs**:
-- Token consumption: 2-3x increase due to mentor/planner invocations
-- Execution time: 2-3x longer due to analysis and planning steps
-- Result quality: 2x improvement in completeness, accuracy, and attack coverage
-- Model requirements: Works best when adviser uses enhanced configuration (higher reasoning parameters, stronger model variant, or different model)
+**权衡取舍**：
+- Token 消耗：由于需要调用导师和规划器，增加 2-3 倍
+- 执行时间：由于增加了分析与规划步骤，延长 2-3 倍
+- 结果质量：完整性、准确性和攻击覆盖范围提高 2 倍
+- 模型要求：顾问采用增强配置时效果最佳，例如提高推理参数、使用更强的模型变体或其他模型
 
-**Configuration Strategy**:
-For optimal performance with smaller models, configure adviser agent with enhanced settings:
-- Use same model with maximum reasoning mode (example: [`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml))
-- Or use stronger model for adviser while keeping base model for other agents
-- Adjust monitoring thresholds based on task complexity and model capabilities
+**配置策略**：
+为使较小模型达到最佳表现，请为顾问智能体配置增强设置：
+- 使用同一个模型并开启最大推理模式（示例：[`vllm-qwen3.5-27b-fp8.provider.yml`](examples/configs/vllm-qwen3.5-27b-fp8.provider.yml)）
+- 或让顾问使用更强的模型，其他智能体继续使用基础模型
+- 根据任务复杂度和模型能力调整监控阈值
 
 
 
 </details>
 
-The architecture of PentAGI is designed to be modular, scalable, and secure. Here are the key components:
+PentAGI 的架构遵循模块化、可扩展和安全的设计原则，主要组件如下：
 
-1. **Core Services**
-   - Frontend UI: React-based web interface with TypeScript for type safety
-   - Backend API: Go-based REST and GraphQL APIs with Bearer token authentication for programmatic access
-   - Vector Store: PostgreSQL with pgvector for semantic search and memory storage
-   - Task Queue: Async task processing system for reliable operation
-   - AI Agent: Multi-agent system with specialized roles for efficient testing
+1. **核心服务**
+   - 前端 UI：基于 React 构建的网页界面，使用 TypeScript 保证类型安全
+   - 后端 API：基于 Go 构建的 REST 和 GraphQL API，支持通过 Bearer token 认证进行程序化访问
+   - 向量存储：采用带有 pgvector 扩展的 PostgreSQL，实现语义搜索和记忆存储
+   - 任务队列：异步任务处理系统，保证运行可靠
+   - AI 智能体：具有专门角色的多智能体系统，可高效执行测试
 
-2. **Knowledge Graph**
-   - Graphiti: Knowledge graph API for semantic relationship tracking and contextual understanding
-   - Neo4j: Graph database for storing and querying relationships between entities, actions, and outcomes
-   - Automatic capturing of agent responses and tool executions for building comprehensive knowledge base
+2. **知识图谱**
+   - Graphiti：用于跟踪语义关系和理解上下文的知识图谱 API
+   - Neo4j：用于存储和查询实体、操作与结果之间关系的图数据库
+   - 自动采集智能体响应和工具执行记录，构建全面的知识库
 
-3. **Monitoring Stack**
-   - OpenTelemetry: Unified observability data collection and correlation
-   - Grafana: Real-time visualization and alerting dashboards
-   - VictoriaMetrics: High-performance time-series metrics storage
-   - Jaeger: End-to-end distributed tracing for debugging
-   - Loki: Scalable log aggregation and analysis
+3. **监控组件栈**
+   - OpenTelemetry：统一采集并关联可观测性数据
+   - Grafana：提供实时可视化与告警仪表板
+   - VictoriaMetrics：高性能时序指标存储
+   - Jaeger：用于调试的端到端分布式追踪
+   - Loki：可扩展的日志聚合与分析系统
 
-4. **Analytics Platform**
-   - Langfuse: Advanced LLM observability and performance analytics
-   - ClickHouse: Column-oriented analytics data warehouse
-   - Redis: High-speed caching and rate limiting
-   - MinIO: S3-compatible object storage for artifacts
+4. **分析平台**
+   - Langfuse：提供高级 LLM 可观测性和性能分析
+   - ClickHouse：面向列的分析型数据仓库
+   - Redis：用于高速缓存和速率限制
+   - MinIO：用于存储产物的 S3 兼容对象存储
 
-5. **Security Tools**
-   - Web Scraper: Isolated browser environment for safe web interaction
-   - Pentesting Tools: Comprehensive suite of 20+ professional security tools
-   - Sandboxed Execution: All operations run in isolated containers
+5. **安全工具**
+   - 网页抓取器：用于安全网页交互的隔离浏览器环境
+   - 渗透测试工具：包含 20 多种专业安全工具的完整工具集
+   - 沙箱执行：所有操作均在隔离容器中运行
 
-6. **Memory Systems**
-   - Long-term Memory: Persistent storage of knowledge and experiences
-   - Working Memory: Active context and goals for current operations
-   - Episodic Memory: Historical actions and success patterns
-   - Knowledge Base: Structured domain expertise and tool capabilities
-   - Context Management: Intelligently manages growing LLM context windows using chain summarization
+6. **记忆系统**
+   - 长期记忆：持久存储知识与经验
+   - 工作记忆：保存当前操作所需的活动上下文与目标
+   - 情景记忆：记录历史操作与成功模式
+   - 知识库：存储结构化的领域知识与工具能力
+   - 上下文管理：通过对话链摘要智能管理不断增长的 LLM 上下文窗口
 
-The system uses Docker containers for isolation and easy deployment, with separate networks for core services, monitoring, and analytics to ensure proper security boundaries. Each component is designed to scale horizontally and can be configured for high availability in production environments.
+系统使用 Docker 容器实现隔离和便捷部署，并为核心服务、监控和分析组件分别设置独立网络，以确保适当的安全边界。每个组件均支持横向扩展，也可在生产环境中配置为高可用模式。
 
 ## 快速开始
 

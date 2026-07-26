@@ -17,9 +17,12 @@ import {
     useUsageStatsByFlowQuery,
     useUsageStatsByModelAgentsForFlowQuery,
 } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
+import { translateAgentName } from '@/lib/i18n/settings-labels';
 import { formatCost, formatDuration, formatNumber, formatTokenCount } from '@/lib/utils/format';
 
 export function FlowDashboardOverview({ flowId }: { flowId: string }) {
+    const { locale, t } = useLocale();
     const { data: usageData, loading: usageLoading } = useUsageStatsByFlowQuery({
         variables: { flowId },
     });
@@ -106,31 +109,36 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
         <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 <MetricCard
-                    description={`Subtasks: ${flowStats?.totalSubtasksCount ?? 0} · Assistants: ${flowStats?.totalAssistantsCount ?? 0}`}
+                    description={t('flow.dashboard.taskBreakdown', {
+                        assistants: flowStats?.totalAssistantsCount ?? 0,
+                        subtasks: flowStats?.totalSubtasksCount ?? 0,
+                    })}
                     icon={<GitFork className="text-muted-foreground size-4" />}
                     loading={anyLoading}
-                    title="Tasks"
+                    title={t('flow.dashboard.tasks')}
                     value={flowStats ? formatNumber(flowStats.totalTasksCount) : '0'}
                 />
                 <MetricCard
-                    description={`Duration: ${toolcalls ? formatDuration(toolcalls.totalDurationSeconds) : '—'}`}
+                    description={t('flow.dashboard.duration', {
+                        duration: toolcalls ? formatDuration(toolcalls.totalDurationSeconds, locale) : '—',
+                    })}
                     icon={<Activity className="text-muted-foreground size-4" />}
                     loading={anyLoading}
-                    title="Tool Calls"
+                    title={t('flow.dashboard.toolCalls')}
                     value={toolcalls ? formatNumber(toolcalls.totalCount) : '0'}
                 />
                 <MetricCard
-                    description="Input + Output tokens"
+                    description={t('flow.dashboard.tokensDescription')}
                     icon={<Cpu className="text-muted-foreground size-4" />}
                     loading={anyLoading}
-                    title="Tokens"
+                    title={t('flow.dashboard.tokens')}
                     value={formatTokenCount(totalTokens)}
                 />
                 <MetricCard
-                    description="LLM spending for this flow"
+                    description={t('flow.dashboard.costDescription')}
                     icon={<CircleDollarSign className="text-muted-foreground size-4" />}
                     loading={anyLoading}
-                    title="Cost"
+                    title={t('flow.dashboard.cost')}
                     value={formatCost(totalCost)}
                 />
             </div>
@@ -138,10 +146,8 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
             {!!modelAgentRows.length && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Usage by Model &amp; Provider</CardTitle>
-                        <CardDescription>
-                            LLM token usage and costs grouped by model and provider, with agent types used
-                        </CardDescription>
+                        <CardTitle>{t('flow.dashboard.usageByModel')}</CardTitle>
+                        <CardDescription>{t('flow.dashboard.usageByModelDescription')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {usageByModelAgentsLoading ? (
@@ -150,16 +156,34 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="whitespace-nowrap">Model</TableHead>
-                                        <TableHead className="whitespace-nowrap">Provider</TableHead>
-                                        <TableHead className="whitespace-nowrap">Agents</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Tokens In</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Tokens Out</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Cache In</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Cache Out</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Cost In</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Cost Out</TableHead>
-                                        <TableHead className="text-right whitespace-nowrap">Total Cost</TableHead>
+                                        <TableHead className="whitespace-nowrap">{t('flow.dashboard.model')}</TableHead>
+                                        <TableHead className="whitespace-nowrap">
+                                            {t('flow.dashboard.provider')}
+                                        </TableHead>
+                                        <TableHead className="whitespace-nowrap">
+                                            {t('flow.dashboard.agents')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.tokensIn')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.tokensOut')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.cacheIn')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.cacheOut')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.costIn')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.costOut')}
+                                        </TableHead>
+                                        <TableHead className="text-right whitespace-nowrap">
+                                            {t('flow.dashboard.totalCost')}
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -173,7 +197,7 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
                                                         <FlowAgentIcon
                                                             className="size-3.5"
                                                             key={agentType}
-                                                            tooltip={agentType}
+                                                            tooltip={translateAgentName(agentType, t)}
                                                             type={agentType as AgentType}
                                                         />
                                                     ))}
@@ -212,8 +236,8 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
             {!!agentTypeRows.length && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Usage by Agent Type</CardTitle>
-                        <CardDescription>LLM token usage and costs per agent type in this flow</CardDescription>
+                        <CardTitle>{t('flow.dashboard.usageByAgent')}</CardTitle>
+                        <CardDescription>{t('flow.dashboard.usageByAgentDescription')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {usageByAgentLoading ? (
@@ -222,21 +246,21 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Agent Type</TableHead>
-                                        <TableHead className="text-right">Tokens In</TableHead>
-                                        <TableHead className="text-right">Tokens Out</TableHead>
-                                        <TableHead className="text-right">Cache In</TableHead>
-                                        <TableHead className="text-right">Cache Out</TableHead>
-                                        <TableHead className="text-right">Cost In</TableHead>
-                                        <TableHead className="text-right">Cost Out</TableHead>
-                                        <TableHead className="text-right">Total Cost</TableHead>
+                                        <TableHead>{t('flow.dashboard.agentType')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.tokensIn')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.tokensOut')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.cacheIn')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.cacheOut')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.costIn')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.costOut')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.totalCost')}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {agentTypeRows.map((row) => (
                                         <UsageStatsRow
                                             key={row.label}
-                                            label={row.label}
+                                            label={translateAgentName(row.label, t)}
                                             stats={row.stats}
                                         />
                                     ))}
@@ -250,8 +274,8 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
             {!!toolcallsByFunction.length && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Tool Calls by Function</CardTitle>
-                        <CardDescription>Execution statistics per tool function in this flow</CardDescription>
+                        <CardTitle>{t('flow.dashboard.toolCallsByFunction')}</CardTitle>
+                        <CardDescription>{t('flow.dashboard.toolCallsByFunctionDescription')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {toolcallsByFunctionLoading ? (
@@ -260,11 +284,15 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Function</TableHead>
-                                        <TableHead>Type</TableHead>
-                                        <TableHead className="text-right">Count</TableHead>
-                                        <TableHead className="text-right">Total Duration</TableHead>
-                                        <TableHead className="text-right">Avg Duration</TableHead>
+                                        <TableHead>{t('flow.dashboard.function')}</TableHead>
+                                        <TableHead>{t('flow.dashboard.type')}</TableHead>
+                                        <TableHead className="text-right">{t('flow.dashboard.count')}</TableHead>
+                                        <TableHead className="text-right">
+                                            {t('flow.dashboard.totalDuration')}
+                                        </TableHead>
+                                        <TableHead className="text-right">
+                                            {t('flow.dashboard.averageDuration')}
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -273,17 +301,19 @@ export function FlowDashboardOverview({ flowId }: { flowId: string }) {
                                             <TableCell className="font-medium">{item.functionName}</TableCell>
                                             <TableCell>
                                                 <Badge variant={item.isAgent ? 'secondary' : 'outline'}>
-                                                    {item.isAgent ? 'Agent' : 'Tool'}
+                                                    {item.isAgent
+                                                        ? t('flow.dashboard.agent')
+                                                        : t('flow.dashboard.tool')}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 {formatNumber(item.totalCount)}
                                             </TableCell>
                                             <TableCell className="text-right">
-                                                {formatDuration(item.totalDurationSeconds)}
+                                                {formatDuration(item.totalDurationSeconds, locale)}
                                             </TableCell>
                                             <TableCell className="text-right">
-                                                {formatDuration(item.avgDurationSeconds)}
+                                                {formatDuration(item.avgDurationSeconds, locale)}
                                             </TableCell>
                                         </TableRow>
                                     ))}

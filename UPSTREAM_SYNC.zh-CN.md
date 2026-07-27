@@ -36,10 +36,11 @@ node scripts/sync-upstream.mjs --remote=upstream --branch=main
 如果 GHCR 包尚未设为公开，请先在 WSL 中使用具有 `read:packages` 权限的 GitHub 令牌登录，然后拉取并通过 Compose 启动：
 
 ```bash
-gh auth token | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin
 docker pull ghcr.io/fulaoaz/pentagi:zh-cn
-PENTAGI_IMAGE=ghcr.io/fulaoaz/pentagi:zh-cn docker compose up -d
+docker compose up -d
 ```
+
+当前 GHCR 包可以匿名拉取；如果以后将包改为私有，再执行 `gh auth token | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin`。汉化分支的 `docker-compose.yml` 和 `.env.example` 已默认使用该镜像。
 
 上游同步 PR 合并到 `zh-CN` 后会自动触发同一镜像工作流，因此本地部署只需再次执行 `docker compose pull pentagi` 和 `docker compose up -d pentagi`。
 

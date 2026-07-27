@@ -52,6 +52,8 @@ import { useLocale } from '@/hooks/use-locale';
 import { translateAgentName, translateProviderFieldPath } from '@/lib/i18n/settings-labels';
 import { cn } from '@/lib/utils';
 
+import { translateProviderTestName, translateProviderTestType } from './provider-test-labels';
+
 interface BaseFieldProps extends ControllerProps {
     label: string;
 }
@@ -747,10 +749,12 @@ function TestResultsDialog({ handleOpenChange, isOpen, results }: TestResultsDia
                                                     <div className="mb-2 flex items-start justify-between">
                                                         <div className="flex items-center gap-2">
                                                             {getStatusIcon(test.result)}
-                                                            <span className="font-medium">{test.name}</span>
+                                                            <span className="font-medium">
+                                                                {translateProviderTestName(test.name, t)}
+                                                            </span>
                                                             {test.type && (
                                                                 <span className="text-muted-foreground text-sm">
-                                                                    ({test.type})
+                                                                    ({translateProviderTestType(test.type, t)})
                                                                 </span>
                                                             )}
                                                         </div>

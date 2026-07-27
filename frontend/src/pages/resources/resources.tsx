@@ -17,6 +17,7 @@ import type { OverwriteConflict } from '@/components/shared/overwrite';
 
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import {
+    buildFileManagerLabels,
     bulkCopyAction,
     bulkCopyPathsAction,
     bulkDeleteAction,
@@ -53,13 +54,14 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ResourcesCopyDialog } from '@/features/resources/resources-copy-dialog';
 import { ResourcesMkdirDialog } from '@/features/resources/resources-mkdir-dialog';
 import { ResourcesMoveDialog } from '@/features/resources/resources-move-dialog';
-import { buildResourcesDownloadHref, pluralizeItems, toFileNode } from '@/features/resources/resources-utils';
+import { buildResourcesDownloadHref, toFileNode } from '@/features/resources/resources-utils';
 import { useResourcesDelete } from '@/features/resources/use-resources-delete';
 import { useResourcesMove } from '@/features/resources/use-resources-move';
 import { useResourcesSearch } from '@/features/resources/use-resources-search';
 import { useResourcesUpload } from '@/features/resources/use-resources-upload';
 import { useEffectAfterMount } from '@/hooks/use-effect-after-mount';
 import { useFilesDragAndDrop } from '@/hooks/use-files-drag-and-drop';
+import { useLocale } from '@/hooks/use-locale';
 import { usePageStorageKeys } from '@/hooks/use-page-storage-keys';
 import { copyToClipboard } from '@/lib/report';
 import { migrateLegacyViewOptions, saveViewOptions } from '@/lib/view-options-storage';
@@ -110,6 +112,7 @@ const seedViewOptions = (storageKey: string): ResourcesViewOptions => {
 
 function Resources() {
     const { isInitialLoading, resources } = useResources();
+    const { locale, t } = useLocale();
     const search = useResourcesSearch();
 
     const [isMkdirOpen, setIsMkdirOpen] = useState(false);
@@ -144,9 +147,13 @@ function Resources() {
     // the row memo for the whole tree on unrelated re-renders.
     const fileManagerLabels = useMemo<FileManagerLabels>(
         () => ({
-            formatModified: viewOptions.isModifiedRelative ? formatModifiedRelative : formatModifiedAbsolute,
+            ...buildFileManagerLabels(locale, t),
+            formatModified: (modifiedAt) =>
+                viewOptions.isModifiedRelative
+                    ? formatModifiedRelative(modifiedAt, locale)
+                    : formatModifiedAbsolute(modifiedAt, locale),
         }),
-        [viewOptions.isModifiedRelative],
+        [locale, t, viewOptions.isModifiedRelative],
     );
 
     // Toolbar / empty-area mkdir + upload always target the library root —
@@ -228,17 +235,20 @@ function Resources() {
         [dndMoveAction],
     );
 
-    const handleCopyPath = useCallback(async (file: FileNode) => {
-        const wasCopied = await copyToClipboard(file.path);
+    const handleCopyPath = useCallback(
+        async (file: FileNode) => {
+            const wasCopied = await copyToClipboard(file.path);
 
-        if (wasCopied) {
-            toast.success('Path copied to clipboard');
+            if (wasCopied) {
+                toast.success(t('resources.pathCopied'));
 
-            return;
-        }
+                return;
+            }
 
-        toast.error('Failed to copy path');
-    }, []);
+            toast.error(t('resources.copyPathFailed'));
+        },
+        [t],
+    );
 
     /**
      * Bulk "copy paths" handler: join every selected file's path with `\n` so the
@@ -246,21 +256,27 @@ function Resources() {
      * a shell command, or notes. Reports the count for clarity — silent failures
      * confuse users when the clipboard happens to already contain the same text.
      */
-    const handleBulkCopyPaths = useCallback(async (paths: string[]) => {
-        if (paths.length === 0) {
-            return;
-        }
+    const handleBulkCopyPaths = useCallback(
+        async (paths: string[]) => {
+            if (paths.length === 0) {
+                return;
+            }
 
-        const wasCopied = await copyToClipboard(paths.join('\n'));
+            const wasCopied = await copyToClipboard(paths.join('\n'));
 
-        if (wasCopied) {
-            toast.success(`${paths.length} ${pluralizeItems(paths.length)} copied to clipboard`);
+            if (wasCopied) {
+                const count = t(paths.length === 1 ? 'fileManager.itemCountOne' : 'fileManager.itemCountMany', {
+                    count: paths.length,
+                });
+                toast.success(t('resources.pathsCopied', { count }));
 
-            return;
-        }
+                return;
+            }
 
-        toast.error('Failed to copy paths');
-    }, []);
+            toast.error(t('resources.copyPathsFailed'));
+        },
+        [t],
+    );
 
     /**
      * "Open" gesture — fires on double-click or Enter for a file row.
@@ -305,8 +321,8 @@ function Resources() {
             // Row download is the single-file specialisation of the bulk download:
             // we hand the URL builder a 1-element array so the same backend
             // contract (`?paths[]=`) is used everywhere.
-            downloadAction((file) => buildResourcesDownloadHref([file])),
-            copyPathAction(handleCopyPath),
+            downloadAction((file) => buildResourcesDownloadHref([file]), { label: t('fileManager.download') }),
+            copyPathAction(handleCopyPath, { label: t('fileManager.copyPath') }),
             // Directory-only actions — surfaced both in the row dropdown and
             // the right-click context menu (the manager renders both menus
             // from the same `actions` array). `appliesToFiles: false` keeps
@@ -316,7 +332,7 @@ function Resources() {
                 appliesToFiles: false,
                 icon: FolderPlus,
                 id: 'resources-mkdir-here',
-                label: 'New folder',
+                label: t('resources.newFolder'),
                 onSelect: handleMkdirHere,
                 separatorBefore: true,
             },
@@ -325,14 +341,14 @@ function Resources() {
                 appliesToFiles: false,
                 icon: Upload,
                 id: 'resources-upload-here',
-                label: 'Upload files',
+                label: t('resources.uploadFiles'),
                 onSelect: handleUploadHere,
             },
             {
                 appliesToDirs: true,
                 icon: FileSymlink,
                 id: 'resources-rename',
-                label: 'Rename or move',
+                label: t('resources.renameOrMove'),
                 onSelect: (file) => setFilesToMove([file]),
                 separatorBefore: true,
             },
@@ -340,12 +356,12 @@ function Resources() {
                 appliesToDirs: true,
                 icon: Copy,
                 id: 'resources-copy',
-                label: 'Copy to…',
+                label: t('resources.copyTo'),
                 onSelect: (file) => setFilesToCopy([file]),
             },
-            deleteAction(deletion.requestDelete),
+            deleteAction(deletion.requestDelete, { label: t('fileManager.delete') }),
         ],
-        [deletion.requestDelete, handleCopyPath, handleMkdirHere, handleUploadHere],
+        [deletion.requestDelete, handleCopyPath, handleMkdirHere, handleUploadHere, t],
     );
 
     // Bulk-action set, rendered in the bulk-actions bar when at least one row
@@ -353,13 +369,18 @@ function Resources() {
     // actions in the overflow `…` menu, then destructive Delete on the right.
     const fileManagerBulkActions = useMemo<FileManagerBulkAction[]>(
         () => [
-            bulkDownloadAction(buildResourcesDownloadHref),
-            bulkMoveAction((files) => setFilesToMove(files)),
-            bulkCopyAction((files) => setFilesToCopy(files), { overflow: true }),
-            bulkCopyPathsAction(handleBulkCopyPaths),
-            bulkDeleteAction(deletion.deleteFiles),
+            bulkDownloadAction(buildResourcesDownloadHref, { label: t('fileManager.download') }),
+            bulkMoveAction((files) => setFilesToMove(files), { label: t('resources.moveTo') }),
+            bulkCopyAction((files) => setFilesToCopy(files), { label: t('resources.copyTo'), overflow: true }),
+            bulkCopyPathsAction(handleBulkCopyPaths, { label: t('fileManager.copyPaths') }),
+            bulkDeleteAction(deletion.deleteFiles, {
+                confirmDescription: (count) => t('resources.deleteManyDescription', { count }),
+                confirmText: t('fileManager.delete'),
+                confirmTitle: (count) => t('resources.deleteManyTitle', { count }),
+                label: t('fileManager.delete'),
+            }),
         ],
-        [deletion.deleteFiles, handleBulkCopyPaths],
+        [deletion.deleteFiles, handleBulkCopyPaths, t],
     );
 
     // Right-click anywhere outside a row in the tree → mirror the toolbar
@@ -370,17 +391,17 @@ function Resources() {
             {
                 icon: FolderPlus,
                 id: 'resources-empty-mkdir',
-                label: 'New folder',
+                label: t('resources.newFolder'),
                 onSelect: () => setIsMkdirOpen(true),
             },
             {
                 icon: Upload,
                 id: 'resources-empty-upload',
-                label: 'Upload files',
+                label: t('resources.uploadFiles'),
                 onSelect: upload.openFilePicker,
             },
         ],
-        [upload.openFilePicker],
+        [t, upload.openFilePicker],
     );
 
     const handleDeleteDialogOpenChange = useCallback(
@@ -404,7 +425,7 @@ function Resources() {
                     <BreadcrumbList className="min-w-0 flex-nowrap">
                         <BreadcrumbItem className="min-w-0">
                             <Folder className="size-4 shrink-0" />
-                            <BreadcrumbPage className="min-w-0 truncate">Resources</BreadcrumbPage>
+                            <BreadcrumbPage className="min-w-0 truncate">{t('title.resources')}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
@@ -413,15 +434,15 @@ function Resources() {
                 <HeaderButton
                     disabled={upload.isUploading}
                     icon={<FolderPlus />}
-                    label="New folder"
+                    label={t('resources.newFolder')}
                     onClick={() => setIsMkdirOpen(true)}
                     variant="outline"
                 />
                 <HeaderButton
-                    aria-label={upload.isUploading ? 'Uploading...' : 'Upload files'}
+                    aria-label={upload.isUploading ? t('resources.uploading') : t('resources.uploadFiles')}
                     disabled={upload.isUploading}
                     icon={upload.isUploading ? <Loader2 className="animate-spin" /> : <Upload />}
-                    label={upload.isUploading ? 'Uploading...' : 'Upload files'}
+                    label={upload.isUploading ? t('resources.uploading') : t('resources.uploadFiles')}
                     onClick={upload.openFilePicker}
                     variant="secondary"
                 />
@@ -433,13 +454,13 @@ function Resources() {
 
     const noResourcesState = (
         <FileDropZone
-            actionLabel="Upload files"
-            description="Upload documents so PentAGI agents can reference them during your flows. You can also drag & drop files anywhere in this panel."
-            hint="Up to 300 MB per file · 2 GB per upload"
+            actionLabel={t('resources.uploadFiles')}
+            description={t('resources.emptyDescription')}
+            hint={t('resources.uploadLimits')}
             isDragging={isDragging}
             isUploading={upload.isUploading}
             onBrowse={upload.openFilePicker}
-            title="No resources yet"
+            title={t('resources.emptyTitle')}
         />
     );
 
@@ -449,9 +470,9 @@ function Resources() {
                 <EmptyMedia variant="icon">
                     <Search />
                 </EmptyMedia>
-                <EmptyTitle>No matches</EmptyTitle>
+                <EmptyTitle>{t('resources.noMatches')}</EmptyTitle>
                 <EmptyDescription>
-                    No resources match <code>{search.debouncedQuery.trim()}</code>. Try a different query.
+                    {t('resources.noMatchesDescription', { query: search.debouncedQuery.trim() })}
                 </EmptyDescription>
             </EmptyHeader>
         </Empty>
@@ -479,7 +500,7 @@ function Resources() {
                     <div className="bg-primary/10 border-primary pointer-events-none absolute inset-2 z-30 flex items-center justify-center rounded-lg border-2 border-dashed">
                         <div className="text-primary flex flex-col items-center gap-2">
                             <FolderUp className="size-8" />
-                            <span className="text-sm font-medium">Drop files to upload</span>
+                            <span className="text-sm font-medium">{t('resources.dropToUpload')}</span>
                         </div>
                     </div>
                 )}
@@ -487,10 +508,10 @@ function Resources() {
                 <div className="flex items-center gap-2">
                     <InputGroup className="max-w-sm flex-1">
                         <InputGroupInput
-                            aria-label="Search resources"
+                            aria-label={t('resources.search')}
                             autoComplete="off"
                             onChange={(event) => search.setQuery(event.target.value)}
-                            placeholder="Search resources..."
+                            placeholder={t('resources.searchPlaceholder')}
                             type="text"
                             value={search.rawQuery}
                         />
@@ -508,7 +529,7 @@ function Resources() {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
-                                aria-label="Column settings"
+                                aria-label={t('resources.columnSettings')}
                                 className="ml-auto"
                                 size="icon"
                                 variant="outline"
@@ -522,14 +543,14 @@ function Resources() {
                                 onCheckedChange={() => toggleViewOption('size')}
                                 onSelect={(event) => event.preventDefault()}
                             >
-                                Size
+                                {t('fileManager.columnSize')}
                             </DropdownMenuCheckboxItem>
                             <DropdownMenuCheckboxItem
                                 checked={viewOptions.modified}
                                 onCheckedChange={() => toggleViewOption('modified')}
                                 onSelect={(event) => event.preventDefault()}
                             >
-                                Modified
+                                {t('fileManager.columnModified')}
                             </DropdownMenuCheckboxItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuCheckboxItem
@@ -537,7 +558,7 @@ function Resources() {
                                 onCheckedChange={() => toggleViewOption('foldersFirst')}
                                 onSelect={(event) => event.preventDefault()}
                             >
-                                Folders first
+                                {t('resources.foldersFirst')}
                             </DropdownMenuCheckboxItem>
                             <DropdownMenuCheckboxItem
                                 checked={viewOptions.isModifiedRelative}
@@ -545,7 +566,7 @@ function Resources() {
                                 onCheckedChange={() => toggleViewOption('isModifiedRelative')}
                                 onSelect={(event) => event.preventDefault()}
                             >
-                                Relative dates
+                                {t('resources.relativeDates')}
                             </DropdownMenuCheckboxItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -594,13 +615,17 @@ function Resources() {
                 />
 
                 <ConfirmationDialog
-                    confirmText="Delete"
+                    confirmText={t('common.delete')}
                     handleConfirm={deletion.confirmDelete}
                     handleOpenChange={handleDeleteDialogOpenChange}
                     isOpen={!!deletion.fileToDelete}
                     itemName={deletion.fileToDelete?.name}
-                    itemType={deletion.fileToDelete?.isDir ? 'directory' : 'resource'}
-                    title={deletion.fileToDelete?.isDir ? 'Delete directory' : 'Delete resource'}
+                    itemType={deletion.fileToDelete?.isDir ? t('resources.directory') : t('resources.resource')}
+                    title={
+                        deletion.fileToDelete?.isDir
+                            ? t('resources.deleteDirectoryTitle')
+                            : t('resources.deleteResourceTitle')
+                    }
                 />
             </div>
         </>

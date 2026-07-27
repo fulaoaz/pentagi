@@ -3,10 +3,11 @@ import { toast } from 'sonner';
 
 import type { FileNode } from '@/components/shared/file-manager';
 
+import { useLocale } from '@/hooks/use-locale';
 import { api, getApiErrorMessage } from '@/lib/axios';
 
 import { RESOURCES_API_PATH } from './resources-constants';
-import { buildPathsQuery, pluralizeItems } from './resources-utils';
+import { buildPathsQuery } from './resources-utils';
 
 interface UseResourcesDeleteParams {
     onAfterDelete?: () => void;
@@ -46,6 +47,7 @@ const deleteResourcesRequest = (paths: readonly string[]) =>
  * is wired into the Apollo cache and removes the deleted entries automatically.
  */
 export function useResourcesDelete({ onAfterDelete }: UseResourcesDeleteParams = {}): UseResourcesDeleteResult {
+    const { t } = useLocale();
     const [fileToDelete, setFileToDelete] = useState<FileNode | null>(null);
 
     const requestDelete = useCallback((file: FileNode) => {
@@ -67,19 +69,23 @@ export function useResourcesDelete({ onAfterDelete }: UseResourcesDeleteParams =
 
                 if (filesToDelete.length === 1) {
                     const single = filesToDelete[0];
-                    toast.success(single.isDir ? 'Directory deleted' : 'Resource deleted');
+                    toast.success(single.isDir ? t('resources.directoryDeleted') : t('resources.resourceDeleted'));
                 } else {
-                    toast.success(`${filesToDelete.length} ${pluralizeItems(filesToDelete.length)} deleted`);
+                    const count = t(
+                        filesToDelete.length === 1 ? 'fileManager.itemCountOne' : 'fileManager.itemCountMany',
+                        { count: filesToDelete.length },
+                    );
+                    toast.success(t('resources.deletedMany', { count }));
                 }
 
                 onAfterDelete?.();
             } catch (error) {
-                const description = getApiErrorMessage(error, 'Failed to delete resource');
+                const description = getApiErrorMessage(error, t('resources.deleteFailed'));
 
-                toast.error('Delete failed', { description });
+                toast.error(t('resources.deleteFailed'), { description });
             }
         },
-        [onAfterDelete],
+        [onAfterDelete, t],
     );
 
     const confirmDelete = useCallback(async () => {

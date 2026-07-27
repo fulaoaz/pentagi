@@ -1,9 +1,11 @@
 import { format } from 'date-fns';
+import { enUS, zhCN } from 'date-fns/locale';
 import { ChevronRight, Clock, Loader2, Wrench } from 'lucide-react';
-import { memo, useDeferredValue, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useDeferredValue, useMemo, useRef, useState } from 'react';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 
 import type { FlowFragmentFragment, UsageStatsPeriod } from '@/graphql/types';
+import type { Locale } from '@/lib/i18n';
 
 import { ChartCard, ChartTooltip } from '@/components/dashboard';
 import { FlowStatusBadge } from '@/components/icons/flow-status-badge';
@@ -17,6 +19,7 @@ import {
     useToolcallsStatsByPeriodQuery,
     useUsageStatsByPeriodQuery,
 } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { cn } from '@/lib/utils';
 import { formatCost, formatDuration, formatNumber, formatTokenCount } from '@/lib/utils/format';
 
@@ -28,9 +31,11 @@ const CHART_COLORS = {
     bar2: 'var(--color-chart-5)',
 };
 
-const formatDateLabel = (dateString: string): string => {
+const formatDateLabel = (dateString: string, locale: Locale): string => {
     try {
-        return format(new Date(dateString), 'MMM d');
+        return format(new Date(dateString), locale === 'zh-CN' ? 'M月d日' : 'MMM d', {
+            locale: locale === 'zh-CN' ? zhCN : enUS,
+        });
     } catch {
         return dateString;
     }
@@ -59,6 +64,7 @@ type FlowExecution = {
 };
 
 export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
+    const { locale, t } = useLocale();
     const { data: usageByPeriodData, loading: usageByPeriodLoading } = useUsageStatsByPeriodQuery({
         variables: { period },
     });
@@ -77,6 +83,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
     const toolcallsTooltip = useChartTooltipAnimation();
     const tokenUsageTooltip = useChartTooltipAnimation();
     const costTooltip = useChartTooltipAnimation();
+    const formatLocalizedDateLabel = useCallback((value: string) => formatDateLabel(value, locale), [locale]);
 
     const flowsById = useMemo(() => {
         const map = new Map<string, FlowFragmentFragment>();
@@ -133,11 +140,11 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
     return (
         <div className="flex flex-col gap-6">
             <ChartCard
-                description="Flows, tasks, and subtasks created per day"
+                description={t('dashboard.flowsChartDescription')}
                 empty={!flowsByPeriodLoading && flowsChartData.length === 0}
                 height={320}
                 loading={flowsByPeriodLoading}
-                title="Flows Activity Over Time"
+                title={t('dashboard.flowsChartTitle')}
             >
                 <BarChart
                     data={flowsChartData}
@@ -151,7 +158,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                     <XAxis
                         dataKey="date"
                         tick={axisTickStyle}
-                        tickFormatter={formatDateLabel}
+                        tickFormatter={formatLocalizedDateLabel}
                         tickMargin={8}
                     />
                     <YAxis
@@ -161,7 +168,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                     <Tooltip
                         content={
                             <ChartTooltip
-                                labelFormatter={formatDateLabel}
+                                labelFormatter={formatLocalizedDateLabel}
                                 onFirstActive={flowsTooltip.onFirstActive}
                                 sessionKey={flowsTooltip.sessionKey}
                             />
@@ -172,19 +179,19 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                     <Bar
                         dataKey="flows"
                         fill={CHART_COLORS.area1}
-                        name="Flows"
+                        name={t('title.flows')}
                         radius={[4, 4, 0, 0]}
                     />
                     <Bar
                         dataKey="tasks"
                         fill={CHART_COLORS.area2}
-                        name="Tasks"
+                        name={t('flow.dashboard.tasks')}
                         radius={[4, 4, 0, 0]}
                     />
                     <Bar
                         dataKey="subtasks"
                         fill={CHART_COLORS.area3}
-                        name="Subtasks"
+                        name={t('dashboard.subtasks')}
                         radius={[4, 4, 0, 0]}
                     />
                 </BarChart>
@@ -192,10 +199,10 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
 
             <div className="grid gap-6 lg:grid-cols-2">
                 <ChartCard
-                    description="Number of tool executions per day"
+                    description={t('dashboard.toolCallsChartDescription')}
                     empty={!toolcallsByPeriodLoading && toolcallsChartData.length === 0}
                     loading={toolcallsByPeriodLoading}
-                    title="Tool Calls Over Time"
+                    title={t('dashboard.toolCallsChartTitle')}
                 >
                     <BarChart
                         data={toolcallsChartData}
@@ -209,7 +216,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         <XAxis
                             dataKey="date"
                             tick={axisTickStyle}
-                            tickFormatter={formatDateLabel}
+                            tickFormatter={formatLocalizedDateLabel}
                             tickMargin={8}
                         />
                         <YAxis
@@ -219,7 +226,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         <Tooltip
                             content={
                                 <ChartTooltip
-                                    labelFormatter={formatDateLabel}
+                                    labelFormatter={formatLocalizedDateLabel}
                                     onFirstActive={toolcallsTooltip.onFirstActive}
                                     sessionKey={toolcallsTooltip.sessionKey}
                                 />
@@ -230,17 +237,17 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         <Bar
                             dataKey="count"
                             fill={CHART_COLORS.bar1}
-                            name="Tool Calls"
+                            name={t('flow.dashboard.toolCalls')}
                             radius={[4, 4, 0, 0]}
                         />
                     </BarChart>
                 </ChartCard>
 
                 <ChartCard
-                    description="Input and output tokens processed daily"
+                    description={t('dashboard.tokensChartDescription')}
                     empty={!usageByPeriodLoading && usageChartData.length === 0}
                     loading={usageByPeriodLoading}
-                    title="Token Usage Over Time"
+                    title={t('dashboard.tokensChartTitle')}
                 >
                     <AreaChart
                         data={usageChartData}
@@ -254,7 +261,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         <XAxis
                             dataKey="date"
                             tick={axisTickStyle}
-                            tickFormatter={formatDateLabel}
+                            tickFormatter={formatLocalizedDateLabel}
                             tickMargin={8}
                         />
                         <YAxis
@@ -266,7 +273,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                             content={
                                 <ChartTooltip
                                     formatter={(value) => formatTokenCount(value)}
-                                    labelFormatter={formatDateLabel}
+                                    labelFormatter={formatLocalizedDateLabel}
                                     onFirstActive={tokenUsageTooltip.onFirstActive}
                                     sessionKey={tokenUsageTooltip.sessionKey}
                                 />
@@ -277,7 +284,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                             dataKey="tokensIn"
                             fill={CHART_COLORS.area1}
                             fillOpacity={0.3}
-                            name="Tokens In"
+                            name={t('flow.dashboard.tokensIn')}
                             stroke={CHART_COLORS.area1}
                             type="monotone"
                         />
@@ -285,7 +292,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                             dataKey="tokensOut"
                             fill={CHART_COLORS.area2}
                             fillOpacity={0.3}
-                            name="Tokens Out"
+                            name={t('flow.dashboard.tokensOut')}
                             stroke={CHART_COLORS.area2}
                             type="monotone"
                         />
@@ -294,11 +301,11 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
             </div>
 
             <ChartCard
-                description="LLM spending per day. May stay near zero when using local engines — this is expected."
+                description={t('dashboard.costChartDescription')}
                 empty={!usageByPeriodLoading && usageChartData.length === 0}
                 height={240}
                 loading={usageByPeriodLoading}
-                title="Cost Over Time"
+                title={t('dashboard.costChartTitle')}
             >
                 <AreaChart
                     data={usageChartData}
@@ -312,7 +319,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                     <XAxis
                         dataKey="date"
                         tick={axisTickStyle}
-                        tickFormatter={formatDateLabel}
+                        tickFormatter={formatLocalizedDateLabel}
                         tickMargin={8}
                     />
                     <YAxis
@@ -324,7 +331,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         content={
                             <ChartTooltip
                                 formatter={(value) => formatCost(value)}
-                                labelFormatter={formatDateLabel}
+                                labelFormatter={formatLocalizedDateLabel}
                                 onFirstActive={costTooltip.onFirstActive}
                                 sessionKey={costTooltip.sessionKey}
                             />
@@ -335,7 +342,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         dataKey="costIn"
                         fill={CHART_COLORS.area1}
                         fillOpacity={0.3}
-                        name="Cost In"
+                        name={t('flow.dashboard.costIn')}
                         stroke={CHART_COLORS.area1}
                         type="monotone"
                     />
@@ -343,7 +350,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                         dataKey="costOut"
                         fill={CHART_COLORS.area3}
                         fillOpacity={0.3}
-                        name="Cost Out"
+                        name={t('flow.dashboard.costOut')}
                         stroke={CHART_COLORS.area3}
                         type="monotone"
                     />
@@ -352,8 +359,8 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Flow Execution Details</CardTitle>
-                    <CardDescription>Execution time and tool calls breakdown per flow</CardDescription>
+                    <CardTitle>{t('dashboard.executionDetails')}</CardTitle>
+                    <CardDescription>{t('dashboard.executionDetailsDescription')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     {executionStatsLoading ? (
@@ -361,9 +368,7 @@ export function DashboardAnalytics({ period }: { period: UsageStatsPeriod }) {
                             <Loader2 className="text-muted-foreground size-6 animate-spin" />
                         </div>
                     ) : !deferredExecutionStats.length ? (
-                        <p className="text-muted-foreground py-8 text-center text-sm">
-                            No flow executions in this period
-                        </p>
+                        <p className="text-muted-foreground py-8 text-center text-sm">{t('dashboard.noExecutions')}</p>
                     ) : (
                         <div
                             className={cn(
@@ -393,9 +398,25 @@ const FlowExecutionItem = memo(function FlowExecutionItem({
     flow: FlowExecution;
     flowMeta?: FlowFragmentFragment;
 }) {
+    const { locale, t } = useLocale();
     const [isOpen, setIsOpen] = useState(false);
     const taskCount = flow.tasks.length;
     const subtaskCount = flow.tasks.reduce((sum, task) => sum + task.subtasks.length, 0);
+    const countSummary = [
+        t(taskCount === 1 ? 'dashboard.taskCountOne' : 'dashboard.taskCount', { count: taskCount }),
+        subtaskCount > 0
+            ? t(subtaskCount === 1 ? 'dashboard.subtaskCountOne' : 'dashboard.subtaskCount', {
+                  count: subtaskCount,
+              })
+            : null,
+        flow.totalAssistantsCount > 0
+            ? t(flow.totalAssistantsCount === 1 ? 'dashboard.assistantCountOne' : 'dashboard.assistantCount', {
+                  count: flow.totalAssistantsCount,
+              })
+            : null,
+    ]
+        .filter(Boolean)
+        .join(' · ');
 
     return (
         <Collapsible
@@ -410,21 +431,18 @@ const FlowExecutionItem = memo(function FlowExecutionItem({
                 <ChevronRight className={`mt-1 size-4 shrink-0 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="truncate font-medium">{flow.flowTitle || `Flow #${flow.flowId}`}</span>
+                        <span className="truncate font-medium">
+                            {flow.flowTitle || t('flow.page.untitledNumbered', { id: flow.flowId })}
+                        </span>
                         {flowMeta?.status && <FlowStatusBadge status={flowMeta.status} />}
                         {flowMeta?.provider?.name && <Badge variant="secondary">{flowMeta.provider.name}</Badge>}
                     </div>
-                    <div className="text-muted-foreground mt-0.5 text-xs">
-                        {taskCount} {taskCount === 1 ? 'task' : 'tasks'}
-                        {subtaskCount > 0 && ` · ${subtaskCount} ${subtaskCount === 1 ? 'subtask' : 'subtasks'}`}
-                        {flow.totalAssistantsCount > 0 &&
-                            ` · ${flow.totalAssistantsCount} ${flow.totalAssistantsCount === 1 ? 'assistant' : 'assistants'}`}
-                    </div>
+                    <div className="text-muted-foreground mt-0.5 text-xs">{countSummary}</div>
                 </div>
                 <div className="text-muted-foreground flex shrink-0 items-center gap-4 pt-1 text-sm">
                     <span className="flex items-center gap-1">
                         <Clock className="size-3" />
-                        {formatDuration(flow.totalDurationSeconds)}
+                        {formatDuration(flow.totalDurationSeconds, locale)}
                     </span>
                     <span className="flex items-center gap-1">
                         <Wrench className="size-3" />
@@ -447,6 +465,7 @@ const FlowExecutionItem = memo(function FlowExecutionItem({
 });
 
 const TaskExecutionItem = memo(function TaskExecutionItem({ task }: { task: FlowExecution['tasks'][number] }) {
+    const { locale, t } = useLocale();
     const [isOpen, setIsOpen] = useState(false);
     const hasSubtasks = task.subtasks.length > 0;
 
@@ -464,11 +483,13 @@ const TaskExecutionItem = memo(function TaskExecutionItem({ task }: { task: Flow
                 ) : (
                     <span className="size-3 shrink-0" />
                 )}
-                <div className="text-muted-foreground flex-1 truncate">{task.taskTitle || `Task #${task.taskId}`}</div>
+                <div className="text-muted-foreground flex-1 truncate">
+                    {task.taskTitle || t('dashboard.taskNumbered', { id: task.taskId })}
+                </div>
                 <div className="text-muted-foreground flex items-center gap-4 text-xs">
                     <span className="flex items-center gap-1">
                         <Clock className="size-3" />
-                        {formatDuration(task.totalDurationSeconds)}
+                        {formatDuration(task.totalDurationSeconds, locale)}
                     </span>
                     <span className="flex items-center gap-1">
                         <Wrench className="size-3" />
@@ -485,12 +506,12 @@ const TaskExecutionItem = memo(function TaskExecutionItem({ task }: { task: Flow
                                 key={subtask.subtaskId}
                             >
                                 <div className="flex-1 truncate">
-                                    {subtask.subtaskTitle || `Subtask #${subtask.subtaskId}`}
+                                    {subtask.subtaskTitle || t('dashboard.subtaskNumbered', { id: subtask.subtaskId })}
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <span className="flex items-center gap-1">
                                         <Clock className="size-3" />
-                                        {formatDuration(subtask.totalDurationSeconds)}
+                                        {formatDuration(subtask.totalDurationSeconds, locale)}
                                     </span>
                                     <span className="flex items-center gap-1">
                                         <Wrench className="size-3" />

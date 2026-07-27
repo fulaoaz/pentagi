@@ -37,10 +37,11 @@ func (h *HttpError) Error() string {
 }
 
 func Error(c *gin.Context, err *HttpError, original error) {
+	message, responseLanguage := localizedErrorMessage(c.GetHeader("Accept-Language"), err)
 	body := gin.H{
 		"status": "error",
 		"code":   err.Code(),
-		"msg":    err.Msg(),
+		"msg":    message,
 	}
 
 	if version.IsDevelopMode() && original != nil {
@@ -53,6 +54,7 @@ func Error(c *gin.Context, err *HttpError, original error) {
 	}
 	logger.FromContext(c).WithFields(fields).WithError(original).Error("api error")
 
+	c.Header("Content-Language", responseLanguage)
 	c.AbortWithStatusJSON(err.HttpCode(), body)
 }
 

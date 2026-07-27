@@ -1,6 +1,8 @@
 import { Terminal as XTerminal } from '@xterm/xterm';
 import { toast } from 'sonner';
 
+import type { Translate } from '@/lib/i18n';
+
 import { ResultFormat } from '@/graphql/types';
 
 /**
@@ -135,12 +137,13 @@ export const getCleanTerminalText = (terminalContent: string): Promise<string> =
 /**
  * Formats message content for copying to clipboard as markdown with collapsible sections
  */
-export const formatMessageForClipboard = async (messageData: CopyableMessage): Promise<string> => {
+export const formatMessageForClipboard = async (messageData: CopyableMessage, t: Translate): Promise<string> => {
     const { message, result, resultFormat = ResultFormat.Plain, thinking } = messageData;
     let content = '';
 
     if (thinking && thinking.trim()) {
-        content += `<details>\n<summary>Thinking</summary>\n\n${thinking.trim()}\n\n</details>\n\n`;
+        const thinkingLabel = t('clipboard.thinking');
+        content += `<details>\n<summary>${thinkingLabel}</summary>\n\n${thinking.trim()}\n\n</details>\n\n`;
     }
 
     if (message && message.trim()) {
@@ -162,7 +165,8 @@ export const formatMessageForClipboard = async (messageData: CopyableMessage): P
             }
         }
 
-        content += `<details>\n<summary>Result</summary>\n\n${resultContent}\n\n</details>`;
+        const resultLabel = t('clipboard.result');
+        content += `<details>\n<summary>${resultLabel}</summary>\n\n${resultContent}\n\n</details>`;
     }
 
     return content;
@@ -171,12 +175,12 @@ export const formatMessageForClipboard = async (messageData: CopyableMessage): P
 /**
  * Copies formatted message content to clipboard
  */
-export const copyMessageToClipboard = async (messageData: CopyableMessage): Promise<void> => {
+export const copyMessageToClipboard = async (messageData: CopyableMessage, t: Translate): Promise<void> => {
     try {
-        const content = await formatMessageForClipboard(messageData);
+        const content = await formatMessageForClipboard(messageData, t);
         await navigator.clipboard.writeText(content);
-        toast.success('Copied to clipboard');
+        toast.success(t('clipboard.copied'));
     } catch {
-        toast.error('Failed to copy to clipboard');
+        toast.error(t('clipboard.copyFailed'));
     }
 };

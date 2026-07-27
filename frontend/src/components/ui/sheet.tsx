@@ -5,6 +5,7 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
+import { useLocale } from '@/hooks/use-locale';
 import { cn } from '@/lib/utils';
 
 const Sheet = SheetPrimitive.Root;
@@ -51,6 +52,8 @@ interface SheetContentProps
 }
 
 function SheetContent({ children, className, container, overlay = true, side = 'right', ...props }: SheetContentProps) {
+    const { t } = useLocale();
+
     return (
         <SheetPortal container={container ?? undefined}>
             {overlay && <SheetOverlay />}
@@ -60,7 +63,7 @@ function SheetContent({ children, className, container, overlay = true, side = '
             >
                 <SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
                     <Cross2Icon className="h-4 w-4" />
-                    <span className="sr-only">Close</span>
+                    <span className="sr-only">{t('common.close')}</span>
                 </SheetPrimitive.Close>
                 {children}
             </SheetPrimitive.Content>

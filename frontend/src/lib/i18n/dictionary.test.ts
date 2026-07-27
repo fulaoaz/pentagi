@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { dictionaries, fallbackLocale, interpolate, translate } from './index';
@@ -6,6 +9,36 @@ import { locales } from './types';
 const keysOf = (locale: (typeof locales)[number]) => Object.keys(dictionaries[locale]).sort();
 
 describe('dictionaries', () => {
+    it('does not declare duplicate keys in locale source files', () => {
+        for (const locale of locales) {
+            const source = readFileSync(resolve('src/lib/i18n/locales', `${locale}.ts`), 'utf8');
+            const sourceFile = ts.createSourceFile(
+                `${locale}.ts`,
+                source,
+                ts.ScriptTarget.Latest,
+                true,
+                ts.ScriptKind.TS,
+            );
+            const declaredKeys = new Set<string>();
+            const duplicates = new Set<string>();
+
+            const visit = (node: ts.Node) => {
+                if (ts.isPropertyAssignment(node) && ts.isStringLiteral(node.name)) {
+                    if (declaredKeys.has(node.name.text)) {
+                        duplicates.add(node.name.text);
+                    }
+
+                    declaredKeys.add(node.name.text);
+                }
+
+                ts.forEachChild(node, visit);
+            };
+
+            visit(sourceFile);
+            expect([...duplicates], `${locale} contains duplicate dictionary keys`).toEqual([]);
+        }
+    });
+
     it('ships a dictionary for every declared locale', () => {
         for (const locale of locales) {
             expect(Object.keys(dictionaries[locale]).length).toBeGreaterThan(0);

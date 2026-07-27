@@ -23,7 +23,7 @@ export const buildFileManagerLabels = (locale: Locale, t: Translate): FileManage
     selectAllAriaLabel: t('fileManager.selectAll'),
     selectedLabel: (count) => t('fileManager.selectedCount', { count }),
     sortHeaderAriaLabel: (column, direction) => {
-        const values = { column: t(columnKey[column]) };
+        const values = { label: t(columnKey[column]) };
 
         if (direction === 'asc') {
             return t('fileManager.sortDescending', values);

@@ -65,6 +65,20 @@ jobs:
         working-directory: frontend
         run: pnpm run i18n:check
 
+      - name: Frontend - Check provider test labels
+        working-directory: frontend
+        run: pnpm exec vitest run src/pages/settings/provider-test-labels.test.ts
+
+      - name: Backend - Check installer localization
+        working-directory: backend
+        run: go test ./cmd/installer/wizard/locale
+
+      - name: Backend - Check API response localization
+        working-directory: backend
+        run: |
+          go test ./pkg/server/response
+          go test ./pkg/server/services -run '^TestLocalizedGraphQLErrorPresenter$'
+
       - name: Frontend - Lint
         working-directory: frontend
         run: pnpm run lint

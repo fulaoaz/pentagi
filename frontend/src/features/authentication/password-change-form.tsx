@@ -1,52 +1,53 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+
+import type { Translate } from '@/lib/i18n';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FormSubmitButton } from '@/components/ui/form-submit-button';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/hooks/use-locale';
 import { api, type ApiErrorResponse, type ApiHttpError } from '@/lib/axios';
 
-const passwordChangeSchema = z
-    .object({
-        confirmPassword: z.string().min(1, { message: 'Confirm your password' }),
-        currentPassword: z.string().min(1, { message: 'Current password is required' }),
-        newPassword: z
-            .string()
-            .min(8, { message: 'Password must be at least 8 characters' })
-            .max(100, { message: 'Password must not exceed 100 characters' })
-            .refine(
-                (password) => {
-                    if (password.length > 15) {
-                        return true;
-                    }
+const buildPasswordChangeSchema = (t: Translate) =>
+    z
+        .object({
+            confirmPassword: z.string().min(1, { message: t('auth.confirmPasswordRequired') }),
+            currentPassword: z.string().min(1, { message: t('auth.currentPasswordRequired') }),
+            newPassword: z
+                .string()
+                .min(8, { message: t('auth.passwordMinLength') })
+                .max(100, { message: t('auth.passwordMaxLength') })
+                .refine(
+                    (password) => {
+                        if (password.length > 15) {
+                            return true;
+                        }
 
-                    return (
-                        password.length >= 8 &&
-                        /[0-9]/.test(password) &&
-                        /[a-z]/.test(password) &&
-                        /[A-Z]/.test(password) &&
-                        /[!@#$&*]/.test(password)
-                    );
-                },
-                {
-                    message:
-                        'Password must be either longer than 15 characters, or at least 8 characters with a number, lowercase, uppercase, and special character (!@#$&*)',
-                },
-            ),
-    })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-        message: "Passwords don't match",
-        path: ['confirmPassword'],
-    })
-    .refine((data) => data.currentPassword !== data.newPassword, {
-        message: 'New password must be different from current password',
-        path: ['newPassword'],
-    });
+                        return (
+                            password.length >= 8 &&
+                            /[0-9]/.test(password) &&
+                            /[a-z]/.test(password) &&
+                            /[A-Z]/.test(password) &&
+                            /[!@#$&*]/.test(password)
+                        );
+                    },
+                    { message: t('auth.passwordComplexity') },
+                ),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+            message: t('auth.passwordsMismatch'),
+            path: ['confirmPassword'],
+        })
+        .refine((data) => data.currentPassword !== data.newPassword, {
+            message: t('auth.newPasswordDifferent'),
+            path: ['newPassword'],
+        });
 
 interface PasswordChangeFormProps {
     isModal?: boolean;
@@ -56,7 +57,7 @@ interface PasswordChangeFormProps {
     showSkip?: boolean;
 }
 
-type PasswordChangeFormValues = z.infer<typeof passwordChangeSchema>;
+type PasswordChangeFormValues = z.infer<ReturnType<typeof buildPasswordChangeSchema>>;
 
 export function PasswordChangeForm({
     isModal = true,
@@ -65,10 +66,12 @@ export function PasswordChangeForm({
     onSuccess,
     showSkip = false,
 }: PasswordChangeFormProps) {
+    const { t } = useLocale();
     const [error, setError] = useState<null | string>(null);
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const passwordChangeSchema = useMemo(() => buildPasswordChangeSchema(t), [t]);
 
     const form = useForm<PasswordChangeFormValues>({
         defaultValues: {
@@ -94,7 +97,7 @@ export function PasswordChangeForm({
             setShowNewPassword(false);
             setShowConfirmPassword(false);
 
-            toast.success('Password successfully changed');
+            toast.success(t('auth.passwordChanged'));
 
             if (onSuccess) {
                 onSuccess();
@@ -103,29 +106,29 @@ export function PasswordChangeForm({
             const error = err as ApiHttpError;
             const responseData = error.response?.data as ApiErrorResponse | undefined;
 
-            let errorMessage = 'Failed to change password';
+            let errorMessage = t('auth.changePasswordFailed');
 
             if (responseData?.msg) {
                 errorMessage = responseData.msg;
             } else if (responseData?.code) {
                 switch (responseData.code) {
                     case 'AuthRequired':
-                        errorMessage = 'Authentication required';
+                        errorMessage = t('auth.authenticationRequired');
                         break;
                     case 'Users.ChangePasswordCurrentUser.InvalidCurrentPassword':
-                        errorMessage = 'Current password is incorrect';
+                        errorMessage = t('auth.currentPasswordIncorrect');
                         break;
                     case 'Users.ChangePasswordCurrentUser.InvalidNewPassword':
-                        errorMessage = 'New password does not meet requirements';
+                        errorMessage = t('auth.newPasswordInvalid');
                         break;
                     case 'Users.ChangePasswordCurrentUser.InvalidPassword':
-                        errorMessage = 'Password validation failed';
+                        errorMessage = t('auth.passwordValidationFailed');
                         break;
                     case 'Users.NotFound':
-                        errorMessage = 'User not found';
+                        errorMessage = t('auth.userNotFound');
                         break;
                     default:
-                        errorMessage = responseData.msg || error.message || 'Failed to change password';
+                        errorMessage = responseData.msg || error.message || t('auth.changePasswordFailed');
                 }
             } else if (error.message) {
                 errorMessage = error.message;
@@ -146,15 +149,18 @@ export function PasswordChangeForm({
                     name="currentPassword"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Current Password</FormLabel>
+                            <FormLabel>{t('auth.currentPassword')}</FormLabel>
                             <FormControl>
                                 <div className="relative">
                                     <Input
                                         {...field}
-                                        placeholder="Enter your current password"
+                                        placeholder={t('auth.enterCurrentPassword')}
                                         type={showCurrentPassword ? 'text' : 'password'}
                                     />
                                     <Button
+                                        aria-label={
+                                            showCurrentPassword ? t('auth.hidePassword') : t('auth.showPassword')
+                                        }
                                         className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                         size="sm"
@@ -180,15 +186,16 @@ export function PasswordChangeForm({
                     name="newPassword"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>New Password</FormLabel>
+                            <FormLabel>{t('auth.newPassword')}</FormLabel>
                             <FormControl>
                                 <div className="relative">
                                     <Input
                                         {...field}
-                                        placeholder="Enter new password"
+                                        placeholder={t('auth.enterNewPassword')}
                                         type={showNewPassword ? 'text' : 'password'}
                                     />
                                     <Button
+                                        aria-label={showNewPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                                         className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
                                         size="sm"
@@ -204,10 +211,7 @@ export function PasswordChangeForm({
                                     </Button>
                                 </div>
                             </FormControl>
-                            <FormDescription className="text-xs">
-                                Must be 16+ characters, or 8+ with number, lowercase, uppercase, and special character
-                                (!@#$&*)
-                            </FormDescription>
+                            <FormDescription className="text-xs">{t('auth.passwordComplexityHint')}</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -218,15 +222,18 @@ export function PasswordChangeForm({
                     name="confirmPassword"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Confirm New Password</FormLabel>
+                            <FormLabel>{t('auth.confirmNewPassword')}</FormLabel>
                             <FormControl>
                                 <div className="relative">
                                     <Input
                                         {...field}
-                                        placeholder="Confirm new password"
+                                        placeholder={t('auth.confirmNewPasswordPlaceholder')}
                                         type={showConfirmPassword ? 'text' : 'password'}
                                     />
                                     <Button
+                                        aria-label={
+                                            showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')
+                                        }
                                         className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                         size="sm"
@@ -257,7 +264,7 @@ export function PasswordChangeForm({
                             type="button"
                             variant="ghost"
                         >
-                            Skip for now
+                            {t('auth.skipForNow')}
                         </Button>
                     )}
                     {isModal && (
@@ -266,11 +273,11 @@ export function PasswordChangeForm({
                             type="button"
                             variant="outline"
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </Button>
                     )}
                     <FormSubmitButton>
-                        <span>Update Password</span>
+                        <span>{t('auth.updatePassword')}</span>
                     </FormSubmitButton>
                 </div>
             </form>

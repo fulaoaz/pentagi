@@ -60,9 +60,10 @@ const formatCamelCase = (value: string): string =>
     value.replaceAll(/([A-Z])/g, ' $1').replace(/^./, (character) => character.toUpperCase());
 
 export const translateAgentName = (name: string, t: Translate): string => {
-    const key = agentNameKeys[name];
+    const normalizedName = name.replaceAll(/_([a-z])/g, (_match, character: string) => character.toUpperCase());
+    const key = agentNameKeys[name] ?? agentNameKeys[normalizedName];
 
-    return key ? t(key) : formatCamelCase(name);
+    return key ? t(key) : formatCamelCase(normalizedName);
 };
 
 export const translatePromptName = (name: string, t: Translate): string => {

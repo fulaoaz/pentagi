@@ -6,15 +6,16 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UsageStatsPeriod } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { usePageStorageKeys } from '@/hooks/use-page-storage-keys';
 import { cn } from '@/lib/utils';
 import { DashboardAnalytics } from '@/pages/dashboard/dashboard-analytics';
 import { DashboardOverview } from '@/pages/dashboard/dashboard-overview';
 
-const periodOptions: { label: string; value: UsageStatsPeriod }[] = [
-    { label: 'Week', value: UsageStatsPeriod.Week },
-    { label: 'Month', value: UsageStatsPeriod.Month },
-    { label: 'Quarter', value: UsageStatsPeriod.Quarter },
+const periodOptions = [
+    { labelKey: 'dashboard.week', shortLabelKey: 'dashboard.weekShort', value: UsageStatsPeriod.Week },
+    { labelKey: 'dashboard.month', shortLabelKey: 'dashboard.monthShort', value: UsageStatsPeriod.Month },
+    { labelKey: 'dashboard.quarter', shortLabelKey: 'dashboard.quarterShort', value: UsageStatsPeriod.Quarter },
 ];
 
 const VALID_PERIODS = new Set<string>(Object.values(UsageStatsPeriod));
@@ -43,6 +44,7 @@ const savePeriod = (storageKey: string, value: UsageStatsPeriod): void => {
 
 function Dashboard() {
     const { period: periodStorageKey } = usePageStorageKeys();
+    const { t } = useLocale();
     const [activeTab, setActiveTab] = useState('analytics');
     const [period, setPeriod] = useState<UsageStatsPeriod>(() => loadPeriod(periodStorageKey));
     // Both transitions wrap heavy re-renders: switching activeTab swaps the
@@ -85,7 +87,7 @@ function Dashboard() {
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <LayoutDashboard className="size-4" />
-                                <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                                <BreadcrumbPage>{t('title.dashboard')}</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -100,8 +102,8 @@ function Dashboard() {
                 >
                     <div className="flex items-center justify-between">
                         <TabsList>
-                            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                            <TabsTrigger value="overview">Overview</TabsTrigger>
+                            <TabsTrigger value="analytics">{t('dashboard.analytics')}</TabsTrigger>
+                            <TabsTrigger value="overview">{t('flow.dashboard.overview')}</TabsTrigger>
                         </TabsList>
 
                         {activeTab === 'analytics' && (
@@ -110,22 +112,26 @@ function Dashboard() {
                                 value={period}
                             >
                                 <TabsList>
-                                    {periodOptions.map(({ label, value }) => (
-                                        <TabsTrigger
-                                            aria-label={label}
-                                            className="size-7 px-0 sm:size-auto sm:px-3"
-                                            key={value}
-                                            value={value}
-                                        >
-                                            <span
-                                                aria-hidden="true"
-                                                className="sm:hidden"
+                                    {periodOptions.map(({ labelKey, shortLabelKey, value }) => {
+                                        const label = t(labelKey);
+
+                                        return (
+                                            <TabsTrigger
+                                                aria-label={label}
+                                                className="size-7 px-0 sm:size-auto sm:px-3"
+                                                key={value}
+                                                value={value}
                                             >
-                                                {label[0]}
-                                            </span>
-                                            <span className="hidden sm:inline">{label}</span>
-                                        </TabsTrigger>
-                                    ))}
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="sm:hidden"
+                                                >
+                                                    {t(shortLabelKey)}
+                                                </span>
+                                                <span className="hidden sm:inline">{label}</span>
+                                            </TabsTrigger>
+                                        );
+                                    })}
                                 </TabsList>
                             </Tabs>
                         )}

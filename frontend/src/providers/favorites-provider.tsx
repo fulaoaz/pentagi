@@ -16,6 +16,7 @@ import {
     useSettingsUserQuery,
     useSettingsUserUpdatedSubscription,
 } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { Log } from '@/lib/log';
 import { useUser } from '@/providers/user-provider';
 
@@ -38,6 +39,7 @@ const FAVORITES_STORAGE_KEY = 'favorites';
 
 export function FavoritesProvider({ children }: FavoritesProviderProps) {
     const { authInfo, isAuthenticated } = useUser();
+    const { t } = useLocale();
 
     const shouldFetchPreferences = Boolean(authInfo && authInfo.type !== 'guest' && isAuthenticated());
 
@@ -149,15 +151,15 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
                         variables: { flowId: id },
                     });
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : 'Failed to add favorite';
-                    toast.error('Failed to add to favorites', {
+                    const errorMessage = error instanceof Error ? error.message : t('favorites.addFailedDescription');
+                    toast.error(t('favorites.addFailed'), {
                         description: errorMessage,
                     });
                     Log.error('Error adding favorite flow:', error);
                 }
             });
         },
-        [addFavoriteFlowMutation, applyOptimisticFavorite],
+        [addFavoriteFlowMutation, applyOptimisticFavorite, t],
     );
 
     const removeFavoriteFlow = useCallback(
@@ -173,15 +175,16 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
                         variables: { flowId: id },
                     });
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : 'Failed to remove favorite';
-                    toast.error('Failed to remove from favorites', {
+                    const errorMessage =
+                        error instanceof Error ? error.message : t('favorites.removeFailedDescription');
+                    toast.error(t('favorites.removeFailed'), {
                         description: errorMessage,
                     });
                     Log.error('Error removing favorite flow:', error);
                 }
             });
         },
-        [applyOptimisticFavorite, deleteFavoriteFlowMutation],
+        [applyOptimisticFavorite, deleteFavoriteFlowMutation, t],
     );
 
     const toggleFavoriteFlow = useCallback(

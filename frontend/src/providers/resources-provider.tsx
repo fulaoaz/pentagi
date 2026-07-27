@@ -8,6 +8,7 @@ import { RESOURCES_API_PATH } from '@/features/resources/resources-constants';
 import { restResourceEntryToFragment, type RestResourceList } from '@/features/resources/resources-rest';
 import { useResourcesRealtime } from '@/features/resources/use-resources-realtime';
 import { ResourcesDocument, useResourcesQuery } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { api, getApiErrorMessage, unwrapApiResponse } from '@/lib/axios';
 import { useUser } from '@/providers/user-provider';
 
@@ -48,6 +49,7 @@ const RESOURCES_ERROR_TOAST_ID = 'resources-error';
  */
 export function ResourcesProvider({ children }: ResourcesProviderProps) {
     const { authInfo, isAuthenticated } = useUser();
+    const { t } = useLocale();
 
     const shouldFetchResources = Boolean(authInfo && authInfo.type !== 'guest' && isAuthenticated());
 
@@ -103,7 +105,7 @@ export function ResourcesProvider({ children }: ResourcesProviderProps) {
                     return;
                 }
 
-                const message = getApiErrorMessage(caught, 'Failed to load resources');
+                const message = getApiErrorMessage(caught, t('resources.loadFailed'));
 
                 setRestError(new Error(message));
             } finally {
@@ -116,7 +118,7 @@ export function ResourcesProvider({ children }: ResourcesProviderProps) {
         return () => {
             isCancelled = true;
         };
-    }, [apolloClient, refreshTick, shouldFetchResources]);
+    }, [apolloClient, refreshTick, shouldFetchResources, t]);
 
     const { data, error: graphqlError } = useResourcesQuery({
         fetchPolicy: 'cache-only',
@@ -131,12 +133,12 @@ export function ResourcesProvider({ children }: ResourcesProviderProps) {
 
     useEffect(() => {
         if (error) {
-            toast.error('Failed to load resources', {
+            toast.error(t('resources.loadFailed'), {
                 description: error.message,
                 id: RESOURCES_ERROR_TOAST_ID,
             });
         }
-    }, [error]);
+    }, [error, t]);
 
     const resources = useMemo<UserResourceFragmentFragment[]>(() => data?.resources ?? [], [data?.resources]);
 

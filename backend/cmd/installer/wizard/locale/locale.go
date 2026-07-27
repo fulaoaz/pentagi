@@ -13,12 +13,14 @@ const (
 	UIConfigSaved      = "配置已保存"
 
 	// Status labels
-	StatusEnabled       = "已启用"
-	StatusDisabled      = "已禁用"
-	StatusConfigured    = "已配置"
-	StatusNotConfigured = "未配置"
-	StatusEmbedded      = "内置"
-	StatusExternal      = "外部"
+	StatusEnabled         = "已启用"
+	StatusDisabled        = "已禁用"
+	StatusConfigured      = "已配置"
+	StatusNotConfigured   = "未配置"
+	StatusEmbedded        = "内置"
+	StatusExternal        = "外部"
+	StatusEnabledInsecure = "已启用（⚠ 不安全）"
+	StatusNotSet          = "未设置"
 
 	// Success/Warning messages
 	MessageSearchEnginesNone       = "⚠ 未配置搜索引擎"
@@ -366,7 +368,7 @@ const (
 	LLMProviderGLM           = "GLM Zhipu AI"
 	LLMProviderKimi          = "Kimi Moonshot AI"
 	LLMProviderQwen          = "Qwen Alibaba Cloud"
-	LLMProviderCustom        = "Custom"
+	LLMProviderCustom        = "自定义"
 	LLMProviderOpenAIDesc    = "业界领先的 GPT 模型，综合表现出色"
 	LLMProviderAnthropicDesc = "Claude 模型，推理能力与安全特性更强"
 	LLMProviderGeminiDesc    = "Google 的先进多模态模型，知识覆盖面广"
@@ -629,13 +631,13 @@ LiteLLM 集成：将 LLM_SERVER_PROVIDER 设为对应的服务商名称（如 "o
 
 // LLM Provider Form field labels and descriptions
 const (
-	LLMFormFieldBaseURL           = "Base URL"
+	LLMFormFieldBaseURL           = "基础 URL"
 	LLMFormFieldAPIKey            = "API 密钥"
 	LLMFormFieldDefaultAuth       = "使用 AWS 默认认证"
-	LLMFormFieldBearerToken       = "Bearer Token"
-	LLMFormFieldAccessKey         = "Access Key ID"
-	LLMFormFieldSecretKey         = "Secret Access Key"
-	LLMFormFieldSessionToken      = "Session Token"
+	LLMFormFieldBearerToken       = "Bearer 令牌"
+	LLMFormFieldAccessKey         = "访问密钥 ID"
+	LLMFormFieldSecretKey         = "秘密访问密钥"
+	LLMFormFieldSessionToken      = "会话令牌"
 	LLMFormFieldRegion            = "区域"
 	LLMFormFieldModel             = "模型"
 	LLMFormFieldConfigPath        = "配置文件路径"
@@ -894,7 +896,7 @@ Graphiti 提供时序知识图谱能力：
 const (
 	MonitoringObservabilityFormTitle       = "Observability 配置"
 	MonitoringObservabilityFormDescription = "配置监控与可观测性组件栈"
-	MonitoringObservabilityFormName        = "Observability"
+	MonitoringObservabilityFormName        = "可观测性"
 	MonitoringObservabilityFormOverview    = `可观测性组件栈包含：
 • Grafana —— 可视化仪表盘
 • VictoriaMetrics —— 时序数据存储
@@ -1397,77 +1399,88 @@ API 密钥获取地址：
 • Traversaal: https://traversaal.ai/
 • Google: https://developers.google.com/custom-search/v1/introduction`
 
-	ToolsSearchEnginesDuckDuckGo               = "DuckDuckGo 搜索"
-	ToolsSearchEnginesDuckDuckGoDesc           = "启用 DuckDuckGo 搜索（无需 API 密钥）"
-	ToolsSearchEnginesDuckDuckGoRegion         = "DuckDuckGo 区域"
-	ToolsSearchEnginesDuckDuckGoRegionDesc     = "DuckDuckGo 区域代码（例如 us-en、uk-en、cn-zh）"
-	ToolsSearchEnginesDuckDuckGoSafeSearch     = "DuckDuckGo 安全搜索"
-	ToolsSearchEnginesDuckDuckGoSafeSearchDesc = "DuckDuckGo 安全搜索级别（strict 严格、moderate 中等、off 关闭）"
-	ToolsSearchEnginesDuckDuckGoTimeRange      = "DuckDuckGo 时间范围"
-	ToolsSearchEnginesDuckDuckGoTimeRangeDesc  = "DuckDuckGo 时间范围（d: 天、w: 周、m: 月、y: 年）"
-	ToolsSearchEnginesSploitus                 = "Sploitus 搜索"
-	ToolsSearchEnginesSploitusDesc             = "启用 Sploitus 漏洞利用与漏洞信息搜索（无需 API 密钥）"
-	ToolsSearchEnginesPerplexityKey            = "Perplexity API 密钥"
-	ToolsSearchEnginesPerplexityKeyDesc        = "Perplexity AI 搜索的 API 密钥"
-	ToolsSearchEnginesTavilyKey                = "Tavily API 密钥"
-	ToolsSearchEnginesTavilyKeyDesc            = "Tavily 搜索服务的 API 密钥"
-	ToolsSearchEnginesTraversaalKey            = "Traversaal API 密钥"
-	ToolsSearchEnginesTraversaalKeyDesc        = "Traversaal 网页抓取的 API 密钥"
-	ToolsSearchEnginesGoogleKey                = "Google 搜索 API 密钥"
-	ToolsSearchEnginesGoogleKeyDesc            = "Google 自定义搜索 API 密钥"
-	ToolsSearchEnginesGoogleCX                 = "Google 搜索引擎 ID"
-	ToolsSearchEnginesGoogleCXDesc             = "Google 自定义搜索引擎 ID"
-	ToolsSearchEnginesGoogleLR                 = "Google 语言限制"
-	ToolsSearchEnginesGoogleLRDesc             = "Google 搜索引擎的语言限制（例如 lang_en、lang_cn 等）"
-	ToolsSearchEnginesSearxngURL               = "Searxng 搜索地址"
-	ToolsSearchEnginesSearxngURLDesc           = "Searxng 搜索引擎的 URL"
-	ToolsSearchEnginesSearxngCategories        = "Searxng 搜索分类"
-	ToolsSearchEnginesSearxngCategoriesDesc    = "Searxng 搜索引擎分类（例如 general、it、web、news、technology、science、health、other）"
-	ToolsSearchEnginesSearxngLanguage          = "Searxng 搜索语言"
-	ToolsSearchEnginesSearxngLanguageDesc      = "Searxng 搜索引擎语言（en、ch、fr、de、it、es、pt、ru、zh，留空表示所有语言）"
-	ToolsSearchEnginesSearxngSafeSearch        = "Searxng 安全搜索"
-	ToolsSearchEnginesSearxngSafeSearchDesc    = "Searxng 搜索引擎安全搜索级别（0: 关闭、1: 中等、2: 严格）"
-	ToolsSearchEnginesSearxngTimeRange         = "Searxng 时间范围"
-	ToolsSearchEnginesSearxngTimeRangeDesc     = "Searxng 搜索引擎时间范围（day 天、month 月、year 年）"
-	ToolsSearchEnginesSearxngTimeout           = "Searxng 超时"
-	ToolsSearchEnginesSearxngTimeoutDesc       = "Searxng 请求超时时间（秒）"
+	ToolsSearchEnginesDuckDuckGo                = "DuckDuckGo 搜索"
+	ToolsSearchEnginesDuckDuckGoName            = "DuckDuckGo"
+	ToolsSearchEnginesDuckDuckGoDesc            = "启用 DuckDuckGo 搜索（无需 API 密钥）"
+	ToolsSearchEnginesDuckDuckGoRegion          = "DuckDuckGo 区域"
+	ToolsSearchEnginesDuckDuckGoRegionDesc      = "DuckDuckGo 区域代码（例如 us-en、uk-en、cn-zh）"
+	ToolsSearchEnginesDuckDuckGoSafeSearch      = "DuckDuckGo 安全搜索"
+	ToolsSearchEnginesDuckDuckGoSafeSearchDesc  = "DuckDuckGo 安全搜索级别（strict 严格、moderate 中等、off 关闭）"
+	ToolsSearchEnginesDuckDuckGoTimeRange       = "DuckDuckGo 时间范围"
+	ToolsSearchEnginesDuckDuckGoTimeRangeDesc   = "DuckDuckGo 时间范围（d: 天、w: 周、m: 月、y: 年）"
+	ToolsSearchEnginesSploitus                  = "Sploitus 搜索"
+	ToolsSearchEnginesSploitusName              = "Sploitus"
+	ToolsSearchEnginesSploitusDesc              = "启用 Sploitus 漏洞利用与漏洞信息搜索（无需 API 密钥）"
+	ToolsSearchEnginesPerplexityKey             = "Perplexity API 密钥"
+	ToolsSearchEnginesPerplexityName            = "Perplexity"
+	ToolsSearchEnginesPerplexityKeyDesc         = "Perplexity AI 搜索的 API 密钥"
+	ToolsSearchEnginesPerplexityModel           = "Perplexity 模型"
+	ToolsSearchEnginesPerplexityModelDesc       = "选择 Perplexity 使用的模型"
+	ToolsSearchEnginesPerplexityContextSize     = "Perplexity 上下文大小"
+	ToolsSearchEnginesPerplexityContextSizeDesc = "选择 Perplexity 使用的上下文大小"
+	ToolsSearchEnginesTavilyKey                 = "Tavily API 密钥"
+	ToolsSearchEnginesTavilyName                = "Tavily"
+	ToolsSearchEnginesTavilyKeyDesc             = "Tavily 搜索服务的 API 密钥"
+	ToolsSearchEnginesTraversaalKey             = "Traversaal API 密钥"
+	ToolsSearchEnginesTraversaalName            = "Traversaal"
+	ToolsSearchEnginesTraversaalKeyDesc         = "Traversaal 网页抓取的 API 密钥"
+	ToolsSearchEnginesGoogleKey                 = "Google 搜索 API 密钥"
+	ToolsSearchEnginesGoogleKeyDesc             = "Google 自定义搜索 API 密钥"
+	ToolsSearchEnginesGoogleName                = "Google 搜索"
+	ToolsSearchEnginesGoogleCX                  = "Google 搜索引擎 ID"
+	ToolsSearchEnginesGoogleCXDesc              = "Google 自定义搜索引擎 ID"
+	ToolsSearchEnginesGoogleLR                  = "Google 语言限制"
+	ToolsSearchEnginesGoogleLRDesc              = "Google 搜索引擎的语言限制（例如 lang_en、lang_cn 等）"
+	ToolsSearchEnginesSearxngURL                = "Searxng 搜索地址"
+	ToolsSearchEnginesSearxngName               = "Searxng"
+	ToolsSearchEnginesSearxngURLDesc            = "Searxng 搜索引擎的 URL"
+	ToolsSearchEnginesSearxngCategories         = "Searxng 搜索分类"
+	ToolsSearchEnginesSearxngCategoriesDesc     = "Searxng 搜索引擎分类（例如 general、it、web、news、technology、science、health、other）"
+	ToolsSearchEnginesSearxngLanguage           = "Searxng 搜索语言"
+	ToolsSearchEnginesSearxngLanguageDesc       = "Searxng 搜索引擎语言（en、ch、fr、de、it、es、pt、ru、zh，留空表示所有语言）"
+	ToolsSearchEnginesSearxngSafeSearch         = "Searxng 安全搜索"
+	ToolsSearchEnginesSearxngSafeSearchDesc     = "Searxng 搜索引擎安全搜索级别（0: 关闭、1: 中等、2: 严格）"
+	ToolsSearchEnginesSearxngTimeRange          = "Searxng 时间范围"
+	ToolsSearchEnginesSearxngTimeRangeDesc      = "Searxng 搜索引擎时间范围（day 天、month 月、year 年）"
+	ToolsSearchEnginesSearxngTimeout            = "Searxng 超时"
+	ToolsSearchEnginesSearxngTimeoutDesc        = "Searxng 请求超时时间（秒）"
 )
 
 // Scraper screen strings
 const (
-	ToolsScraperFormTitle       = "Scraper Configuration"
-	ToolsScraperFormDescription = "Configure web scraping service"
-	ToolsScraperFormName        = "Scraper"
-	ToolsScraperFormOverview    = `Web scraper service for content extraction and analysis using vxcontrol/scraper Docker image.
+	ToolsScraperFormTitle       = "网页抓取服务配置"
+	ToolsScraperFormDescription = "配置网页内容抓取服务"
+	ToolsScraperFormName        = "网页抓取"
+	ToolsScraperFormOverview    = `网页抓取服务使用 vxcontrol/scraper Docker 镜像提取并分析网页内容。
 
-Modes:
-• Embedded - Run local scraper container (recommended)
-• External - Use external scraper services
-• Disabled - No web scraping capabilities
+运行模式：
+• 内置 —— 运行本地抓取容器（推荐）
+• 外部 —— 使用独立部署的抓取服务
+• 禁用 —— 关闭网页抓取功能
 
-Docker image: https://hub.docker.com/r/vxcontrol/scraper
+Docker 镜像：https://hub.docker.com/r/vxcontrol/scraper
 
-The scraper supports:
-• Public URL access for external links
-• Private URL access for internal/local links
-• Content extraction and analysis
-• Multiple output formats`
+支持的功能：
+• 通过公网地址访问外部链接
+• 通过内网地址访问内部或本地链接
+• 提取并分析网页内容
+• 多种输出格式`
 
-	ToolsScraperModeTitle                 = "Scraper Mode"
-	ToolsScraperModeDesc                  = "Select how the scraper service should operate"
-	ToolsScraperEmbedded                  = "Embedded Container"
-	ToolsScraperExternal                  = "External Service"
-	ToolsScraperDisabled                  = "Disabled"
-	ToolsScraperPublicURL                 = "Public Scraper URL"
-	ToolsScraperPublicURLDesc             = "URL for scraping public/external websites. If empty, the same value as private URL will be used."
-	ToolsScraperPublicURLEmbeddedDesc     = "URL for embedded scraper (optional override). If empty, the same value as private URL will be used."
-	ToolsScraperPrivateURL                = "Private Scraper URL"
-	ToolsScraperPrivateURLDesc            = "URL for scraping private/internal websites"
-	ToolsScraperPublicUsername            = "Public URL Username"
-	ToolsScraperPublicUsernameDesc        = "Username for public scraper access"
-	ToolsScraperPublicPassword            = "Public URL Password"
-	ToolsScraperPublicPasswordDesc        = "Password for public scraper access"
-	ToolsScraperPrivateUsername           = "Private URL Username"
+	ToolsScraperModeTitle                 = "抓取服务模式"
+	ToolsScraperModeDesc                  = "选择抓取服务的运行方式"
+	ToolsScraperEmbedded                  = "内置容器"
+	ToolsScraperExternal                  = "外部服务"
+	ToolsScraperDisabled                  = "禁用"
+	ToolsScraperPublicURL                 = "公网抓取地址"
+	ToolsScraperPublicURLDesc             = "抓取公网网站所用的服务地址；留空时使用内网抓取地址"
+	ToolsScraperPublicURLEmbeddedDesc     = "内置抓取服务的可选自定义地址；留空时使用内网抓取地址"
+	ToolsScraperPrivateURL                = "内网抓取地址"
+	ToolsScraperPrivateURLDesc            = "抓取内网网站所用的服务地址"
+	ToolsScraperPublicUsername            = "公网地址用户名"
+	ToolsScraperPublicUsernameDesc        = "访问公网抓取服务所用的用户名"
+	ToolsScraperPublicPassword            = "公网地址密码"
+	ToolsScraperPublicPasswordDesc        = "访问公网抓取服务所用的密码"
+	ToolsScraperPrivateUsername           = "内网地址用户名"
 	ToolsScraperPrivateUsernameDesc       = "访问内网抓取服务所用的用户名"
 	ToolsScraperPrivatePassword           = "内网地址密码"
 	ToolsScraperPrivatePasswordDesc       = "访问内网抓取服务所用的密码"
@@ -1539,9 +1552,9 @@ const (
 	ToolsDockerCertPathDesc  = "包含 ca.pem、cert.pem、key.pem 文件的目录"
 
 	// Help content for specific configurations
-	ToolsDockerInsideHelp = `Docker Access enables workers to spawn additional containers for specialized tools and environments. Required when tasks need custom software not available in default images.
+	ToolsDockerInsideHelp = `Docker 访问权限允许工作容器为专用工具或运行环境创建额外容器。当任务需要默认镜像中未包含的软件时，必须启用此项。
 
-When enabled, workers can pull and run any Docker image, providing maximum flexibility for complex testing scenarios.`
+启用后，工作容器可以拉取并运行任意 Docker 镜像，以满足复杂测试场景的需要。`
 
 	ToolsDockerNetAdminHelp = `网络管理权限允许工作容器执行渗透测试所必需的底层网络操作。
 
@@ -1560,7 +1573,7 @@ When enabled, workers can pull and run any Docker image, providing maximum flexi
 
 示例：/var/run/docker.sock`
 
-	ToolsDockerNetworkHelp = `Docker Network 控制工作容器的网络隔离模式：
+	ToolsDockerNetworkHelp = `Docker 网络控制工作容器的网络隔离模式：
 
 桥接模式（自定义网络名）：
 • 容器之间隔离通信
@@ -1608,7 +1621,7 @@ When enabled, workers can pull and run any Docker image, providing maximum flexi
 
 推荐使用 Kali Linux、Parrot Security 或自定义的安全专用容器。默认值：vxcontrol/kali-linux`
 
-	ToolsDockerHostHelp = `Docker Host 用于启动主工作容器，并覆盖默认的 Docker 守护进程连接。支持 Unix 套接字和 TCP 连接。
+	ToolsDockerHostHelp = `Docker 主机地址用于启动主工作容器，并覆盖默认的 Docker 守护进程连接。支持 Unix 套接字和 TCP 连接。
 
 示例：
 • unix:///var/run/docker.sock（本地）
@@ -1840,8 +1853,19 @@ https://www.voyageai.com/
 
 // Development and Mock Screen constants
 const (
-	MockScreenTitle       = "开发中界面"
-	MockScreenDescription = "此界面尚在开发中"
+	MockScreenTitle                  = "开发中界面"
+	MockScreenDescription            = "此界面尚在开发中"
+	MockScreenUnderDevelopment       = "🚧 此界面正在开发中"
+	MockScreenAvailableLater         = "该配置界面将在后续更新中提供。"
+	MockScreenBackInstruction        = "按 Enter 或 Esc 返回主菜单。"
+	MockScreenMigrationPending       = "⏳ 配置界面正在迁移"
+	MockScreenDevelopmentNotice      = "开发提示"
+	MockScreenMigrationDescription   = "当前正在将此配置界面迁移到新版界面。"
+	MockScreenExpectedFeatures       = "预计提供："
+	MockScreenModernForm             = "• 现代化表单界面"
+	MockScreenImprovedValidation     = "• 更完善的输入校验"
+	MockScreenEnhancedUserExperience = "• 更流畅的操作体验"
+	MockScreenCheckLater             = "请关注后续更新。"
 )
 
 // Apply Changes screen constants
@@ -2162,8 +2186,8 @@ const (
 	EnvDesc_GEMINI_SERVER_URL                 = "Gemini 服务器地址"
 	EnvDesc_BEDROCK_DEFAULT_AUTH              = "AWS Bedrock 使用默认凭证链"
 	EnvDesc_BEDROCK_BEARER_TOKEN              = "AWS Bedrock Bearer 令牌"
-	EnvDesc_BEDROCK_ACCESS_KEY_ID             = "AWS Bedrock Access Key ID"
-	EnvDesc_BEDROCK_SECRET_ACCESS_KEY         = "AWS Bedrock Secret Access Key"
+	EnvDesc_BEDROCK_ACCESS_KEY_ID             = "AWS Bedrock 访问密钥 ID"
+	EnvDesc_BEDROCK_SECRET_ACCESS_KEY         = "AWS Bedrock 秘密访问密钥"
 	EnvDesc_BEDROCK_SESSION_TOKEN             = "AWS Bedrock 会话令牌"
 	EnvDesc_BEDROCK_REGION                    = "AWS Bedrock 区域"
 	EnvDesc_BEDROCK_SERVER_URL                = "AWS Bedrock 自定义端点地址"
@@ -2346,7 +2370,7 @@ const (
 	// component labels
 	ProcessorComponentPentagi       = "PentAGI"
 	ProcessorComponentLangfuse      = "Langfuse"
-	ProcessorComponentObservability = "Observability"
+	ProcessorComponentObservability = "可观测性"
 
 	ProcessorComponentWorkerImage           = "工作容器镜像"
 	ProcessorComponentComposeStacks         = "compose 服务栈"

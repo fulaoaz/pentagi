@@ -26,7 +26,9 @@ import { InputSearch } from '@/components/ui/input-search';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { StatusCard } from '@/components/ui/status-card';
+import { getKnowledgeDocTypeLabel, getKnowledgeSubtypeLabel } from '@/features/knowledges/knowledge-labels';
 import { KnowledgeDocType } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { useTableState } from '@/hooks/use-table-state';
 import { mergeHrefWithSearchParams, URL_PARAMS } from '@/lib/url-params';
 import { type Knowledge, useKnowledges } from '@/providers/knowledges-provider';
@@ -37,25 +39,10 @@ const docTypeBadgeVariant: Record<KnowledgeDocType, BadgeVariant> = {
     [KnowledgeDocType.Guide]: 'green',
 };
 
-const docTypeSubtype = (k: Knowledge): null | string => {
-    if (k.docType === KnowledgeDocType.Guide) {
-        return k.guideType ?? null;
-    }
-
-    if (k.docType === KnowledgeDocType.Answer) {
-        return k.answerType ?? null;
-    }
-
-    if (k.docType === KnowledgeDocType.Code) {
-        return k.codeLang ?? null;
-    }
-
-    return null;
-};
-
 function Knowledges() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useLocale();
     const { deleteKnowledge, isLoading, knowledges, updateKnowledge } = useKnowledges();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [deletingKnowledge, setDeletingKnowledge] = useState<Knowledge | null>(null);
@@ -147,14 +134,14 @@ function Knowledges() {
                 content: knowledge.content,
                 question: newQuestion,
             });
-            toast.success('Knowledge renamed successfully');
+            toast.success(t('knowledge.renamed'));
             setEditingKnowledgeId(null);
         } catch {
             // Error already handled in provider with toast
         } finally {
             setIsRenameLoading(false);
         }
-    }, [editingKnowledgeId, knowledges, updateKnowledge]);
+    }, [editingKnowledgeId, knowledges, t, updateKnowledge]);
 
     const handleDelete = async () => {
         if (!deletingKnowledge) {
@@ -183,7 +170,7 @@ function Knowledges() {
             accessorKey: 'docType',
             cell: ({ row }) => {
                 const docType = row.getValue('docType') as KnowledgeDocType;
-                const subtype = docTypeSubtype(row.original);
+                const subtype = getKnowledgeSubtypeLabel(t, row.original);
 
                 return (
                     <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
@@ -191,7 +178,7 @@ function Knowledges() {
                             className="shrink-0 whitespace-nowrap"
                             variant={docTypeBadgeVariant[docType]}
                         >
-                            {docType}
+                            {getKnowledgeDocTypeLabel(t, docType)}
                         </Badge>
                         {subtype ? (
                             <span
@@ -207,11 +194,11 @@ function Knowledges() {
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
-                    title="Type"
+                    title={t('knowledge.type')}
                 />
             ),
             maxSize: 180,
-            meta: { columnMenuLabel: 'Type', searchable: true },
+            meta: { columnMenuLabel: t('knowledge.type'), searchable: true },
             minSize: 110,
             size: 130,
         },
@@ -232,7 +219,7 @@ function Knowledges() {
                                 inputRef={editingInputRef}
                                 onCancel={handleKnowledgeRenameCancel}
                                 onSave={handleKnowledgeRenameSave}
-                                placeholder="Knowledge question"
+                                placeholder={t('knowledge.question')}
                             />
                         </div>
                     );
@@ -250,10 +237,10 @@ function Knowledges() {
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
-                    title="Question"
+                    title={t('knowledge.question')}
                 />
             ),
-            meta: { columnMenuLabel: 'Question', searchable: true },
+            meta: { columnMenuLabel: t('knowledge.question'), searchable: true },
             minSize: 180,
             size: 280,
         },
@@ -273,10 +260,12 @@ function Knowledges() {
             },
             enableSorting: false,
             header: () => (
-                <span className="text-muted-foreground inline-flex items-center text-sm font-medium">Preview</span>
+                <span className="text-muted-foreground inline-flex items-center text-sm font-medium">
+                    {t('knowledge.preview')}
+                </span>
             ),
             maxSize: 800,
-            meta: { columnMenuLabel: 'Preview', searchable: true },
+            meta: { columnMenuLabel: t('knowledge.preview'), searchable: true },
             minSize: 160,
             size: 380,
         },
@@ -291,14 +280,14 @@ function Knowledges() {
                                 className="shrink-0 whitespace-nowrap"
                                 variant="outline"
                             >
-                                flow #{k.flowId}
+                                {t('knowledge.flowNumbered', { id: k.flowId })}
                             </Badge>
                         ) : null}
                         <Badge
                             className="shrink-0 whitespace-nowrap"
                             variant={k.manual ? 'secondary' : 'outline'}
                         >
-                            {k.manual ? 'manual' : 'agent'}
+                            {k.manual ? t('knowledge.manual') : t('knowledge.agentGenerated')}
                         </Badge>
                     </div>
                 );
@@ -306,12 +295,12 @@ function Knowledges() {
             enableSorting: false,
             header: () => (
                 <span className="text-muted-foreground inline-flex w-full items-center justify-end text-sm font-medium">
-                    Flags
+                    {t('knowledge.source')}
                 </span>
             ),
             id: 'flags',
             maxSize: 200,
-            meta: { columnMenuLabel: 'Flags' },
+            meta: { columnMenuLabel: t('knowledge.source') },
             minSize: 110,
             size: 150,
         },
@@ -324,7 +313,7 @@ function Knowledges() {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
-                                    aria-label="Open menu"
+                                    aria-label={t('common.openMenu')}
                                     className="size-8 p-0"
                                     onClick={(event) => event.stopPropagation()}
                                     variant="ghost"
@@ -339,11 +328,11 @@ function Knowledges() {
                             >
                                 <DropdownMenuItem onClick={() => handleOpen(k.id)}>
                                     <Pencil />
-                                    Edit
+                                    {t('common.edit')}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleKnowledgeRenameStart(k)}>
                                     <PencilLine />
-                                    Rename
+                                    {t('common.rename')}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -353,12 +342,12 @@ function Knowledges() {
                                     {deletingIds.has(k.id) ? (
                                         <>
                                             <Loader2 className="size-4 animate-spin" />
-                                            Deleting...
+                                            {t('common.deleting')}
                                         </>
                                     ) : (
                                         <>
                                             <Trash className="size-4" />
-                                            Delete
+                                            {t('common.delete')}
                                         </>
                                     )}
                                 </DropdownMenuItem>
@@ -381,11 +370,11 @@ function Knowledges() {
         <>
             <ContextMenuItem onClick={() => handleOpen(k.id)}>
                 <Pencil />
-                Edit
+                {t('common.edit')}
             </ContextMenuItem>
             <ContextMenuItem onClick={() => handleKnowledgeRenameStart(k)}>
                 <PencilLine />
-                Rename
+                {t('common.rename')}
             </ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem
@@ -393,7 +382,7 @@ function Knowledges() {
                 onClick={() => handleDeleteDialogOpen(k)}
             >
                 <Trash />
-                {deletingIds.has(k.id) ? 'Deleting...' : 'Delete'}
+                {deletingIds.has(k.id) ? t('common.deleting') : t('common.delete')}
             </ContextMenuItem>
         </>
     );
@@ -410,14 +399,14 @@ function Knowledges() {
                     <BreadcrumbList className="min-w-0 flex-nowrap">
                         <BreadcrumbItem className="min-w-0">
                             <LibraryBig className="size-4 shrink-0" />
-                            <BreadcrumbPage className="min-w-0 truncate">Knowledges</BreadcrumbPage>
+                            <BreadcrumbPage className="min-w-0 truncate">{t('knowledge.listTitle')}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
             </div>
             <div className="flex shrink-0 items-center gap-2 px-4">
                 <InputSearch
-                    ariaLabel="Search knowledge documents"
+                    ariaLabel={t('knowledge.searchAria')}
                     // Use Mod+K — Mod+F is reserved as the page-wide default
                     // because we don't want to conflict with the browser's
                     // own find-in-page on every screen, but this list is one
@@ -425,12 +414,12 @@ function Knowledges() {
                     hotkey="k"
                     maxWidth={220}
                     onSearchChange={handleSemanticQueryChange}
-                    placeholder="Semantic search..."
+                    placeholder={t('knowledge.semanticSearchPlaceholder')}
                     searchQuery={semanticQuery}
                 />
                 <HeaderButton
                     icon={<Plus />}
-                    label="New Knowledge"
+                    label={t('knowledge.new')}
                     onClick={() => navigate('/knowledges/new')}
                     variant="secondary"
                 />
@@ -444,9 +433,9 @@ function Knowledges() {
                 {pageHeader}
                 <div className="flex flex-col gap-4 p-4">
                     <StatusCard
-                        description="Please wait while we fetch your knowledge documents"
+                        description={t('knowledge.loadingDescription')}
                         icon={<Loader2 className="text-muted-foreground size-16 animate-spin" />}
-                        title="Loading knowledges..."
+                        title={t('knowledge.loadingTitle')}
                     />
                 </div>
             </>
@@ -465,12 +454,12 @@ function Knowledges() {
                                 variant="secondary"
                             >
                                 <Plus />
-                                New Knowledge
+                                {t('knowledge.new')}
                             </Button>
                         }
-                        description="Create your first knowledge document to enrich the vector store"
+                        description={t('knowledge.emptyDescription')}
                         icon={<LibraryBig className="text-muted-foreground size-8" />}
-                        title="No knowledge documents yet"
+                        title={t('knowledge.emptyTitle')}
                     />
                 </div>
             </>
@@ -484,8 +473,8 @@ function Knowledges() {
                 <DataTable
                     columns={columns}
                     data={knowledges}
-                    empty={{ entityName: 'knowledge documents' }}
-                    filterPlaceholder="Filter knowledge documents..."
+                    empty={{ entityName: t('knowledge.entityNamePlural') }}
+                    filterPlaceholder={t('knowledge.filterPlaceholder')}
                     filterValue={filter}
                     onFilterChange={setFilter}
                     onRowClick={(k) => {
@@ -497,13 +486,13 @@ function Knowledges() {
                 />
 
                 <ConfirmationDialog
-                    cancelText="Cancel"
-                    confirmText="Delete"
+                    cancelText={t('common.cancel')}
+                    confirmText={t('common.delete')}
                     handleConfirm={handleDelete}
                     handleOpenChange={setIsDeleteDialogOpen}
                     isOpen={isDeleteDialogOpen}
                     itemName={deletingKnowledge?.question}
-                    itemType="knowledge document"
+                    itemType={t('knowledge.entityName')}
                 />
             </div>
         </>

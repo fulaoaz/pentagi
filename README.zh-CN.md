@@ -52,7 +52,7 @@
 PentAGI 是一款用于自动化安全测试的创新工具，采用了前沿的人工智能技术。本项目面向需要强大且灵活的渗透测试方案的信息安全从业者、研究人员和爱好者。
 
 你可以观看视频 **PentAGI 概览**：
-[![PentAGI Overview Video](https://github.com/user-attachments/assets/0828dc3e-15f1-4a1d-858e-9696a146e478)](https://youtu.be/R70x5Ddzs1o)
+[![PentAGI 概览视频](https://github.com/user-attachments/assets/0828dc3e-15f1-4a1d-858e-9696a146e478)](https://youtu.be/R70x5Ddzs1o)
 
 ## 功能特性
 
@@ -821,16 +821,16 @@ PentAGI 的登录页不开放自助注册。全新安装会创建默认的本地
 1. **更新 `.env` 文件**，填入服务器的 IP 地址：
 
 ```bash
-# Network binding - allow external connections
+# 网络监听地址：允许外部设备连接
 PENTAGI_LISTEN_IP=0.0.0.0
 PENTAGI_LISTEN_PORT=8443
 
-# Public URL - use your actual server IP or hostname
-# Replace 192.168.1.100 with your server's IP address
+# 公网访问地址：请填写实际服务器 IP 或主机名
+# 将 192.168.1.100 替换为服务器的实际 IP 地址
 PUBLIC_URL=https://192.168.1.100:8443
 
-# CORS origins - list all URLs that will access PentAGI
-# Include localhost for local access AND your server IP for external access
+# CORS 来源：列出所有需要访问 PentAGI 的 URL
+# 同时保留本机访问所需的 localhost 和外部访问所需的服务器 IP
 CORS_ORIGINS=https://localhost:8443,https://192.168.1.100:8443
 ```
 
@@ -866,11 +866,11 @@ ports:
 4. **配置防火墙**，放通 8443 端口的入站连接：
 
 ```bash
-# Ubuntu/Debian with UFW
+# Ubuntu/Debian（使用 UFW）
 sudo ufw allow 8443/tcp
 sudo ufw reload
 
-# CentOS/RHEL with firewalld
+# CentOS/RHEL（使用 firewalld）
 sudo firewall-cmd --permanent --add-port=8443/tcp
 sudo firewall-cmd --reload
 ```
@@ -923,7 +923,7 @@ scraper:
 **2. 更新 `.env` 文件** —— 将抓取服务地址改为使用 HTTP 和 3000 端口：
 
 ```bash
-# Scraper configuration for Podman rootless
+# Podman 无根模式下的抓取服务配置
 SCRAPER_PRIVATE_URL=http://someuser:somepass@scraper:3000/
 LOCAL_SCRAPER_USERNAME=someuser
 LOCAL_SCRAPER_PASSWORD=somepass
@@ -946,7 +946,7 @@ podman-compose up -d --force-recreate
 **4. 测试抓取服务连通性：**
 
 ```bash
-# Test from within the pentagi container
+# 在 pentagi 容器内测试
 podman exec -it pentagi wget -O- "http://someuser:somepass@scraper:3000/html?url=http://example.com"
 ```
 

@@ -87,13 +87,16 @@ function FlowMessage({ log, searchValue = '' }: FlowMessageProps) {
     }, []);
 
     const handleCopy = useCallback(async () => {
-        await copyMessageToClipboard({
-            message,
-            result,
-            resultFormat,
-            thinking,
-        });
-    }, [thinking, message, result, resultFormat]);
+        await copyMessageToClipboard(
+            {
+                message,
+                result,
+                resultFormat,
+                thinking,
+            },
+            t,
+        );
+    }, [thinking, message, result, resultFormat, t]);
 
     const shouldShowThinking = thinking && (!message || isThinkingVisible);
 

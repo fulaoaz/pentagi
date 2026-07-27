@@ -1,9 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import Logo from '@/components/icons/logo';
+import { useLocale } from '@/hooks/use-locale';
 
 function OAuthResult() {
-    const [statusMessage, setStatusMessage] = useState('Authentication in progress...');
+    const { t } = useLocale();
+    const [statusMessage, setStatusMessage] = useState(() => t('auth.oauthInProgress'));
     const messageRef = useRef(statusMessage);
     const prevMessageRef = useRef(statusMessage);
 
@@ -70,15 +72,15 @@ function OAuthResult() {
                     window.location.origin,
                 );
 
-                updateMessage('Authentication complete, closing window...');
+                updateMessage(t('auth.oauthCompleteClosing'));
                 handleClose(successDelay);
             } catch (e) {
                 console.error('Failed to send message to opener:', e);
-                updateMessage('Error communicating with parent window. Closing in a few seconds...');
+                updateMessage(t('auth.oauthCommunicationFailed'));
                 handleClose(errorDelay);
             }
         } else {
-            updateMessage('Authentication window opened directly. Redirecting to login page...');
+            updateMessage(t('auth.oauthDirectRedirect'));
             handleRedirect('/login', errorDelay / 2);
             handleClose(errorDelay);
         }
@@ -96,7 +98,7 @@ function OAuthResult() {
                 clearTimeout(closeTimer);
             }
         };
-    }, [successDelay, errorDelay]);
+    }, [successDelay, errorDelay, t]);
 
     return (
         <div className="flex h-screen w-full items-center justify-center bg-linear-to-r from-slate-800 to-slate-950">

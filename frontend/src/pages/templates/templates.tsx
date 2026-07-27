@@ -22,6 +22,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { StatusCard } from '@/components/ui/status-card';
+import { useLocale } from '@/hooks/use-locale';
 import { useTableState } from '@/hooks/use-table-state';
 import { mergeHrefWithSearchParams } from '@/lib/url-params';
 import { type Template, useTemplates } from '@/providers/templates-provider';
@@ -30,6 +31,7 @@ function Templates() {
     const navigate = useNavigate();
     const location = useLocation();
     const { deleteTemplate, templates, updateTemplate } = useTemplates();
+    const { t } = useLocale();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [deletingTemplate, setDeletingTemplate] = useState<null | Template>(null);
     const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
@@ -82,14 +84,14 @@ function Templates() {
 
         try {
             await updateTemplate(editingTemplateId, { text: template.text, title: newTitle });
-            toast.success('Template renamed successfully');
+            toast.success(t('templates.renamed'));
             setEditingTemplateId(null);
         } catch {
             // Error already handled in provider with toast
         } finally {
             setIsRenameLoading(false);
         }
-    }, [editingTemplateId, templates, updateTemplate]);
+    }, [editingTemplateId, t, templates, updateTemplate]);
 
     const handleDelete = async () => {
         if (!deletingTemplate) {
@@ -131,7 +133,7 @@ function Templates() {
                                 inputRef={editingInputRef}
                                 onCancel={handleTemplateRenameCancel}
                                 onSave={handleTemplateRenameSave}
-                                placeholder="Template title"
+                                placeholder={t('templates.titlePlaceholder')}
                             />
                         </div>
                     );
@@ -142,7 +144,7 @@ function Templates() {
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
-                    title="Title"
+                    title={t('templates.title')}
                 />
             ),
             meta: { searchable: true },
@@ -157,7 +159,7 @@ function Templates() {
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
-                    title="Text"
+                    title={t('templates.text')}
                 />
             ),
             meta: { searchable: true },
@@ -171,7 +173,7 @@ function Templates() {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
-                                    aria-label="Open menu"
+                                    aria-label={t('common.openMenu')}
                                     className="size-8 p-0"
                                     onClick={(e) => e.stopPropagation()}
                                     variant="ghost"
@@ -186,11 +188,11 @@ function Templates() {
                             >
                                 <DropdownMenuItem onClick={() => handleTemplateOpen(template.id)}>
                                     <Pencil />
-                                    Edit
+                                    {t('common.edit')}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleTemplateRenameStart(template)}>
                                     <Pencil className="size-3" />
-                                    Rename
+                                    {t('templates.rename')}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -200,12 +202,12 @@ function Templates() {
                                     {deletingIds.has(template.id) ? (
                                         <>
                                             <Loader2 className="size-4 animate-spin" />
-                                            Deleting...
+                                            {t('templates.deleting')}
                                         </>
                                     ) : (
                                         <>
                                             <Trash className="size-4" />
-                                            Delete
+                                            {t('common.delete')}
                                         </>
                                     )}
                                 </DropdownMenuItem>
@@ -226,11 +228,11 @@ function Templates() {
         <>
             <ContextMenuItem onClick={() => handleTemplateOpen(template.id)}>
                 <Pencil />
-                Edit
+                {t('common.edit')}
             </ContextMenuItem>
             <ContextMenuItem onClick={() => handleTemplateRenameStart(template)}>
                 <PencilLine />
-                Rename
+                {t('templates.rename')}
             </ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem
@@ -238,7 +240,7 @@ function Templates() {
                 onClick={() => handleDeleteDialogOpen(template)}
             >
                 <Trash />
-                {deletingIds.has(template.id) ? 'Deleting...' : 'Delete'}
+                {deletingIds.has(template.id) ? t('templates.deleting') : t('common.delete')}
             </ContextMenuItem>
         </>
     );
@@ -255,7 +257,7 @@ function Templates() {
                     <BreadcrumbList className="min-w-0 flex-nowrap">
                         <BreadcrumbItem className="min-w-0">
                             <FileText className="size-4 shrink-0" />
-                            <BreadcrumbPage className="min-w-0 truncate">Templates</BreadcrumbPage>
+                            <BreadcrumbPage className="min-w-0 truncate">{t('title.templates')}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
@@ -263,7 +265,7 @@ function Templates() {
             <div className="flex shrink-0 items-center gap-2 px-4">
                 <HeaderButton
                     icon={<Plus />}
-                    label="New Template"
+                    label={t('templates.new')}
                     onClick={() => navigate('/templates/new')}
                     variant="secondary"
                 />
@@ -283,12 +285,12 @@ function Templates() {
                                 variant="secondary"
                             >
                                 <Plus className="size-4" />
-                                New Template
+                                {t('templates.new')}
                             </Button>
                         }
-                        description="Create your first template to get started"
+                        description={t('templates.emptyDescription')}
                         icon={<FileText className="text-muted-foreground size-8" />}
-                        title="No templates yet"
+                        title={t('templates.emptyTitle')}
                     />
                 </div>
             </>
@@ -302,8 +304,8 @@ function Templates() {
                 <DataTable
                     columns={columns}
                     data={templates}
-                    empty={{ entityName: 'templates' }}
-                    filterPlaceholder="Filter templates..."
+                    empty={{ entityName: t('templates.entityName') }}
+                    filterPlaceholder={t('templates.filterPlaceholder')}
                     filterValue={filter}
                     onFilterChange={setFilter}
                     onRowClick={(template) => {
@@ -315,13 +317,13 @@ function Templates() {
                 />
 
                 <ConfirmationDialog
-                    cancelText="Cancel"
-                    confirmText="Delete"
+                    cancelText={t('common.cancel')}
+                    confirmText={t('common.delete')}
                     handleConfirm={handleDelete}
                     handleOpenChange={setIsDeleteDialogOpen}
                     isOpen={isDeleteDialogOpen}
                     itemName={deletingTemplate?.title}
-                    itemType="template"
+                    itemType={t('title.template')}
                 />
             </div>
         </>

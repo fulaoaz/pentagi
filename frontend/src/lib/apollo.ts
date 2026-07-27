@@ -1,6 +1,7 @@
 import type { FetchResult, Operation, Reference, StoreObject } from '@apollo/client';
 
 import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, Observable, split } from '@apollo/client';
+import { SetContextLink } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -9,6 +10,7 @@ import { LRUCache } from 'lru-cache';
 
 import type { AssistantLogFragmentFragment } from '@/graphql/types';
 
+import { resolveBrowserLocale } from '@/lib/i18n';
 import { Log } from '@/lib/log';
 import { baseUrl } from '@/models/api';
 
@@ -379,8 +381,16 @@ const createApolloClient = () => {
         uri: `${window.location.origin}${GRAPHQL_ENDPOINT}`,
     });
 
+    const localeLink = new SetContextLink((previousContext) => ({
+        headers: {
+            ...(previousContext.headers as Record<string, string> | undefined),
+            'Accept-Language': resolveBrowserLocale(),
+        },
+    }));
+
     const wsLink = new GraphQLWsLink(
         createClient({
+            connectionParams: () => ({ 'Accept-Language': resolveBrowserLocale() }),
             lazy: true,
             on: {
                 closed: () => Log.debug('GraphQL WebSocket closed'),
@@ -418,7 +428,7 @@ const createApolloClient = () => {
         }),
     );
 
-    const transportLink = split(isSubscriptionOperation, wsLink, httpLink);
+    const transportLink = split(isSubscriptionOperation, wsLink, localeLink.concat(httpLink));
 
     const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
         if (graphQLErrors) {

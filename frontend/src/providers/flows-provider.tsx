@@ -15,6 +15,7 @@ import {
     useFlowsQuery,
     useFlowUpdatedSubscription,
 } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { Log } from '@/lib/log';
 
 export type Flow = FlowFragmentFragment;
@@ -37,6 +38,8 @@ interface FlowsProviderProps {
 }
 
 export function FlowsProvider({ children }: FlowsProviderProps) {
+    const { t } = useLocale();
+
     const {
         data: flowsData,
         error: flowsError,
@@ -55,12 +58,12 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
 
     useEffect(() => {
         if (flowsError) {
-            toast.error('Error loading flows', {
+            toast.error(t('flow.provider.loadListFailed'), {
                 description: flowsError.message,
             });
             Log.error('Error loading flows:', flowsError);
         }
-    }, [flowsError]);
+    }, [flowsError, t]);
 
     const [createFlowMutation] = useCreateFlowMutation();
     const [createAssistantMutation] = useCreateAssistantMutation();
@@ -93,8 +96,8 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
 
                 return null;
             } catch (error) {
-                const description = error instanceof Error ? error.message : 'An error occurred while creating flow';
-                toast.error('Failed to create flow', {
+                const description = error instanceof Error ? error.message : t('flow.provider.createFlowError');
+                toast.error(t('flow.provider.createFlowFailed'), {
                     description,
                 });
                 Log.error('Error creating flow:', error);
@@ -102,7 +105,7 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                 return null;
             }
         },
-        [createFlowMutation],
+        [createFlowMutation, t],
     );
 
     const createFlowWithAssistant = useCallback(
@@ -133,9 +136,8 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
 
                 return null;
             } catch (error) {
-                const description =
-                    error instanceof Error ? error.message : 'An error occurred while creating assistant';
-                toast.error('Failed to create assistant', {
+                const description = error instanceof Error ? error.message : t('flow.provider.createAssistantError');
+                toast.error(t('flow.provider.createAssistantFailed'), {
                     description,
                 });
                 Log.error('Error creating assistant:', error);
@@ -143,7 +145,7 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                 return null;
             }
         },
-        [createAssistantMutation],
+        [createAssistantMutation, t],
     );
 
     const deleteFlow = useCallback(
@@ -154,9 +156,12 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                 return false;
             }
 
-            const flowDescription = `${title || 'Unknown'} (ID: ${flowId})`;
+            const flowDescription = t('flow.provider.description', {
+                id: flowId,
+                title: title || t('flow.provider.untitled'),
+            });
 
-            const loadingToastId = toast.loading('Deleting flow...', {
+            const loadingToastId = toast.loading(t('flow.provider.deleting'), {
                 description: flowDescription,
             });
 
@@ -165,14 +170,14 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                     variables: { flowId },
                 });
 
-                toast.success('Flow deleted successfully', {
+                toast.success(t('flow.provider.deleted'), {
                     description: flowDescription,
                     id: loadingToastId,
                 });
 
                 return true;
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'An error occurred while deleting flow';
+                const errorMessage = error instanceof Error ? error.message : t('flow.provider.deleteFlowError');
                 toast.error(errorMessage, {
                     description: flowDescription,
                     id: loadingToastId,
@@ -182,7 +187,7 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                 return false;
             }
         },
-        [deleteFlowMutation],
+        [deleteFlowMutation, t],
     );
 
     const finishFlow = useCallback(
@@ -193,9 +198,12 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                 return false;
             }
 
-            const flowDescription = `${title || 'Unknown'} (ID: ${flowId})`;
+            const flowDescription = t('flow.provider.description', {
+                id: flowId,
+                title: title || t('flow.provider.untitled'),
+            });
 
-            const loadingToastId = toast.loading('Finishing flow...', {
+            const loadingToastId = toast.loading(t('flow.provider.finishing'), {
                 description: flowDescription,
             });
 
@@ -204,14 +212,14 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                     variables: { flowId },
                 });
 
-                toast.success('Flow finished successfully', {
+                toast.success(t('flow.provider.finished'), {
                     description: flowDescription,
                     id: loadingToastId,
                 });
 
                 return true;
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'An error occurred while finishing flow';
+                const errorMessage = error instanceof Error ? error.message : t('flow.provider.finishFlowError');
                 toast.error(errorMessage, {
                     description: flowDescription,
                     id: loadingToastId,
@@ -221,7 +229,7 @@ export function FlowsProvider({ children }: FlowsProviderProps) {
                 return false;
             }
         },
-        [finishFlowMutation],
+        [finishFlowMutation, t],
     );
 
     const value = useMemo(

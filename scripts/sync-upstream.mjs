@@ -38,16 +38,7 @@ const currentBranch = run("git", ["branch", "--show-current"], {
 
 if (currentBranch !== "zh-CN") {
   console.error(
-    `Run this script from the zh-CN branch (current branch: ${currentBranch || "detached HEAD"}).`,
-  );
-  process.exit(1);
-}
-
-const worktreeStatus = run("git", ["status", "--porcelain"], { capture: true });
-
-if (worktreeStatus) {
-  console.error(
-    "Commit or stash the current worktree changes before syncing upstream.",
+    `请在 zh-CN 分支运行此脚本（当前分支：${currentBranch || "游离 HEAD"}）。`,
   );
   process.exit(1);
 }
@@ -61,14 +52,21 @@ const behind = Number(
 );
 
 if (behind === 0) {
-  console.log(`zh-CN is up to date with ${upstreamRef}.`);
+  console.log(`zh-CN 已与 ${upstreamRef} 保持同步。`);
   process.exit(0);
 }
 
-console.log(`${upstreamRef} has ${behind} new commit(s).`);
+console.log(`${upstreamRef} 有 ${behind} 个新提交。`);
 
 if (checkOnly) {
   process.exit(0);
+}
+
+const worktreeStatus = run("git", ["status", "--porcelain"], { capture: true });
+
+if (worktreeStatus) {
+  console.error("同步上游前，请先提交或暂存当前工作区改动。");
+  process.exit(1);
 }
 
 run("git", ["merge", "--no-ff", "--no-commit", upstreamRef]);
@@ -82,10 +80,87 @@ const i18nCheck = spawnSync("node", ["scripts/check-ui-i18n.mjs"], {
 
 if (i18nCheck.status !== 0) {
   console.error(
-    "Upstream was merged without committing. Translate or review the reported UI text, then commit.",
+    "上游改动已合并但尚未提交。请翻译或复核报告中的前端文案，再完成提交。",
   );
   process.exit(i18nCheck.status ?? 1);
 }
 
+const providerTestLabelsCheck = spawnSync(
+  "pnpm",
+  ["exec", "vitest", "run", "src/pages/settings/provider-test-labels.test.ts"],
+  {
+    cwd: path.join(repositoryDirectory, "frontend"),
+    encoding: "utf8",
+    shell: process.platform === "win32",
+    stdio: "inherit",
+  },
+);
+
+if (providerTestLabelsCheck.status !== 0) {
+  console.error(
+    "上游改动已合并但尚未提交。请为新增的提供商测试名称补充中文标签，再完成提交。",
+  );
+  process.exit(providerTestLabelsCheck.status ?? 1);
+}
+
+const installerI18nCheck = spawnSync(
+  "go",
+  ["test", "./cmd/installer/wizard/locale"],
+  {
+    cwd: path.join(repositoryDirectory, "backend"),
+    encoding: "utf8",
+    shell: process.platform === "win32",
+    stdio: "inherit",
+  },
+);
+
+if (installerI18nCheck.status !== 0) {
+  console.error(
+    "上游改动已合并但尚未提交。请翻译或复核报告中的安装器文案，再完成提交。",
+  );
+  process.exit(installerI18nCheck.status ?? 1);
+}
+
+const apiResponseI18nCheck = spawnSync(
+  "go",
+  ["test", "./pkg/server/response"],
+  {
+    cwd: path.join(repositoryDirectory, "backend"),
+    encoding: "utf8",
+    shell: process.platform === "win32",
+    stdio: "inherit",
+  },
+);
+
+if (apiResponseI18nCheck.status !== 0) {
+  console.error(
+    "上游改动已合并但尚未提交。请复核 REST 与 GraphQL 的中文错误响应，再完成提交。",
+  );
+  process.exit(apiResponseI18nCheck.status ?? 1);
+}
+
+const graphqlResponseI18nCheck = spawnSync(
+  "go",
+  [
+    "test",
+    "./pkg/server/services",
+    "-run",
+    "^TestLocalizedGraphQLErrorPresenter$",
+  ],
+  {
+    cwd: path.join(repositoryDirectory, "backend"),
+    encoding: "utf8",
+    shell: process.platform === "win32",
+    stdio: "inherit",
+  },
+);
+
+if (graphqlResponseI18nCheck.status !== 0) {
+  console.error(
+    "上游改动已合并但尚未提交。请复核 GraphQL 的中文错误响应，再完成提交。",
+  );
+  process.exit(graphqlResponseI18nCheck.status ?? 1);
+}
+
 run("git", ["commit", "--no-edit"]);
-console.log(`Merged ${upstreamRef}; run the full test suite before pushing.`);
+console.log(`${upstreamRef} 已合并；推送前请运行完整测试。`);

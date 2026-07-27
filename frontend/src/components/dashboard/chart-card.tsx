@@ -4,6 +4,7 @@ import { BarChart2, Loader2 } from 'lucide-react';
 import { ResponsiveContainer } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLocale } from '@/hooks/use-locale';
 
 export function ChartCard({
     children,
@@ -22,6 +23,8 @@ export function ChartCard({
     loading?: boolean;
     title: ReactNode;
 }) {
+    const { t } = useLocale();
+
     return (
         <Card className={className}>
             <CardHeader>
@@ -42,7 +45,7 @@ export function ChartCard({
                         style={{ height }}
                     >
                         <BarChart2 className="text-muted-foreground/30 size-10" />
-                        <p className="text-muted-foreground text-sm">No data for this period</p>
+                        <p className="text-muted-foreground text-sm">{t('common.noDataForPeriod')}</p>
                     </div>
                 ) : (
                     <ResponsiveContainer

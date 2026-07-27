@@ -48,6 +48,8 @@ import { useLocale } from '@/hooks/use-locale';
 import { formatPromptId } from '@/lib/route-titles/format-prompt-id';
 import { cn } from '@/lib/utils';
 
+import { getPromptValidationCopy } from './prompt-validation-i18n';
+
 const buildSystemFormSchema = (t: Translate) =>
     z.object({
         template: z.string().min(1, t('settings.prompts.systemTemplateRequired')),
@@ -154,6 +156,10 @@ function SettingsPrompt() {
     const hasPushedBlockerStateRef = useRef(false);
 
     const isLoading = isCreateLoading || isUpdateLoading || isDeleteLoading || isValidateLoading;
+    const validationCopy = useMemo(
+        () => (validationResult ? getPromptValidationCopy(validationResult, t) : null),
+        [t, validationResult],
+    );
 
     const handleVariableClick = (
         variable: string,
@@ -964,11 +970,11 @@ function SettingsPrompt() {
                                 </AlertTitle>
                                 <AlertDescription>
                                     <div className="whitespace-pre-line">
-                                        {validationResult.message}
-                                        {validationResult.details && (
+                                        {validationCopy?.message}
+                                        {validationCopy?.details && (
                                             <div className="mt-2">
                                                 <strong>{t('settings.prompts.details')}</strong>{' '}
-                                                {validationResult.details}
+                                                {validationCopy.details}
                                             </div>
                                         )}
                                         {validationResult.line && (

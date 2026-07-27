@@ -62,7 +62,7 @@ func (p *processor) performPasswordReset(ctx context.Context, newPassword string
 		return fmt.Errorf("failed to ping database: %w", err)
 	}
 
-	p.appendLog(fmt.Sprintf("Connected to PostgreSQL at %s:%s (database: %s)", PostgreSQLHost, PostgreSQLPort, dbName), ProductStackPentagi, state)
+	p.appendLog(fmt.Sprintf("已连接 PostgreSQL：%s:%s（数据库：%s）", PostgreSQLHost, PostgreSQLPort, dbName), ProductStackPentagi, state)
 
 	// hash the new password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
@@ -87,7 +87,7 @@ func (p *processor) performPasswordReset(ctx context.Context, newPassword string
 		return fmt.Errorf("no admin user found with email %s", AdminEmail)
 	}
 
-	p.appendLog(fmt.Sprintf("Password updated for %s", AdminEmail), ProductStackPentagi, state)
+	p.appendLog(fmt.Sprintf("已更新 %s 的密码", AdminEmail), ProductStackPentagi, state)
 
 	return nil
 }

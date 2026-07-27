@@ -10,6 +10,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { Form, FormControl, FormField } from '@/components/ui/form';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
 import { useAutoScroll } from '@/hooks/use-auto-scroll';
+import { useLocale } from '@/hooks/use-locale';
 import { useFlow } from '@/providers/flow-provider';
 
 import FlowTasksDropdown from '../flow-tasks-dropdown';
@@ -26,6 +27,7 @@ const searchFormSchema = z.object({
 });
 
 function FlowTools() {
+    const { t } = useLocale();
     const { flowData, flowId } = useFlow();
 
     const logs = useMemo(() => flowData?.searchLogs ?? [], [flowData?.searchLogs]);
@@ -156,7 +158,7 @@ function FlowTools() {
                                         <InputGroupInput
                                             {...field}
                                             autoComplete="off"
-                                            placeholder="Search tool logs..."
+                                            placeholder={t('flow.logs.toolSearch')}
                                             type="text"
                                         />
                                         {field.value && (
@@ -230,8 +232,8 @@ function FlowTools() {
                         <EmptyMedia variant="icon">
                             <ListFilter />
                         </EmptyMedia>
-                        <EmptyTitle>No search logs found</EmptyTitle>
-                        <EmptyDescription>Try adjusting your search or filter parameters</EmptyDescription>
+                        <EmptyTitle>{t('flow.logs.toolNoMatches')}</EmptyTitle>
+                        <EmptyDescription>{t('flow.messages.adjustFilters')}</EmptyDescription>
                     </EmptyHeader>
                     <EmptyContent>
                         <Button
@@ -239,7 +241,7 @@ function FlowTools() {
                             variant="outline"
                         >
                             <X />
-                            Reset filters
+                            {t('flow.messages.resetFilters')}
                         </Button>
                     </EmptyContent>
                 </Empty>
@@ -249,10 +251,8 @@ function FlowTools() {
                         <EmptyMedia variant="icon">
                             <Wrench />
                         </EmptyMedia>
-                        <EmptyTitle>No search logs available</EmptyTitle>
-                        <EmptyDescription>
-                            Search logs will appear here when the agent performs searches
-                        </EmptyDescription>
+                        <EmptyTitle>{t('flow.logs.toolEmptyTitle')}</EmptyTitle>
+                        <EmptyDescription>{t('flow.logs.toolEmptyDescription')}</EmptyDescription>
                     </EmptyHeader>
                 </Empty>
             )}

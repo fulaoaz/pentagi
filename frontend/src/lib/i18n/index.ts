@@ -3,6 +3,7 @@ import type { Dictionary, Locale } from './types';
 import { en } from './locales/en';
 import { zhCN } from './locales/zh-CN';
 
+export { LOCALE_STORAGE_KEY, resolveBrowserLocale, resolveLocalePreference } from './locale-preference';
 export { interpolate, translate } from './translate';
 export {
     defaultLocale,

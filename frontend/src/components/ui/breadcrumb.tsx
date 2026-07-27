@@ -2,6 +2,7 @@ import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 
+import { useLocale } from '@/hooks/use-locale';
 import { cn } from '@/lib/utils';
 
 function Breadcrumb({
@@ -9,15 +10,19 @@ function Breadcrumb({
 }: React.ComponentProps<'nav'> & {
     separator?: React.ReactNode;
 }) {
+    const { t } = useLocale();
+
     return (
         <nav
-            aria-label="breadcrumb"
+            aria-label={t('common.breadcrumb')}
             {...props}
         />
     );
 }
 
 function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<'span'>) {
+    const { t } = useLocale();
+
     return (
         <span
             aria-hidden="true"
@@ -26,7 +31,7 @@ function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<'span'
             {...props}
         >
             <DotsHorizontalIcon className="h-4 w-4" />
-            <span className="sr-only">More</span>
+            <span className="sr-only">{t('common.more')}</span>
         </span>
     );
 }

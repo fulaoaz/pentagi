@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { type FieldPath, type SubmitHandler, useForm } from 'react-hook-form';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -11,6 +11,7 @@ import type {
     KnowledgeDocumentFragmentFragment,
     UpdateKnowledgeDocumentInput,
 } from '@/graphql/types';
+import type { Translate } from '@/lib/i18n';
 
 import { HeaderButton } from '@/components/shared/header-button';
 import { UnsavedChangesDialog, useUnsavedChangesGuard } from '@/components/shared/unsaved-changes';
@@ -18,6 +19,7 @@ import { Form } from '@/components/ui/form';
 import { Spinner } from '@/components/ui/spinner';
 import { KnowledgeAnswerType, KnowledgeDocType, KnowledgeGuideType, useAnonymizeTextMutation } from '@/graphql/types';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useLocale } from '@/hooks/use-locale';
 import { Log } from '@/lib/log';
 import { useUser } from '@/providers/user-provider';
 
@@ -41,62 +43,70 @@ export const KNOWLEDGE_LIMITS = {
 // backend clears it) from "field was empty and untouched" (don't send at
 // all so the backend leaves it alone). Mapping `"" → undefined` here would
 // erase that signal and break the "clear an existing description" use case.
-const optionalTrimmed = (max: number, label: string) =>
+const optionalTrimmed = (max: number, label: string, t: Translate) =>
     z
         .string()
         .trim()
-        .max(max, { message: `${label} must be ${max} characters or fewer` })
+        .max(max, { message: t('knowledge.validation.maxCharacters', { label, max }) })
         .optional();
 
-export const formSchema = z
-    .object({
-        answerType: z.nativeEnum(KnowledgeAnswerType).optional(),
-        codeLang: optionalTrimmed(KNOWLEDGE_LIMITS.codeLang, 'Code language'),
-        content: z
-            .string()
-            .trim()
-            .min(1, { message: 'Content is required' })
-            .max(KNOWLEDGE_LIMITS.content, {
-                message: `Content must be ${KNOWLEDGE_LIMITS.content} characters or fewer`,
-            }),
-        description: optionalTrimmed(KNOWLEDGE_LIMITS.description, 'Description'),
-        docType: z.nativeEnum(KnowledgeDocType),
-        guideType: z.nativeEnum(KnowledgeGuideType).optional(),
-        question: z
-            .string()
-            .trim()
-            .min(1, { message: 'Question is required' })
-            .max(KNOWLEDGE_LIMITS.question, {
-                message: `Question must be ${KNOWLEDGE_LIMITS.question} characters or fewer`,
-            }),
-    })
-    .superRefine((value, ctx) => {
-        const requiredByDocType: Partial<Record<KnowledgeDocType, { field: FieldPath<FormValues>; message: string }>> =
-            {
-                [KnowledgeDocType.Answer]: { field: 'answerType', message: 'Answer type is required' },
-                [KnowledgeDocType.Code]: { field: 'codeLang', message: 'Code language is required' },
-                [KnowledgeDocType.Guide]: { field: 'guideType', message: 'Guide type is required' },
+export const createKnowledgeFormSchema = (t: Translate) =>
+    z
+        .object({
+            answerType: z.nativeEnum(KnowledgeAnswerType).optional(),
+            codeLang: optionalTrimmed(KNOWLEDGE_LIMITS.codeLang, t('knowledge.codeLanguage'), t),
+            content: z
+                .string()
+                .trim()
+                .min(1, { message: t('knowledge.contentRequired') })
+                .max(KNOWLEDGE_LIMITS.content, {
+                    message: t('knowledge.validation.maxCharacters', {
+                        label: t('knowledge.content'),
+                        max: KNOWLEDGE_LIMITS.content,
+                    }),
+                }),
+            description: optionalTrimmed(KNOWLEDGE_LIMITS.description, t('knowledge.descriptionOptional'), t),
+            docType: z.nativeEnum(KnowledgeDocType),
+            guideType: z.nativeEnum(KnowledgeGuideType).optional(),
+            question: z
+                .string()
+                .trim()
+                .min(1, { message: t('knowledge.questionRequired') })
+                .max(KNOWLEDGE_LIMITS.question, {
+                    message: t('knowledge.validation.maxCharacters', {
+                        label: t('knowledge.question'),
+                        max: KNOWLEDGE_LIMITS.question,
+                    }),
+                }),
+        })
+        .superRefine((value, ctx) => {
+            const requiredByDocType: Partial<
+                Record<KnowledgeDocType, { field: 'answerType' | 'codeLang' | 'guideType'; message: string }>
+            > = {
+                [KnowledgeDocType.Answer]: { field: 'answerType', message: t('knowledge.answerTypeRequired') },
+                [KnowledgeDocType.Code]: { field: 'codeLang', message: t('knowledge.codeLanguageRequired') },
+                [KnowledgeDocType.Guide]: { field: 'guideType', message: t('knowledge.guideTypeRequired') },
             };
 
-        const rule = requiredByDocType[value.docType];
+            const rule = requiredByDocType[value.docType];
 
-        if (!rule) {
-            return;
-        }
+            if (!rule) {
+                return;
+            }
 
-        const fieldValue = value[rule.field];
-        const isMissing = fieldValue === undefined || fieldValue === null || fieldValue === '';
+            const fieldValue = value[rule.field];
+            const isMissing = fieldValue === undefined || fieldValue === null || fieldValue === '';
 
-        if (isMissing) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: rule.message,
-                path: [rule.field],
-            });
-        }
-    });
+            if (isMissing) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: rule.message,
+                    path: [rule.field],
+                });
+            }
+        });
 
-export type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<ReturnType<typeof createKnowledgeFormSchema>>;
 
 export const newDocumentDefaults: FormValues = {
     answerType: undefined,
@@ -190,11 +200,13 @@ interface KnowledgeFormProps {
 export function KnowledgeForm({ initialValues, isNew, knowledge, onSubmit }: KnowledgeFormProps) {
     const navigate = useNavigate();
     const { isDesktop } = useBreakpoint();
+    const { t } = useLocale();
     const [isSaving, setIsSaving] = useState(false);
     const [isAnonymizing, setIsAnonymizing] = useState(false);
     const [anonymizeMutation] = useAnonymizeTextMutation();
     const { authInfo } = useUser();
     const canAnonymize = authInfo?.privileges?.includes('anonymize.call') ?? false;
+    const formSchema = useMemo(() => createKnowledgeFormSchema(t), [t]);
 
     const form = useForm<FormValues>({
         defaultValues: initialValues,
@@ -311,7 +323,7 @@ export function KnowledgeForm({ initialValues, isNew, knowledge, onSubmit }: Kno
         } finally {
             setIsSaving(false);
         }
-    }, [form, isSaving, isValid, performSave]);
+    }, [form, formSchema, isSaving, isValid, performSave]);
 
     const guard = useUnsavedChangesGuard({
         isDirty,
@@ -329,7 +341,7 @@ export function KnowledgeForm({ initialValues, isNew, knowledge, onSubmit }: Kno
         <HeaderButton
             disabled={!canSubmit}
             icon={isSaving ? <Spinner variant="circle" /> : <Save aria-hidden="true" />}
-            label={isNew ? 'Create' : 'Save'}
+            label={isNew ? t('common.create') : t('common.save')}
             type="submit"
         />
     );
@@ -354,26 +366,26 @@ export function KnowledgeForm({ initialValues, isNew, knowledge, onSubmit }: Kno
             const anonymizedContent = data?.anonymizeText;
 
             if (anonymizedContent == null) {
-                toast.error('Anonymizer returned no result');
+                toast.error(t('knowledge.anonymizerNoResult'));
 
                 return;
             }
 
             if (anonymizedContent === currentContent) {
-                toast.info('No sensitive data detected');
+                toast.info(t('knowledge.noSensitiveData'));
 
                 return;
             }
 
             form.setValue('content', anonymizedContent, { shouldDirty: true, shouldValidate: true });
-            toast.success('Content anonymized');
+            toast.success(t('knowledge.anonymized'));
         } catch (error) {
             Log.error('Failed to anonymize content', error);
-            toast.error(error instanceof Error ? error.message : 'Failed to anonymize content');
+            toast.error(error instanceof Error ? error.message : t('knowledge.contentAnonymizeFailed'));
         } finally {
             setIsAnonymizing(false);
         }
-    }, [anonymizeMutation, form]);
+    }, [anonymizeMutation, form, t]);
 
     return (
         <>

@@ -11,9 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/hooks/use-locale';
 import { useResources } from '@/providers/resources-provider';
 
-import { resourcesMoveFormSchema, type ResourcesMoveFormValues, useResourcesMove } from './use-resources-move';
+import { createResourcesMoveFormSchema, type ResourcesMoveFormValues, useResourcesMove } from './use-resources-move';
 
 interface MovePlan {
     /** Final destination string sent to the backend (exact path or base directory). */
@@ -124,6 +125,7 @@ export function ResourcesMoveDialog({ files, onClose }: ResourcesMoveDialogProps
 }
 
 function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProps) {
+    const { t } = useLocale();
     const { isMoving, move } = useResourcesMove();
     const { resources } = useResources();
     const isMulti = files.length > 1;
@@ -139,10 +141,12 @@ function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProp
         return files[0].path;
     }, [files, isMulti]);
 
+    const formSchema = useMemo(() => createResourcesMoveFormSchema(t), [t]);
+
     const form = useForm<ResourcesMoveFormValues>({
         defaultValues: { destination: defaultDestination },
         mode: 'onChange',
-        resolver: zodResolver(resourcesMoveFormSchema),
+        resolver: zodResolver(formSchema),
     });
 
     useEffect(() => {
@@ -182,11 +186,13 @@ function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProp
 
     const isSubmitDisabled = !form.formState.isValid;
     const titleText = isMulti
-        ? `Move ${files.length} items`
+        ? t('resources.moveManyTitle', { count: files.length })
         : files[0].isDir
-          ? 'Move directory'
-          : 'Rename or move resource';
-    const overwriteCtaLabel = isMulti ? `Move ${files.length} with overwrite` : 'Move with overwrite';
+          ? t('resources.moveDirectoryTitle')
+          : t('resources.renameOrMoveResourceTitle');
+    const overwriteCtaLabel = isMulti
+        ? t('resources.moveManyOverwrite', { count: files.length })
+        : t('resources.moveOverwrite');
 
     return (
         <>
@@ -198,11 +204,9 @@ function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProp
                     </DialogTitle>
                     <DialogDescription>
                         {isMulti ? (
-                            <>Move every selected item into the destination directory.</>
+                            <>{t('resources.moveManyDescription')}</>
                         ) : (
-                            <>
-                                Update the path of <code>{files[0].path}</code>.
-                            </>
+                            <>{t('resources.moveSingleDescription', { path: files[0].path })}</>
                         )}
                     </DialogDescription>
                 </DialogHeader>
@@ -217,29 +221,23 @@ function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProp
                             name="destination"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>{isMulti ? 'Destination directory' : 'New path'}</FormLabel>
+                                    <FormLabel>
+                                        {isMulti ? t('resources.destinationDirectory') : t('resources.newPath')}
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
                                             autoComplete="off"
                                             autoFocus
                                             disabled={isMoving}
-                                            placeholder={
-                                                isMulti ? 'Leave empty to move into the library root' : undefined
-                                            }
+                                            placeholder={isMulti ? t('resources.moveRootPlaceholder') : undefined}
                                         />
                                     </FormControl>
                                     <FormDescription>
                                         {isMulti ? (
-                                            <>
-                                                Relative directory inside your library. Leave empty for the root. Each
-                                                item keeps its current filename.
-                                            </>
+                                            <>{t('resources.destinationDirectoryDescription')}</>
                                         ) : (
-                                            <>
-                                                Relative path inside your library. End with <code>/</code> to drop the
-                                                entry into that directory.
-                                            </>
+                                            <>{t('resources.movePathDescription')}</>
                                         )}
                                     </FormDescription>
                                     <FormMessage />
@@ -254,7 +252,7 @@ function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProp
                                 type="button"
                                 variant="outline"
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </Button>
                             <OverwriteButtons
                                 isDisabled={isSubmitDisabled}
@@ -264,7 +262,7 @@ function ResourcesMoveDialogForm({ files, onClose }: ResourcesMoveDialogFormProp
                                 }}
                                 overwriteLabel={overwriteCtaLabel}
                                 primaryIcon={FolderInput}
-                                primaryLabel="Move"
+                                primaryLabel={t('common.move')}
                                 primaryType="submit"
                             />
                         </div>

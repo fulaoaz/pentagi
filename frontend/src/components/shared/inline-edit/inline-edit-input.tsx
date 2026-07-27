@@ -2,6 +2,7 @@ import { Check, Loader2, X } from 'lucide-react';
 import { type KeyboardEvent, type Ref } from 'react';
 
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
+import { useLocale } from '@/hooks/use-locale';
 import { cn } from '@/lib/utils';
 
 interface InlineEditInputProps {
@@ -64,6 +65,8 @@ export function InlineEditInput({
     onSave,
     placeholder,
 }: InlineEditInputProps) {
+    const { t } = useLocale();
+
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -94,14 +97,14 @@ export function InlineEditInput({
                 className="gap-0 pr-2"
             >
                 <InputGroupButton
-                    aria-label="Save"
+                    aria-label={t('common.save')}
                     disabled={busy}
                     onClick={onSave}
                 >
                     {busy ? <Loader2 className="animate-spin" /> : <Check />}
                 </InputGroupButton>
                 <InputGroupButton
-                    aria-label="Cancel"
+                    aria-label={t('common.cancel')}
                     disabled={busy}
                     onClick={onCancel}
                 >

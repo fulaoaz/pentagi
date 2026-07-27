@@ -33,6 +33,7 @@ import {
     useTerminalLogAddedSubscription,
     useVectorStoreLogAddedSubscription,
 } from '@/graphql/types';
+import { useLocale } from '@/hooks/use-locale';
 import { Log } from '@/lib/log';
 
 interface FlowContextValue {
@@ -63,6 +64,7 @@ interface FlowProviderProps {
 
 export function FlowProvider({ children }: FlowProviderProps) {
     const { flowId } = useParams();
+    const { t } = useLocale();
 
     const [selectedAssistantIds, setSelectedAssistantIds] = useState<Record<string, null | string>>({});
 
@@ -177,13 +179,13 @@ export function FlowProvider({ children }: FlowProviderProps) {
         if (flowError) {
             const raw = flowError.message ?? '';
             const isNotFound = /no rows in result set|not found/i.test(raw);
-            toast.error(isNotFound ? 'Flow not found' : 'Failed to load flow', {
+            toast.error(isNotFound ? t('flow.provider.notFound') : t('flow.provider.loadFailed'), {
                 description: isNotFound ? undefined : raw || undefined,
                 id: 'flow-load-error',
             });
             Log.error('Error loading flow:', flowError);
         }
-    }, [flowError]);
+    }, [flowError, t]);
 
     const submitAutomationMessage = useCallback(
         async (values: FlowFormValues) => {
@@ -203,15 +205,14 @@ export function FlowProvider({ children }: FlowProviderProps) {
                     },
                 });
             } catch (error) {
-                const description =
-                    error instanceof Error ? error.message : 'An error occurred while submitting message';
-                toast.error('Failed to submit message', {
+                const description = error instanceof Error ? error.message : t('flow.provider.submitMessageError');
+                toast.error(t('flow.provider.submitMessageFailed'), {
                     description,
                 });
                 Log.error('Error submitting message:', error);
             }
         },
-        [flowId, flowStatus, putUserInput],
+        [flowId, flowStatus, putUserInput, t],
     );
 
     const stopAutomation = useCallback(async () => {
@@ -226,13 +227,13 @@ export function FlowProvider({ children }: FlowProviderProps) {
                 },
             });
         } catch (error) {
-            const description = error instanceof Error ? error.message : 'An error occurred while stopping flow';
-            toast.error('Failed to stop flow', {
+            const description = error instanceof Error ? error.message : t('flow.provider.stopFlowError');
+            toast.error(t('flow.provider.stopFlowFailed'), {
                 description,
             });
             Log.error('Error stopping flow:', error);
         }
-    }, [flowId, stopFlowMutation]);
+    }, [flowId, stopFlowMutation, t]);
 
     const createAssistant = useCallback(
         async (values: FlowFormValues) => {
@@ -264,15 +265,14 @@ export function FlowProvider({ children }: FlowProviderProps) {
                     }
                 }
             } catch (error) {
-                const description =
-                    error instanceof Error ? error.message : 'An error occurred while creating assistant';
-                toast.error('Failed to create assistant', {
+                const description = error instanceof Error ? error.message : t('flow.provider.createAssistantError');
+                toast.error(t('flow.provider.createAssistantFailed'), {
                     description,
                 });
                 Log.error('Error creating assistant:', error);
             }
         },
-        [flowId, createAssistantMutation, selectAssistant],
+        [flowId, createAssistantMutation, selectAssistant, t],
     );
 
     const submitAssistantMessage = useCallback(
@@ -296,15 +296,14 @@ export function FlowProvider({ children }: FlowProviderProps) {
                     },
                 });
             } catch (error) {
-                const description =
-                    error instanceof Error ? error.message : 'An error occurred while calling assistant';
-                toast.error('Failed to call assistant', {
+                const description = error instanceof Error ? error.message : t('flow.provider.callAssistantError');
+                toast.error(t('flow.provider.callAssistantFailed'), {
                     description,
                 });
                 Log.error('Error calling assistant:', error);
             }
         },
-        [flowId, submitAssistantMessageMutation],
+        [flowId, submitAssistantMessageMutation, t],
     );
 
     const stopAssistant = useCallback(
@@ -321,15 +320,14 @@ export function FlowProvider({ children }: FlowProviderProps) {
                     },
                 });
             } catch (error) {
-                const description =
-                    error instanceof Error ? error.message : 'An error occurred while stopping assistant';
-                toast.error('Failed to stop assistant', {
+                const description = error instanceof Error ? error.message : t('flow.provider.stopAssistantError');
+                toast.error(t('flow.provider.stopAssistantFailed'), {
                     description,
                 });
                 Log.error('Error stopping assistant:', error);
             }
         },
-        [flowId, stopAssistantMutation],
+        [flowId, stopAssistantMutation, t],
     );
 
     const deleteAssistant = useCallback(
@@ -355,15 +353,14 @@ export function FlowProvider({ children }: FlowProviderProps) {
                     selectAssistant(null);
                 }
             } catch (error) {
-                const description =
-                    error instanceof Error ? error.message : 'An error occurred while deleting assistant';
-                toast.error('Failed to delete assistant', {
+                const description = error instanceof Error ? error.message : t('flow.provider.deleteAssistantError');
+                toast.error(t('flow.provider.deleteAssistantFailed'), {
                     description,
                 });
                 Log.error('Error deleting assistant:', error);
             }
         },
-        [flowId, selectedAssistantId, deleteAssistantMutation, selectAssistant],
+        [flowId, selectedAssistantId, deleteAssistantMutation, selectAssistant, t],
     );
 
     const value = useMemo(

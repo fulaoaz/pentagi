@@ -12,7 +12,9 @@
 
 ## 汉化版说明
 
-这是 PentAGI 的简体中文维护分支，默认分支为 `zh-CN`。汉化以用户实际可见、需要理解和操作的内容为重点，包括网页界面、安装器、REST/GraphQL 错误提示，以及项目自有的 Grafana 面板。
+这是 PentAGI 的简体中文维护分支，默认分支为 `zh-CN`。汉化以用户实际可见、需要理解和操作的内容为重点，包括网页界面、交互式安装器、REST/GraphQL 错误提示，以及项目自有的 Grafana 面板。仓库内 `backend/cmd/installer` 的终端安装器也已完成汉化，并由 GitHub Actions 自动构建多平台版本。
+
+项目发布说明、界面预览与部署体验见：[浮潦の小窝 - PentAGI 简体中文维护版发布](https://fulao.cc/2026/07/27/pentagi-zh-cn/)。
 
 以下内容有意保留英文，避免改变程序契约、影响模型效果或增加无意义的上游冲突：
 
@@ -25,7 +27,7 @@
 - `ghcr.io/fulaoaz/pentagi:zh-cn`：最新汉化版。
 - `ghcr.io/fulaoaz/pentagi:zh-cn-<commit>`：按提交锁定的可回滚版本。
 
-与上游安装方式相比，本分支的 `docker-compose.yml` 和 `.env.example` 默认使用上述 GHCR 汉化镜像。`pentagi.com` 提供的安装器属于上游官方发行渠道，版本和默认镜像可能先于或晚于本汉化分支；需要稳定使用中文界面时，优先采用下方的 Docker Compose 安装方式。
+与上游安装方式相比，本分支的 `docker-compose.yml`、`.env.example` 和汉化安装器默认使用上述 GHCR 汉化镜像。汉化安装器可从 [`zh-cn-installer-latest`](https://github.com/fulaoaz/pentagi/releases/tag/zh-cn-installer-latest) 下载；`pentagi.com` 提供的安装器属于上游官方发行渠道，不是本分支构建的汉化版本。
 
 当前版本已在 Windows 11、WSL2 Ubuntu 24.04 和 Docker Desktop 环境完成实际验证：镜像拉取、数据库迁移、HTTPS 访问、默认管理员登录、首次改密流程和中文仪表盘均正常。首次访问本机地址时，浏览器会提示自签名证书，这是默认本地 TLS 配置的预期行为。
 
@@ -56,6 +58,9 @@
 - [架构](#架构)
   - [智能体监管](#advanced-agent-supervision)
 - [快速开始](#快速开始)
+  - [使用汉化镜像（推荐）](#使用汉化镜像推荐)
+  - [使用汉化安装程序](#使用汉化安装程序)
+  - [手动安装](#手动安装)
 - [登录后如何使用 PentAGI](#登录后如何使用-pentagi)
 - [API 访问](#api-访问)
   - [LLM 提供商配置](#自定义-llm-提供商配置)
@@ -638,14 +643,17 @@ docker compose pull
 docker compose up -d
 ```
 
-### 使用官方安装程序
+### 使用汉化安装程序
 
-PentAGI 上游提供带有终端交互界面的安装程序，可简化配置和部署流程。安装程序会引导你完成系统检查、LLM 提供商设置、搜索引擎配置和安全加固。以下下载地址属于 `pentagi.com` 官方发行渠道；若安装器写入的是上游默认镜像，请在生成的 `.env` 中将 `PENTAGI_IMAGE` 改为 `ghcr.io/fulaoaz/pentagi:zh-cn`，再执行部署。
+本仓库自带 Go 编写的终端交互式安装器，源码位于 [`backend/cmd/installer`](backend/cmd/installer)。安装器界面、系统检查、配置向导、部署进度、维护菜单和密码重置提示均已汉化；命令、环境变量、提供商 ID 和原始技术错误仍保留英文，便于排障和对照上游文档。
+
+每次 `zh-CN` 分支更新后，GitHub Actions 都会重新构建并覆盖发布 [`zh-cn-installer-latest`](https://github.com/fulaoaz/pentagi/releases/tag/zh-cn-installer-latest)。安装器内嵌当前汉化分支的 Compose、`.env` 模板和示例配置，默认部署 `ghcr.io/fulaoaz/pentagi:zh-cn`。
 
 **支持的平台：**
-- **Linux**：amd64 [下载](https://pentagi.com/downloads/linux/amd64/installer-latest.zip) | arm64 [下载](https://pentagi.com/downloads/linux/arm64/installer-latest.zip)
-- **Windows**：amd64 [下载](https://pentagi.com/downloads/windows/amd64/installer-latest.zip)
-- **macOS**：amd64（Intel）[下载](https://pentagi.com/downloads/darwin/amd64/installer-latest.zip) | arm64（M 系列芯片）[下载](https://pentagi.com/downloads/darwin/arm64/installer-latest.zip)
+- **Linux**：amd64 [下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-linux-amd64.zip) | arm64 [下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-linux-arm64.zip)
+- **Windows**：amd64 [下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-windows-amd64.zip)
+- **macOS**：amd64（Intel）[下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-darwin-amd64.zip) | arm64（Apple Silicon）[下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-darwin-arm64.zip)
+- **完整性校验**：[SHA256SUMS](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/SHA256SUMS)
 
 **快速安装（Linux amd64）：**
 
@@ -653,15 +661,44 @@ PentAGI 上游提供带有终端交互界面的安装程序，可简化配置和
 # 创建安装目录
 mkdir -p pentagi && cd pentagi
 
-# 下载安装程序
-wget -O installer.zip https://pentagi.com/downloads/linux/amd64/installer-latest.zip
+# 下载汉化安装程序
+wget -O installer.zip https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-linux-amd64.zip
 
 # 解压
 unzip installer.zip
 
 # 运行交互式安装程序
+chmod +x installer
+sudo ./installer
+```
+
+Windows 用户需先启动 Docker Desktop，解压后在 PowerShell 中运行：
+
+```powershell
+.\installer.exe
+```
+
+也可以在 Linux、WSL 或 macOS 中直接从当前分支源码构建。以下命令会先把 Compose、`.env` 模板和示例配置嵌入安装器，再生成可独立运行的二进制文件；Windows 用户建议直接下载上面的 `.zip` 成品：
+
+```bash
+git clone --branch zh-CN https://github.com/fulaoaz/pentagi.git
+cd pentagi/backend
+go generate ./cmd/installer/files
+go build -trimpath -o ../installer ./cmd/installer
+cd ..
 ./installer
 ```
+
+仓库中容易混淆的安装相关文件如下：
+
+| 路径 | 用途 | 是否需要汉化 |
+| --- | --- | --- |
+| `backend/cmd/installer` | 面向用户的交互式安装、配置和维护程序 | 已汉化 |
+| `docker-compose*.yml`、`.env.example` | 安装器和手动部署共用的配置模板 | 中文说明已补充，变量名保持英文 |
+| `scripts/version.sh`、`scripts/version.ps1` | 开发和发布时计算版本号 | 开发脚本，无需汉化 |
+| `scripts/entrypoint.sh` | 容器内部启动入口 | 内部脚本，无需汉化 |
+
+> `pentagi.com/downloads/.../installer-latest.zip` 是上游官方安装器，不是此分支构建的汉化安装器。要确保安装界面和默认镜像都来自汉化分支，请使用上面的 GitHub Release 下载地址。
 
 **前置条件与权限：**
 

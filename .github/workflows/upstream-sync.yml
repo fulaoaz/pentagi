@@ -14,7 +14,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 concurrency:
   group: upstream-sync
@@ -84,12 +83,10 @@ jobs:
 
       - name: Record upstream conflict
         if: steps.merge.outputs.result == 'conflict'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONFLICT_FILE: ${{ runner.temp }}/upstream-conflicts.txt
-          UPSTREAM_BRANCH: ${{ inputs.upstream_branch || 'main' }}
-          UPSTREAM_SHA: ${{ steps.merge.outputs.upstream_sha }}
         run: |
+          CONFLICT_FILE="$RUNNER_TEMP/upstream-conflicts.txt"
+          UPSTREAM_BRANCH="${{ inputs.upstream_branch || 'main' }}"
+          UPSTREAM_SHA="${{ steps.merge.outputs.upstream_sha }}"
           {
             echo "上游分支：\`vxcontrol/pentagi:${UPSTREAM_BRANCH}\`"
             echo "上游提交：\`${UPSTREAM_SHA}\`"
@@ -98,18 +95,20 @@ jobs:
             sed 's/^/- \`/; s/$/\`/' "$CONFLICT_FILE"
             echo ""
             echo "工作流已自动中止合并，没有修改 \`zh-CN\` 分支。请在本地完成汉化复核后重新推送。"
-          } > "$RUNNER_TEMP/upstream-conflict-issue.md"
+          } > "$RUNNER_TEMP/upstream-conflict-summary.md"
+          cat "$RUNNER_TEMP/upstream-conflict-summary.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "同步冲突已记录到本次 Actions 运行摘要和 artifact；本次运行不创建同步 PR。"
 
-          issue_number="$(gh issue list --state open --search 'upstream sync conflict in:title' --json number,title --jq '.[] | select(.title == "chore(zh-CN): upstream sync conflict") | .number' | head -n 1)"
-          if [ -n "$issue_number" ]; then
-            gh issue comment "$issue_number" --body-file "$RUNNER_TEMP/upstream-conflict-issue.md"
-          else
-            gh issue create \
-              --title "chore(zh-CN): upstream sync conflict" \
-              --body-file "$RUNNER_TEMP/upstream-conflict-issue.md"
-          fi
-
-          echo "同步冲突已记录到 Issue；本次运行不创建同步 PR。"
+      - name: Upload upstream conflict details
+        if: steps.merge.outputs.result == 'conflict'
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-conflicts-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/upstream-conflicts.txt
+            ${{ runner.temp }}/upstream-conflict-summary.md
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Install frontend dependencies
         if: steps.merge.outputs.result == 'updated'

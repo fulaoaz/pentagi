@@ -162,5 +162,25 @@ if (graphqlResponseI18nCheck.status !== 0) {
   process.exit(graphqlResponseI18nCheck.status ?? 1);
 }
 
+const regressionCheck = spawnSync(
+  "go",
+  ["test", "./pkg/config", "./pkg/tools", "./pkg/providers/embeddings"],
+  {
+    cwd: path.join(repositoryDirectory, "backend"),
+    encoding: "utf8",
+    shell: process.platform === "win32",
+    stdio: "inherit",
+  },
+);
+
+if (regressionCheck.status !== 0) {
+  console.error(
+    "上游改动已合并但尚未提交。请复核配置、搜索工具和嵌入模型回归测试，再完成提交。",
+  );
+  process.exit(regressionCheck.status ?? 1);
+}
+
+run("git", ["diff", "--check"]);
+
 run("git", ["commit", "--no-edit"]);
 console.log(`${upstreamRef} 已合并；推送前请运行完整测试。`);

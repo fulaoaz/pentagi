@@ -31,6 +31,8 @@
 
 当前版本已在 Windows 11、WSL2 Ubuntu 24.04 和 Docker Desktop 环境完成实际验证：镜像拉取、数据库迁移、HTTPS 访问、默认管理员登录、首次改密流程和中文仪表盘均正常。首次访问本机地址时，浏览器会提示自签名证书，这是默认本地 TLS 配置的预期行为。
 
+最近一轮维护还修复了几类容易让任务卡住的问题：重启 Docker 后会校验并自动重建失效的任务容器；嵌入服务暂时不可用时，工具结果和指南内容仍会保留在任务日志中；Google AI 嵌入现在支持自定义 `EMBEDDING_URL`；Tavily 支持兼容网关的 `/search` 地址和 Bearer 认证；PostgreSQL exporter 的长查询不会再因为无界索引阻止日志写入。
+
 ### 汉化界面预览
 
 ![PentAGI 简体中文仪表盘](docs/images/zh-cn-dashboard.jpg)
@@ -745,7 +747,7 @@ cd ..
 以下项目仍需通过环境变量、Compose 文件或挂载的配置文件在服务端设置：
 
 - **LLM 凭据和连接信息**：OpenAI、Anthropic、Bedrock、Ollama、自定义提供商及类似后端所需的 API 密钥、端点、认证方式和提供商专用连接设置。仅部分提供商支持通过配置文件路径加载设置，例如 `OLLAMA_SERVER_CONFIG_PATH` 和 `LLM_SERVER_CONFIG_PATH`。
-- **搜索提供商凭据和选项**：包括 `DUCKDUCKGO_*`、`GOOGLE_*`、`TAVILY_API_KEY`、`TRAVERSAAL_API_KEY`、`PERPLEXITY_*`、`SEARXNG_*` 和 `SPLOITUS_ENABLED` 等设置。
+- **搜索提供商凭据和选项**：包括 `DUCKDUCKGO_*`、`GOOGLE_*`、`TAVILY_API_KEY`、`TAVILY_BASE_URL`、`TAVILY_USE_BEARER_AUTH`、`TRAVERSAAL_API_KEY`、`PERPLEXITY_*`、`SEARXNG_*` 和 `SPLOITUS_ENABLED` 等设置。
 - **第三方集成**：Langfuse、Graphiti 及类似外部服务仍需在服务端配置。
 - **MCP 服务器管理**：网页控制台目前尚未提供可直接使用的 MCP 设置页面。
 
@@ -824,6 +826,10 @@ SPLOITUS_ENABLED=true
 GOOGLE_API_KEY=your_google_key
 GOOGLE_CX_KEY=your_google_cx
 TAVILY_API_KEY=your_tavily_key
+# 可选：兼容 Tavily HTTP API 的网关基础地址；PentAGI 会自动追加 /search
+TAVILY_BASE_URL=https://tavily-gateway.example.com/api/tavily
+# 启用后使用 Authorization: Bearer <TAVILY_API_KEY>，而非 JSON 中的 api_key 字段
+TAVILY_USE_BEARER_AUTH=true
 TRAVERSAAL_API_KEY=your_traversaal_key
 PERPLEXITY_API_KEY=your_perplexity_key
 PERPLEXITY_MODEL=sonar-pro
@@ -2745,6 +2751,25 @@ DOCKER_DEFAULT_IMAGE_FOR_PENTEST=mycompany/pentest-tools:v2.0
 > [!NOTE]
 > 如果用户在任务中明确指定 Docker 镜像，系统会尝试直接使用该镜像，而忽略这些设置。这些变量只影响系统的自动镜像选择过程。
 
+#### 本地增强执行环境
+
+默认的 `debian:latest` 只包含极少的基础命令。项目提供了可本地构建的增强执行镜像，其中包含 Bash、Python 3（含 `venv` 与 `pip`）、Git、curl、wget、CA 证书、OpenSSH 客户端、`jq`、文件与压缩工具，以及 `iproute2`、ping、DNS 查询、netcat、traceroute 等常用网络诊断命令。
+
+在项目根目录执行一次构建：
+
+```bash
+docker build -t pentagi-executor:local -f examples/images/executor/Dockerfile .
+```
+
+然后在 `.env` 中将两个自动选择的执行镜像都设为本地镜像：
+
+```bash
+DOCKER_DEFAULT_IMAGE=pentagi-executor:local
+DOCKER_DEFAULT_IMAGE_FOR_PENTEST=pentagi-executor:local
+```
+
+重启 PentAGI 后，新建任务流会使用该镜像；已创建的任务流仍使用其已有的主执行容器。镜像定义位于 [`examples/images/executor/Dockerfile`](examples/images/executor/Dockerfile)，可按日常工作负载补充软件包后重新构建。
+
 有关使用自定义渗透测试镜像开展 OpenVAS/GVM 高级实验的方法，请参阅[通过自定义渗透测试镜像使用 OpenVAS](examples/guides/openvas-custom-image.md)。
 
 #### 受限网络、Docker 镜像站与代理
@@ -3389,7 +3414,7 @@ docker compose restart pentagi
 - **Mistral**：不支持 `EMBEDDING_MODEL` 或自定义 HTTP 客户端
 - **Jina**：不支持自定义 HTTP 客户端
 - **HuggingFace**：必须设置 `EMBEDDING_KEY`，支持其他所有选项
-- **GoogleAI**：不支持 `EMBEDDING_URL`，必须设置 `EMBEDDING_KEY`
+- **GoogleAI**：支持 `EMBEDDING_URL` 自定义端点；仍必须设置 `EMBEDDING_KEY`。端点应填写 Google AI 兼容服务的基础地址，系统会保留其路径并追加 SDK 请求路径
 - **VoyageAI**：支持所有配置选项
 
 如果未指定 `EMBEDDING_URL` 和 `EMBEDDING_KEY`，系统会尝试使用对应 LLM 提供商的设置。例如，`EMBEDDING_PROVIDER=openai` 时使用 `OPEN_AI_KEY`。

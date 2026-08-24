@@ -165,7 +165,9 @@ type Config struct {
 	TraversaalAPIKey string `env:"TRAVERSAAL_API_KEY"`
 
 	// === Search Engine: Tavily AI ===
-	TavilyAPIKey string `env:"TAVILY_API_KEY"`
+	TavilyAPIKey        string `env:"TAVILY_API_KEY"`
+	TavilyBaseURL       string `env:"TAVILY_BASE_URL"`
+	TavilyUseBearerAuth bool   `env:"TAVILY_USE_BEARER_AUTH" envDefault:"false"`
 
 	// === Search Engine: Perplexity AI ===
 	PerplexityAPIKey      string `env:"PERPLEXITY_API_KEY"`

@@ -468,14 +468,35 @@ func (fte *flowToolsExecutor) Prepare(ctx context.Context) error {
 	if cnt, err := fte.db.GetFlowPrimaryContainer(ctx, fte.flowID); err == nil {
 		switch cnt.Status {
 		case database.ContainerStatusRunning:
-			fte.primaryID = cnt.ID
-			fte.primaryLID = cnt.LocalID.String
-			if err := fte.syncMissingFiles(ctx); err != nil {
-				return fmt.Errorf("failed to sync missing files to container '%s': %w", PrimaryTerminalName(fte.flowID), err)
+			running, runtimeErr := fte.docker.IsContainerRunning(ctx, cnt.LocalID.String)
+			if runtimeErr == nil && running {
+				fte.primaryID = cnt.ID
+				fte.primaryLID = cnt.LocalID.String
+				if err := fte.syncMissingFiles(ctx); err != nil {
+					return fmt.Errorf("failed to sync missing files to container '%s': %w", PrimaryTerminalName(fte.flowID), err)
+				}
+				return nil
 			}
-			return nil
+
+			// Docker may be restarted independently of PentAGI. Do not trust a
+			// persisted "running" status when its runtime container is gone.
+			logger := logrus.WithFields(logrus.Fields{
+				"flow_id":      fte.flowID,
+				"container":    cnt.Name,
+				"container_id": cnt.LocalID.String,
+			})
+			if runtimeErr != nil {
+				logger.WithError(runtimeErr).Warn("persisted primary container is unavailable; recreating it")
+			} else {
+				logger.Warn("persisted primary container is stopped; recreating it")
+			}
+			if err := fte.docker.RemoveContainer(ctx, cnt.LocalID.String, cnt.ID); err != nil {
+				return fmt.Errorf("failed to remove unavailable primary container '%s': %w", PrimaryTerminalName(fte.flowID), err)
+			}
 		default:
-			fte.docker.RemoveContainer(ctx, cnt.LocalID.String, cnt.ID)
+			if err := fte.docker.RemoveContainer(ctx, cnt.LocalID.String, cnt.ID); err != nil {
+				return fmt.Errorf("failed to remove primary container '%s': %w", PrimaryTerminalName(fte.flowID), err)
+			}
 		}
 	}
 

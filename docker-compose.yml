@@ -151,6 +151,8 @@ services:
       - GOOGLE_LR_KEY=${GOOGLE_LR_KEY:-}
       - TRAVERSAAL_API_KEY=${TRAVERSAAL_API_KEY:-}
       - TAVILY_API_KEY=${TAVILY_API_KEY:-}
+      - TAVILY_BASE_URL=${TAVILY_BASE_URL:-}
+      - TAVILY_USE_BEARER_AUTH=${TAVILY_USE_BEARER_AUTH:-false}
       - PERPLEXITY_API_KEY=${PERPLEXITY_API_KEY:-}
       - PERPLEXITY_MODEL=${PERPLEXITY_MODEL:-sonar}
       - PERPLEXITY_CONTEXT_SIZE=${PERPLEXITY_CONTEXT_SIZE:-low}
@@ -218,6 +220,7 @@ services:
 
   pgexporter:
     image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    command: ["--config.file=/etc/postgres_exporter.yml"]
     restart: unless-stopped
     depends_on:
       pgvector:
@@ -230,6 +233,8 @@ services:
       - ${POSTGRES_EXPORTER_LISTEN_IP:-127.0.0.1}:${POSTGRES_EXPORTER_LISTEN_PORT:-9187}:9187
     environment:
       - DATA_SOURCE_NAME=postgresql://${PENTAGI_POSTGRES_USER:-postgres}:${PENTAGI_POSTGRES_PASSWORD:-postgres}@pgvector:5432/${PENTAGI_POSTGRES_DB:-pentagidb}?sslmode=disable
+    volumes:
+      - ./examples/configs/postgres-exporter.yml:/etc/postgres_exporter.yml:ro
     logging:
       options:
         max-size: 50m

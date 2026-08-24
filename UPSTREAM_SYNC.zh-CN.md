@@ -24,7 +24,14 @@ node scripts/sync-upstream.mjs --remote=upstream --branch=main
 
 ## 自动检查
 
-`.github/workflows/upstream-sync.yml` 每小时检查一次官方主线。有新提交时，它会在个人仓库创建或更新同步 PR；主 CI 会运行词典测试、前端英文基线、提供商测试标签、安装器汉化门禁和 REST/GraphQL API 错误响应门禁。GitHub 只会从仓库默认分支加载计划任务，因此请确保该工作流已存在于默认分支（个人汉化仓库建议将 `zh-CN` 设为默认分支）。
+`.github/workflows/upstream-sync.yml` 每小时检查一次官方主线。有新提交时，它会在个人仓库创建或更新同步 PR。工作流会先准备与项目一致的 Node、pnpm 和 Go 工具链，再在合并结果上运行：
+
+- 前端英文基线、提供商测试标签和 Prettier 门禁；
+- 安装器、REST/GraphQL 错误响应本地化测试；
+- 配置、搜索工具、嵌入模型回归测试；
+- `git diff --check`。
+
+合并冲突会直接停止并给出本地解决提示，不会把半成品推到 `zh-CN`。手动运行时可以在 `workflow_dispatch` 中指定要同步的上游分支，默认是 `main`。GitHub 只会从仓库默认分支加载计划任务，因此请确保该工作流已存在于默认分支（个人汉化仓库建议将 `zh-CN` 设为默认分支）。
 
 ## 自动构建汉化镜像
 
@@ -42,7 +49,7 @@ docker compose up -d
 
 当前 GHCR 包可以匿名拉取；如果以后将包改为私有，再执行 `gh auth token | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin`。汉化分支的 `docker-compose.yml` 和 `.env.example` 已默认使用该镜像。
 
-上游同步 PR 合并到 `zh-CN` 后会自动触发同一镜像工作流，因此本地部署只需再次执行 `docker compose pull pentagi` 和 `docker compose up -d pentagi`。
+上游同步 PR 合并到 `zh-CN` 后会自动触发同一镜像工作流，因此本地部署只需再次执行 `docker compose pull pentagi` 和 `docker compose up -d pentagi`。如果 Docker 在系统重启后丢失了任务容器，应用现在会在下一次任务准备阶段校验容器实际状态并自动重建，不再只相信数据库里残留的 `running` 标记。
 
 界面英文基线记录尚未汉化的已知文案。新增或消失的条目都会使检查失败：
 

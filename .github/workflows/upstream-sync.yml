@@ -14,6 +14,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 concurrency:
   group: upstream-sync
@@ -54,30 +55,69 @@ jobs:
         env:
           UPSTREAM_BRANCH: ${{ inputs.upstream_branch || 'main' }}
         run: |
+          set -o pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git remote add upstream https://github.com/vxcontrol/pentagi.git
           git fetch upstream "$UPSTREAM_BRANCH" --prune
 
           if git merge-base --is-ancestor "upstream/$UPSTREAM_BRANCH" HEAD; then
+            echo "result=none" >> "$GITHUB_OUTPUT"
             echo "updates=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          if ! git merge --no-ff --no-commit "upstream/$UPSTREAM_BRANCH"; then
+          set +e
+          git merge --no-ff --no-commit "upstream/$UPSTREAM_BRANCH"
+          merge_status=$?
+          set -e
+          if [ "$merge_status" -ne 0 ]; then
+            git diff --name-only --diff-filter=U | sort > "$RUNNER_TEMP/upstream-conflicts.txt"
             git merge --abort || true
-            echo "上游合并存在冲突；请在本地 zh-CN 分支解决后再运行同步。" >&2
-            exit 1
+            echo "result=conflict" >> "$GITHUB_OUTPUT"
+            echo "updates=false" >> "$GITHUB_OUTPUT"
+            echo "upstream_sha=$(git rev-parse "upstream/$UPSTREAM_BRANCH")" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          echo "result=updated" >> "$GITHUB_OUTPUT"
           echo "updates=true" >> "$GITHUB_OUTPUT"
 
+      - name: Record upstream conflict
+        if: steps.merge.outputs.result == 'conflict'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFLICT_FILE: ${{ runner.temp }}/upstream-conflicts.txt
+          UPSTREAM_BRANCH: ${{ inputs.upstream_branch || 'main' }}
+          UPSTREAM_SHA: ${{ steps.merge.outputs.upstream_sha }}
+        run: |
+          {
+            echo "上游分支：\`vxcontrol/pentagi:${UPSTREAM_BRANCH}\`"
+            echo "上游提交：\`${UPSTREAM_SHA}\`"
+            echo ""
+            echo "本次合并涉及冲突的文件："
+            sed 's/^/- \`/; s/$/\`/' "$CONFLICT_FILE"
+            echo ""
+            echo "工作流已自动中止合并，没有修改 \`zh-CN\` 分支。请在本地完成汉化复核后重新推送。"
+          } > "$RUNNER_TEMP/upstream-conflict-issue.md"
+
+          issue_number="$(gh issue list --state open --search 'upstream sync conflict in:title' --json number,title --jq '.[] | select(.title == "chore(zh-CN): upstream sync conflict") | .number' | head -n 1)"
+          if [ -n "$issue_number" ]; then
+            gh issue comment "$issue_number" --body-file "$RUNNER_TEMP/upstream-conflict-issue.md"
+          else
+            gh issue create \
+              --title "chore(zh-CN): upstream sync conflict" \
+              --body-file "$RUNNER_TEMP/upstream-conflict-issue.md"
+          fi
+
+          echo "同步冲突已记录到 Issue；本次运行不创建同步 PR。"
+
       - name: Install frontend dependencies
-        if: steps.merge.outputs.updates == 'true'
+        if: steps.merge.outputs.result == 'updated'
         working-directory: frontend
         run: pnpm install --frozen-lockfile
 
       - name: Run frontend localization gates
-        if: steps.merge.outputs.updates == 'true'
+        if: steps.merge.outputs.result == 'updated'
         working-directory: frontend
         run: |
           pnpm run i18n:check
@@ -85,7 +125,7 @@ jobs:
           pnpm run prettier
 
       - name: Run backend localization and regression gates
-        if: steps.merge.outputs.updates == 'true'
+        if: steps.merge.outputs.result == 'updated'
         working-directory: backend
         env:
           GOSUMDB: "sum.golang.org"
@@ -96,12 +136,12 @@ jobs:
           go test ./pkg/config ./pkg/tools ./pkg/providers/embeddings
 
       - name: Check merged diff
-        if: steps.merge.outputs.updates == 'true'
+        if: steps.merge.outputs.result == 'updated'
         run: |
           git diff --check
 
       - name: Create or update synchronization PR
-        if: steps.merge.outputs.updates == 'true'
+        if: steps.merge.outputs.result == 'updated'
         uses: peter-evans/create-pull-request@v8
         with:
           base: zh-CN

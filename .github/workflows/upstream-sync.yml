@@ -111,30 +111,33 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Decide whether this conflict needs notification
-        id: conflict_notification
+      - name: Restore conflict notification marker
+        id: conflict_marker
         if: steps.merge.outputs.result == 'conflict'
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/upstream-conflict-notified
+          key: upstream-conflict-notified-${{ steps.merge.outputs.upstream_sha }}
+          lookup-only: true
+
+      - name: Save conflict notification marker
+        if: steps.merge.outputs.result == 'conflict' && steps.conflict_marker.outputs.cache-hit != 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
-          LAST_NOTIFIED_SHA: ${{ vars.UPSTREAM_SYNC_LAST_NOTIFIED_SHA }}
           UPSTREAM_SHA: ${{ steps.merge.outputs.upstream_sha }}
         run: |
-          if [ "$LAST_NOTIFIED_SHA" = "$UPSTREAM_SHA" ]; then
-            echo "send=false" >> "$GITHUB_OUTPUT"
-            echo "同一个上游提交的冲突此前已通知，本次仅保留摘要和 artifact，不重复发送邮件。"
-            exit 0
-          fi
+          marker_dir="$RUNNER_TEMP/upstream-conflict-notified"
+          mkdir -p "$marker_dir"
+          printf '%s\n' "$UPSTREAM_SHA" > "$marker_dir/upstream-sha.txt"
 
-          if gh variable set UPSTREAM_SYNC_LAST_NOTIFIED_SHA --repo "$GITHUB_REPOSITORY" --body "$UPSTREAM_SHA"; then
-            echo "send=true" >> "$GITHUB_OUTPUT"
-            echo "已登记新的上游冲突，将本次运行标记为失败以触发 GitHub Actions 邮件通知。"
-          else
-            echo "send=true" >> "$GITHUB_OUTPUT"
-            echo "::error title=无法登记冲突通知状态::无法保存上游提交标记；本次仍会失败并发送通知，下次检查可能重复提醒。"
-          fi
+      - name: Persist conflict notification marker
+        if: steps.merge.outputs.result == 'conflict' && steps.conflict_marker.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/upstream-conflict-notified
+          key: upstream-conflict-notified-${{ steps.merge.outputs.upstream_sha }}
 
       - name: Fail and notify on upstream conflict
-        if: steps.merge.outputs.result == 'conflict' && steps.conflict_notification.outputs.send == 'true'
+        if: steps.merge.outputs.result == 'conflict' && steps.conflict_marker.outputs.cache-hit != 'true'
         env:
           UPSTREAM_BRANCH: ${{ inputs.upstream_branch || 'main' }}
           UPSTREAM_SHA: ${{ steps.merge.outputs.upstream_sha }}
@@ -156,7 +159,7 @@ jobs:
           exit 1
 
       - name: Finish duplicate conflict check
-        if: steps.merge.outputs.result == 'conflict' && steps.conflict_notification.outputs.send == 'false'
+        if: steps.merge.outputs.result == 'conflict' && steps.conflict_marker.outputs.cache-hit == 'true'
         run: |
           echo "同一上游提交的冲突已通知；本次检查正常结束，避免重复发送邮件。"
 

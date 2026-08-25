@@ -141,7 +141,13 @@ jobs:
 
   docker-build:
     needs: lint-and-test
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    # The localized fork publishes its maintained image through
+    # `zh-cn-image.yml` to GHCR. Keep the upstream Docker Hub job available
+    # for the source repository, but skip it here because this fork does not
+    # own the upstream Docker Hub credentials.
+    if: >-
+      github.repository != 'fulaoaz/pentagi' &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -12,6 +12,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -88,13 +89,13 @@ jobs:
           UPSTREAM_BRANCH="${{ inputs.upstream_branch || 'main' }}"
           UPSTREAM_SHA="${{ steps.merge.outputs.upstream_sha }}"
           {
-            echo "上游分支：\`vxcontrol/pentagi:${UPSTREAM_BRANCH}\`"
-            echo "上游提交：\`${UPSTREAM_SHA}\`"
+            printf '上游分支：`vxcontrol/pentagi:%s`\n' "$UPSTREAM_BRANCH"
+            printf '上游提交：`%s`\n' "$UPSTREAM_SHA"
             echo ""
             echo "本次合并涉及冲突的文件："
             sed 's/^/- \`/; s/$/\`/' "$CONFLICT_FILE"
             echo ""
-            echo "工作流已自动中止合并，没有修改 \`zh-CN\` 分支。请在本地完成汉化复核后重新推送。"
+            printf '工作流已自动中止合并，没有修改 `zh-CN` 分支。请在本地完成汉化复核后重新推送。\n'
           } > "$RUNNER_TEMP/upstream-conflict-summary.md"
           cat "$RUNNER_TEMP/upstream-conflict-summary.md" >> "$GITHUB_STEP_SUMMARY"
           echo "同步冲突已记录到本次 Actions 运行摘要和 artifact；本次运行不创建同步 PR。"
@@ -109,6 +110,55 @@ jobs:
             ${{ runner.temp }}/upstream-conflict-summary.md
           if-no-files-found: error
           retention-days: 30
+
+      - name: Decide whether this conflict needs notification
+        id: conflict_notification
+        if: steps.merge.outputs.result == 'conflict'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LAST_NOTIFIED_SHA: ${{ vars.UPSTREAM_SYNC_LAST_NOTIFIED_SHA }}
+          UPSTREAM_SHA: ${{ steps.merge.outputs.upstream_sha }}
+        run: |
+          if [ "$LAST_NOTIFIED_SHA" = "$UPSTREAM_SHA" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "同一个上游提交的冲突此前已通知，本次仅保留摘要和 artifact，不重复发送邮件。"
+            exit 0
+          fi
+
+          if gh variable set UPSTREAM_SYNC_LAST_NOTIFIED_SHA --repo "$GITHUB_REPOSITORY" --body "$UPSTREAM_SHA"; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "已登记新的上游冲突，将本次运行标记为失败以触发 GitHub Actions 邮件通知。"
+          else
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "::error title=无法登记冲突通知状态::无法保存上游提交标记；本次仍会失败并发送通知，下次检查可能重复提醒。"
+          fi
+
+      - name: Fail and notify on upstream conflict
+        if: steps.merge.outputs.result == 'conflict' && steps.conflict_notification.outputs.send == 'true'
+        env:
+          UPSTREAM_BRANCH: ${{ inputs.upstream_branch || 'main' }}
+          UPSTREAM_SHA: ${{ steps.merge.outputs.upstream_sha }}
+        run: |
+          conflict_count="$(wc -l < "$RUNNER_TEMP/upstream-conflicts.txt")"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          {
+            echo ""
+            echo "## 邮件通知"
+            echo ""
+            echo "本次同步因上游合并冲突而失败，GitHub Actions 会按账号通知设置发送工作流失败邮件。"
+            echo ""
+            printf '%s\n' "- 上游：\`vxcontrol/pentagi:${UPSTREAM_BRANCH}@${UPSTREAM_SHA}\`"
+            echo "- 冲突文件：${conflict_count} 个"
+            printf '%s\n' '- 处理：合并已中止，`zh-CN` 分支未被半成品覆盖'
+            echo "- 详情：${run_url}（运行摘要和 artifact）"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=上游汉化同步冲突::vxcontrol/pentagi:${UPSTREAM_BRANCH}@${UPSTREAM_SHA} 有 ${conflict_count} 个冲突文件；合并已中止，详情见运行摘要和 artifact。"
+          exit 1
+
+      - name: Finish duplicate conflict check
+        if: steps.merge.outputs.result == 'conflict' && steps.conflict_notification.outputs.send == 'false'
+        run: |
+          echo "同一上游提交的冲突已通知；本次检查正常结束，避免重复发送邮件。"
 
       - name: Install frontend dependencies
         if: steps.merge.outputs.result == 'updated'

@@ -1,10 +1,10 @@
 # 跟进上游更新
 
-汉化分支以 `vxcontrol/pentagi:main` 为上游基准，保留英文词典作为回退和差异参照。
+中文默认的 `main` 维护主线以 `vxcontrol/pentagi:main` 为上游基准，保留英文词典作为回退、可切换界面和差异参照。
 
 ## 本地同步
 
-请先提交当前改动，再在 `zh-CN` 分支执行：
+请先提交当前改动，再在 `main` 分支执行：
 
 ```bash
 node scripts/sync-upstream.mjs
@@ -31,27 +31,28 @@ node scripts/sync-upstream.mjs --remote=upstream --branch=main
 - 配置、搜索工具、嵌入模型回归测试；
 - `git diff --check`。
 
-如果上游结构变化造成合并冲突，工作流会自动中止合并，把冲突文件写入 Actions 运行摘要和可下载 artifact。第一次发现某个上游提交的冲突时，工作流会将本次运行标记为失败，以便 GitHub Actions 按你的通知设置发送失败邮件；失败摘要会说明上游分支、提交 SHA、冲突文件数量和处理方式，artifact 中保留完整文件列表。工作流会用 GitHub Actions 缓存记录已通知的上游提交，因此同一个提交在后续定时检查中只会保留摘要和 artifact，不重复发送邮件。它不会把半成品推到 `zh-CN`，也不会创建同步 PR。完成本地汉化复核后重新推送，下一轮检查会自动恢复正常。手动运行时可以在 `workflow_dispatch` 中指定要同步的上游分支，默认是 `main`。GitHub 只会从仓库默认分支加载计划任务，因此请确保该工作流已存在于默认分支（个人汉化仓库建议将 `zh-CN` 设为默认分支）。
+如果上游结构变化造成合并冲突，工作流会自动中止合并，把冲突文件写入 Actions 运行摘要和可下载 artifact。第一次发现某个上游提交的冲突时，工作流会将本次运行标记为失败，以便 GitHub Actions 按你的通知设置发送失败邮件；失败摘要会说明上游分支、提交 SHA、冲突文件数量和处理方式，artifact 中保留完整文件列表。工作流会用 GitHub Actions 缓存记录已通知的上游提交，因此同一个提交在后续定时检查中只会保留摘要和 artifact，不重复发送邮件。它不会把半成品推到 `main`，也不会创建同步 PR。完成本地汉化复核后重新推送，下一轮检查会自动恢复正常。手动运行时可以在 `workflow_dispatch` 中指定要同步的上游分支，默认是 `main`。GitHub 只会从仓库默认分支加载计划任务，因此请确保该工作流已存在于默认分支。
 
 GitHub 账号需要开启 Actions 失败通知才能收到邮件：进入 **Settings → Notifications → Actions**，启用工作流失败邮件。邮件由 GitHub 发送，正文会链接到对应运行记录；冲突文件和详细说明在运行摘要与 artifact 中查看。本流程不把邮箱地址或 SMTP 密码写入仓库。若需要自定义收件人、主题或邮件模板，再单独配置 SMTP secrets 和通知步骤。
 
 ## 自动构建汉化镜像
 
-向 `zh-CN` 分支推送提交后，`.github/workflows/zh-cn-image.yml` 会使用当前源码构建 Linux amd64 镜像，并发布以下标签：
+向 `main` 推送提交后，`.github/workflows/zh-cn-image.yml` 会使用当前源码构建 Linux amd64 镜像，并发布以下标签：
 
-- `ghcr.io/fulaoaz/pentagi:zh-cn`：始终指向最新的汉化版本。
-- `ghcr.io/fulaoaz/pentagi:zh-cn-<commit>`：用于锁定和回滚到具体提交。
+- `ghcr.io/fulaoaz/pentagi:main`：始终指向最新的中文默认、英文可选版本。
+- `ghcr.io/fulaoaz/pentagi:main-<commit>`：用于锁定和回滚到具体提交。
+- `ghcr.io/fulaoaz/pentagi:zh-cn` 和 `zh-cn-<commit>`：兼容旧部署的等价标签。
 
 如果 GHCR 包尚未设为公开，请先在 WSL 中使用具有 `read:packages` 权限的 GitHub 令牌登录，然后拉取并通过 Compose 启动：
 
 ```bash
-docker pull ghcr.io/fulaoaz/pentagi:zh-cn
+docker pull ghcr.io/fulaoaz/pentagi:main
 docker compose up -d
 ```
 
-当前 GHCR 包可以匿名拉取；如果以后将包改为私有，再执行 `gh auth token | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin`。汉化分支的 `docker-compose.yml` 和 `.env.example` 已默认使用该镜像。
+当前 GHCR 包可以匿名拉取；如果以后将包改为私有，再执行 `gh auth token | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin`。`main` 的 `docker-compose.yml` 和 `.env.example` 已默认使用该镜像。
 
-上游同步 PR 合并到 `zh-CN` 后会自动触发同一镜像工作流，因此本地部署只需再次执行 `docker compose pull pentagi` 和 `docker compose up -d pentagi`。如果 Docker 在系统重启后丢失了任务容器，应用现在会在下一次任务准备阶段校验容器实际状态并自动重建，不再只相信数据库里残留的 `running` 标记。
+上游同步 PR 合并到 `main` 后会自动触发同一镜像工作流，因此本地部署只需再次执行 `docker compose pull pentagi` 和 `docker compose up -d pentagi`。如果 Docker 在系统重启后丢失了任务容器，应用现在会在下一次任务准备阶段校验容器实际状态并自动重建，不再只相信数据库里残留的 `running` 标记。
 
 界面英文基线记录尚未汉化的已知文案。新增或消失的条目都会使检查失败：
 

@@ -36,9 +36,9 @@ const currentBranch = run("git", ["branch", "--show-current"], {
   capture: true,
 });
 
-if (currentBranch !== "zh-CN") {
+if (currentBranch !== "main") {
   console.error(
-    `请在 zh-CN 分支运行此脚本（当前分支：${currentBranch || "游离 HEAD"}）。`,
+    `请在 main 分支运行此脚本（当前分支：${currentBranch || "游离 HEAD"}）。`,
   );
   process.exit(1);
 }
@@ -52,7 +52,7 @@ const behind = Number(
 );
 
 if (behind === 0) {
-  console.log(`zh-CN 已与 ${upstreamRef} 保持同步。`);
+  console.log(`中文默认的 main 已与 ${upstreamRef} 保持同步。`);
   process.exit(0);
 }
 

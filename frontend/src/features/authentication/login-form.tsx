@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Languages } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import type { Translate } from '@/lib/i18n';
+import type { Locale, Translate } from '@/lib/i18n';
 import type { OAuthProvider } from '@/providers/user-provider';
 
 import Github from '@/components/icons/github';
@@ -13,7 +14,9 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FormSubmitButton } from '@/components/ui/form-submit-button';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from '@/hooks/use-locale';
+import { localeNames, locales } from '@/lib/i18n';
 import { useUser } from '@/providers/user-provider';
 
 import { PasswordChangeForm } from './password-change-form';
@@ -64,7 +67,7 @@ interface LoginFormProps {
 }
 
 function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
-    const { t } = useLocale();
+    const { locale, setLocale, t } = useLocale();
     const formSchema = useMemo(() => buildFormSchema(t), [t]);
     const errorMessage = t('auth.invalidLoginOrPassword');
     const errorProviderMessage = t('auth.providerFailed');
@@ -180,7 +183,32 @@ function LoginForm({ providers, returnUrl = '/flows/new' }: LoginFormProps) {
                 className="mx-auto grid w-[350px] gap-8"
                 onSubmit={form.handleSubmit(handleSubmit)}
             >
-                <h1 className="text-center text-3xl font-bold">PentAGI</h1>
+                <div className="space-y-3">
+                    <h1 className="text-center text-3xl font-bold">PentAGI</h1>
+                    <div className="flex items-center justify-center gap-2 text-sm">
+                        <Languages
+                            aria-hidden="true"
+                            className="text-muted-foreground size-4"
+                        />
+                        <span className="text-muted-foreground">{t('settings.language')}</span>
+                        <Tabs
+                            onValueChange={(value) => setLocale(value as Locale)}
+                            value={locale}
+                        >
+                            <TabsList className="h-8 p-0.5">
+                                {locales.map((value) => (
+                                    <TabsTrigger
+                                        className="h-7 px-2 text-xs"
+                                        key={value}
+                                        value={value}
+                                    >
+                                        {localeNames[value]}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+                        </Tabs>
+                    </div>
+                </div>
 
                 {providers?.length > 0 && (
                     <>

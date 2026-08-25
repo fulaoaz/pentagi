@@ -2,6 +2,10 @@ export const locales = ['en', 'zh-CN'] as const;
 
 export type Locale = (typeof locales)[number];
 
+/**
+ * This maintained fork is Chinese-first. The upstream English dictionary is
+ * retained as a selectable locale rather than being replaced or discarded.
+ */
 export const defaultLocale: Locale = 'zh-CN';
 
 export const localeNames: Record<Locale, string> = {

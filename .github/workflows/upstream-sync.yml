@@ -1,4 +1,4 @@
-name: Sync upstream into zh-CN
+name: Sync upstream into localized main
 
 on:
   schedule:
@@ -25,11 +25,11 @@ jobs:
     if: github.repository == 'fulaoaz/pentagi'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout zh-CN
+      - name: Checkout localized main
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: zh-CN
+          ref: main
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -95,7 +95,7 @@ jobs:
             echo "本次合并涉及冲突的文件："
             sed 's/^/- \`/; s/$/\`/' "$CONFLICT_FILE"
             echo ""
-            printf '工作流已自动中止合并，没有修改 `zh-CN` 分支。请在本地完成汉化复核后重新推送。\n'
+            printf '工作流已自动中止合并，没有修改 `main` 分支。请在本地完成汉化复核后重新推送。\n'
           } > "$RUNNER_TEMP/upstream-conflict-summary.md"
           cat "$RUNNER_TEMP/upstream-conflict-summary.md" >> "$GITHUB_STEP_SUMMARY"
           echo "同步冲突已记录到本次 Actions 运行摘要和 artifact；本次运行不创建同步 PR。"
@@ -152,7 +152,7 @@ jobs:
             echo ""
             printf '%s\n' "- 上游：\`vxcontrol/pentagi:${UPSTREAM_BRANCH}@${UPSTREAM_SHA}\`"
             echo "- 冲突文件：${conflict_count} 个"
-            printf '%s\n' '- 处理：合并已中止，`zh-CN` 分支未被半成品覆盖'
+            printf '%s\n' '- 处理：合并已中止，`main` 分支未被半成品覆盖'
             echo "- 详情：${run_url}（运行摘要和 artifact）"
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::error title=上游汉化同步冲突::vxcontrol/pentagi:${UPSTREAM_BRANCH}@${UPSTREAM_SHA} 有 ${conflict_count} 个冲突文件；合并已中止，详情见运行摘要和 artifact。"
@@ -196,13 +196,13 @@ jobs:
         if: steps.merge.outputs.result == 'updated'
         uses: peter-evans/create-pull-request@v8
         with:
-          base: zh-CN
+          base: main
           branch: sync/upstream-main
           delete-branch: true
           commit-message: |
             chore(upstream): merge upstream main
 
-            Constraint: Preserve zh-CN localization while importing upstream changes
+            Constraint: Preserve English baseline and Simplified Chinese locale while importing upstream changes
             Confidence: high
             Scope-risk: broad
           title: "chore(upstream): sync latest upstream main"

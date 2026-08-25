@@ -12,7 +12,9 @@
 
 ## 汉化版说明
 
-这是 PentAGI 的简体中文维护分支，默认分支为 `zh-CN`。汉化以用户实际可见、需要理解和操作的内容为重点，包括网页界面、交互式安装器、REST/GraphQL 错误提示，以及项目自有的 Grafana 面板。仓库内 `backend/cmd/installer` 的终端安装器也已完成汉化，并由 GitHub Actions 自动构建多平台版本。
+这是 PentAGI 的简体中文维护版，默认分支为 `main`。它以原版英文为基础保留全部原有功能，并额外提供简体中文界面、交互式安装器、REST/GraphQL 错误提示和项目自有 Grafana 面板的本地化。
+
+网页首次打开默认显示简体中文；原版英文没有被删除，在登录页和登录后的侧边栏用户菜单中都可以随时切换为 English。选择会保存在当前浏览器中，后续访问继续使用该语言。这样主线既保持中文用户开箱即用，也保留原版英语文案作为可选界面和上游差异参照。
 
 项目发布说明、界面预览与部署体验见：[浮潦の小窝 - PentAGI 简体中文维护版发布](https://fulao.cc/2026/07/27/pentagi-zh-cn/)。
 
@@ -22,10 +24,11 @@
 - AI 系统提示词、工具调用协议、工具原始输出和服务端技术日志。
 - 自动生成的 Swagger 文档，以及直接引入的第三方 Grafana 面板。
 
-本分支通过 GitHub Actions 每小时检查 `vxcontrol/pentagi:main`。发现更新后会创建同步 PR，先经过汉化门禁和 CI 复核；合并到 `zh-CN` 后，会自动构建并发布以下 Linux amd64 镜像：
+`main` 通过 GitHub Actions 每小时检查 `vxcontrol/pentagi:main`。发现更新后会创建同步 PR，先经过汉化门禁和 CI 复核；合并到 `main` 后，会自动构建并发布以下 Linux amd64 镜像：
 
-- `ghcr.io/fulaoaz/pentagi:zh-cn`：最新汉化版。
-- `ghcr.io/fulaoaz/pentagi:zh-cn-<commit>`：按提交锁定的可回滚版本。
+- `ghcr.io/fulaoaz/pentagi:main`：最新的中文默认、英文可选维护版。
+- `ghcr.io/fulaoaz/pentagi:main-<commit>`：按提交锁定的可回滚版本。
+- `ghcr.io/fulaoaz/pentagi:zh-cn` 和 `zh-cn-<commit>`：为已部署用户保留的兼容标签。
 
 与上游安装方式相比，本分支的 `docker-compose.yml`、`.env.example` 和汉化安装器默认使用上述 GHCR 汉化镜像。汉化安装器可从 [`zh-cn-installer-latest`](https://github.com/fulaoaz/pentagi/releases/tag/zh-cn-installer-latest) 下载；`pentagi.com` 提供的安装器属于上游官方发行渠道，不是本分支构建的汉化版本。
 
@@ -37,7 +40,7 @@
 
 ![PentAGI 简体中文仪表盘](docs/images/zh-cn-dashboard.jpg)
 
-> 截图来自 `zh-CN` 分支提交 `3101d2b` 构建的 GHCR 镜像，并在本机 WSL2 部署后通过默认管理员登录实测。图中展示了中文导航、数据分析页签、时间范围、图表说明和空状态。
+> 截图来自本维护版构建的 GHCR 镜像，并在本机 WSL2 部署后通过默认管理员登录实测。图中展示了中文导航、数据分析页签、时间范围、图表说明和空状态；登录页与侧边栏用户菜单均可切换为 English。
 
 > [!IMPORTANT]
 > PentAGI 是安全测试项目，仓库中的 Sploitus 测试夹具会保存公开漏洞样本文本。例如 `backend/pkg/tools/testdata/sploitus_result_nginx.json` 可能被 Windows Defender 按其中的 PHP WebShell 特征识别为后门，但它本身是不会被项目执行的 JSON 测试数据。遇到告警时应核对命中路径、文件类型和 Defender 的“是否执行”状态，不要直接为整个仓库添加杀毒排除项；仓库外的可执行文件告警也应单独处置。
@@ -622,12 +625,12 @@ PentAGI 的架构遵循模块化、可扩展和安全的设计原则，主要组
 ### 使用汉化镜像（推荐）
 
 ```bash
-git clone --branch zh-CN https://github.com/fulaoaz/pentagi.git
+git clone https://github.com/fulaoaz/pentagi.git
 cd pentagi
 cp .env.example .env
 ```
 
-首次启动前，请至少修改 `.env` 中的 `COOKIE_SIGNING_SALT` 和 `PENTAGI_POSTGRES_PASSWORD`，并按需填写一个 LLM 提供商的密钥或本地模型地址。`PENTAGI_IMAGE` 已默认指向 `ghcr.io/fulaoaz/pentagi:zh-cn`。
+首次启动前，请至少修改 `.env` 中的 `COOKIE_SIGNING_SALT` 和 `PENTAGI_POSTGRES_PASSWORD`，并按需填写一个 LLM 提供商的密钥或本地模型地址。`PENTAGI_IMAGE` 已默认指向 `ghcr.io/fulaoaz/pentagi:main`。
 
 ```bash
 docker compose pull
@@ -649,7 +652,7 @@ docker compose up -d
 
 本仓库自带 Go 编写的终端交互式安装器，源码位于 [`backend/cmd/installer`](backend/cmd/installer)。安装器界面、系统检查、配置向导、部署进度、维护菜单和密码重置提示均已汉化；命令、环境变量、提供商 ID 和原始技术错误仍保留英文，便于排障和对照上游文档。
 
-每次 `zh-CN` 分支更新后，GitHub Actions 都会重新构建并覆盖发布 [`zh-cn-installer-latest`](https://github.com/fulaoaz/pentagi/releases/tag/zh-cn-installer-latest)。安装器内嵌当前汉化分支的 Compose、`.env` 模板和示例配置，默认部署 `ghcr.io/fulaoaz/pentagi:zh-cn`。
+每次 `main` 更新后，GitHub Actions 都会重新构建并覆盖发布 [`zh-cn-installer-latest`](https://github.com/fulaoaz/pentagi/releases/tag/zh-cn-installer-latest)。安装器内嵌当前维护主线的 Compose、`.env` 模板和示例配置，默认部署 `ghcr.io/fulaoaz/pentagi:main`。
 
 **支持的平台：**
 - **Linux**：amd64 [下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-linux-amd64.zip) | arm64 [下载](https://github.com/fulaoaz/pentagi/releases/download/zh-cn-installer-latest/pentagi-installer-zh-cn-linux-arm64.zip)
@@ -683,7 +686,7 @@ Windows 用户需先启动 Docker Desktop，解压后在 PowerShell 中运行：
 也可以在 Linux、WSL 或 macOS 中直接从当前分支源码构建。以下命令会先把 Compose、`.env` 模板和示例配置嵌入安装器，再生成可独立运行的二进制文件；Windows 用户建议直接下载上面的 `.zip` 成品：
 
 ```bash
-git clone --branch zh-CN https://github.com/fulaoaz/pentagi.git
+git clone https://github.com/fulaoaz/pentagi.git
 cd pentagi/backend
 go generate ./cmd/installer/files
 go build -trimpath -o ../installer ./cmd/installer
@@ -768,7 +771,7 @@ cd ..
 1. 克隆汉化仓库并进入目录：
 
 ```bash
-git clone --branch zh-CN https://github.com/fulaoaz/pentagi.git
+git clone https://github.com/fulaoaz/pentagi.git
 cd pentagi
 ```
 
@@ -776,14 +779,14 @@ cd pentagi
 
 ```bash
 cp .env.example .env
-# 或：curl -o .env https://raw.githubusercontent.com/fulaoaz/pentagi/zh-CN/.env.example
+# 或：curl -o .env https://raw.githubusercontent.com/fulaoaz/pentagi/main/.env.example
 ```
 
 3. 创建示例配置文件（`example.custom.provider.yml`、`example.ollama.provider.yml`），或下载现成配置：
 
 ```bash
-curl -o example.custom.provider.yml https://raw.githubusercontent.com/fulaoaz/pentagi/zh-CN/examples/configs/custom-openai.provider.yml
-curl -o example.ollama.provider.yml https://raw.githubusercontent.com/fulaoaz/pentagi/zh-CN/examples/configs/ollama-llama318b.provider.yml
+curl -o example.custom.provider.yml https://raw.githubusercontent.com/fulaoaz/pentagi/main/examples/configs/custom-openai.provider.yml
+curl -o example.ollama.provider.yml https://raw.githubusercontent.com/fulaoaz/pentagi/main/examples/configs/ollama-llama318b.provider.yml
 ```
 
 4. 在 `.env` 文件中填写所需的 API 密钥。
@@ -888,7 +891,7 @@ perl -i -pe 's/\s+#.*$//' .env
 7. 启动 PentAGI 服务：
 
 ```bash
-curl -O https://raw.githubusercontent.com/fulaoaz/pentagi/zh-CN/docker-compose.yml
+curl -O https://raw.githubusercontent.com/fulaoaz/pentagi/main/docker-compose.yml
 docker compose up -d
 ```
 
@@ -2723,7 +2726,7 @@ PentAGI 可以为不同任务配置 Docker 镜像选择规则。系统会根据�
 
 | 变量                               | 默认值                          | 说明                                             |
 | ---------------------------------- | ------------------------------- | ------------------------------------------------ |
-| `PENTAGI_IMAGE`                    | `ghcr.io/fulaoaz/pentagi:zh-cn` | PentAGI 主应用服务使用的汉化镜像                 |
+| `PENTAGI_IMAGE`                    | `ghcr.io/fulaoaz/pentagi:main`  | PentAGI 主应用服务使用的中文默认、英文可选镜像   |
 | `DOCKER_DEFAULT_IMAGE`             | `debian:latest`                 | 一般任务或类型不明确的任务所用的默认 Docker 镜像 |
 | `DOCKER_DEFAULT_IMAGE_FOR_PENTEST` | `vxcontrol/kali-linux`          | 安全/渗透测试任务所用的默认 Docker 镜像          |
 

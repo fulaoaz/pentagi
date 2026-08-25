@@ -7,15 +7,11 @@ describe('resolveLocalePreference', () => {
         expect(resolveLocalePreference('en', ['zh-CN'])).toBe('en');
     });
 
-    it('maps Chinese language variants to Simplified Chinese', () => {
+    it('defaults to Simplified Chinese for a new visitor', () => {
         expect(resolveLocalePreference(null, ['zh-Hans-SG', 'en-US'])).toBe('zh-CN');
     });
 
-    it('maps English variants to English', () => {
-        expect(resolveLocalePreference(undefined, ['en-GB', 'zh-CN'])).toBe('en');
-    });
-
-    it('uses the project default for unsupported languages', () => {
-        expect(resolveLocalePreference(null, ['fr-FR'])).toBe('zh-CN');
+    it('does not let browser preferences override the Chinese project default', () => {
+        expect(resolveLocalePreference(undefined, ['en-GB', 'zh-CN'])).toBe('zh-CN');
     });
 });

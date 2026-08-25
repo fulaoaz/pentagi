@@ -2,7 +2,7 @@
 
 [简体中文（默认）](README.md) | **English**
 
-> This file retains the upstream English documentation. For the maintained Chinese edition, its GHCR image, and deployment differences, see [README.md](README.md).
+> The maintained `main` branch is Chinese-first, while preserving the upstream English UI and documentation. The web app starts in Simplified Chinese; select **English** on the login page or in the signed-in sidebar user menu at any time. For the Chinese-maintenance notes, GHCR image, and deployment differences, see [README.md](README.md).
 
 <div align="center" style="font-size: 1.5em; margin: 20px 0;">
     <strong>P</strong>enetration testing <strong>A</strong>rtificial <strong>G</strong>eneral <strong>I</strong>ntelligence

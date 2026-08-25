@@ -1,9 +1,9 @@
-name: Build and publish zh-CN installer
+name: Build and publish zh-CN installer from main
 
 on:
   push:
     branches:
-      - zh-CN
+      - main
   workflow_dispatch:
 
 permissions:
@@ -114,11 +114,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cat > release-notes.md <<'EOF'
-          PentAGI 简体中文交互式安装器，由 `zh-CN` 分支自动构建。
+          PentAGI 简体中文交互式安装器，由双语维护主线 `main` 自动构建。
 
           - 覆盖安装、配置、系统检查、部署、维护和密码重置界面
-          - 内嵌当前汉化分支的 Compose、`.env` 模板和示例配置
-          - 默认部署 `ghcr.io/fulaoaz/pentagi:zh-cn`
+          - 内嵌当前 `main` 的 Compose、`.env` 模板和示例配置
+          - 默认部署 `ghcr.io/fulaoaz/pentagi:main`（同时保留 `zh-cn` 兼容标签）
           - 下载后请先使用 `SHA256SUMS` 校验文件完整性
           EOF
 

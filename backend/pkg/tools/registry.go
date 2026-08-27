@@ -28,6 +28,7 @@ const (
 	PerplexityToolName         = "perplexity"
 	SearxngToolName            = "searxng"
 	SploitusToolName           = "sploitus"
+	EppssToolName              = "eppss"
 	SearchToolName             = "search"
 	SearchResultToolName       = "search_result"
 	EnricherResultToolName     = "enricher_result"
@@ -113,6 +114,7 @@ var toolsTypeMapping = map[string]ToolType{
 	PerplexityToolName:         SearchNetworkToolType,
 	SearxngToolName:            SearchNetworkToolType,
 	SploitusToolName:           SearchNetworkToolType,
+	EppssToolName:              SearchNetworkToolType,
 	SearchToolName:             AgentToolType,
 	SearchResultToolName:       StoreAgentResultToolType,
 	EnricherResultToolName:     StoreAgentResultToolType,
@@ -257,6 +259,12 @@ var registryDefinitions = map[string]llms.FunctionDefinition{
 			"for specific software, services, CVEs, or vulnerability classes (e.g. 'ssh', 'apache log4j', " +
 			"'CVE-2021-44228'). Returns exploit URLs, CVSS scores, CVE references, and publication dates.",
 		Parameters: reflector.Reflect(&SploitusAction{}),
+	},
+
+	EppssToolName: {
+		Name:        EppssToolName,
+		Description: "Look up EPSS scores from FIRST.org for CVEs. EPSS estimates exploit probability (0.0-1.0). Provide CVE IDs separated by comma or space.",
+		Parameters:  reflector.Reflect(&EppssAction{}),
 	},
 	EnricherResultToolName: {
 		Name:        EnricherResultToolName,
@@ -440,7 +448,7 @@ func getMessageType(name string) database.MsglogType {
 	case BrowserToolName:
 		return database.MsglogTypeBrowser
 	case MemoristToolName, SearchToolName, GoogleToolName, DuckDuckGoToolName, TavilyToolName, TraversaalToolName,
-		PerplexityToolName, SearxngToolName, SploitusToolName,
+		PerplexityToolName, SearxngToolName, SploitusToolName, EppssToolName,
 		SearchGuideToolName, SearchAnswerToolName, SearchCodeToolName, SearchInMemoryToolName, GraphitiSearchToolName:
 		return database.MsglogTypeSearch
 	case AdviceToolName:

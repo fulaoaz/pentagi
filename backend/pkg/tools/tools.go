@@ -1001,6 +1001,16 @@ func (fte *flowToolsExecutor) GetAssistantExecutor(cfg AssistantExecutorConfig) 
 			definitions = append(definitions, registryDefinitions[SploitusToolName])
 			handlers[SploitusToolName] = sploitus.Handle
 		}
+
+		eppss := NewEPPSTool(
+			fte.cfg,
+			fte.flowID, nil, nil,
+			fte.slp,
+		)
+		if eppss.IsAvailable() {
+			definitions = append(definitions, registryDefinitions[EppssToolName])
+			handlers[EppssToolName] = eppss.Handle
+		}
 	}
 
 	flowStatus := NewFlowStatusTool(fte.flowID, fte.db, cfg.Summarizer)
@@ -1475,6 +1485,18 @@ func (fte *flowToolsExecutor) GetPentesterExecutor(cfg PentesterExecutorConfig) 
 		ce.handlers[SploitusToolName] = sploitus.Handle
 	}
 
+	eppss := NewEPPSTool(
+		fte.cfg,
+		fte.flowID,
+		cfg.TaskID,
+		cfg.SubtaskID,
+		fte.slp,
+	)
+	if eppss.IsAvailable() {
+		ce.definitions = append(ce.definitions, registryDefinitions[EppssToolName])
+		ce.handlers[EppssToolName] = eppss.Handle
+	}
+
 	return ce, nil
 }
 
@@ -1610,6 +1632,18 @@ func (fte *flowToolsExecutor) GetSearcherExecutor(cfg SearcherExecutorConfig) (C
 	if sploitus.IsAvailable() {
 		ce.definitions = append(ce.definitions, registryDefinitions[SploitusToolName])
 		ce.handlers[SploitusToolName] = sploitus.Handle
+	}
+
+	eppss := NewEPPSTool(
+		fte.cfg,
+		fte.flowID,
+		cfg.TaskID,
+		cfg.SubtaskID,
+		fte.slp,
+	)
+	if eppss.IsAvailable() {
+		ce.definitions = append(ce.definitions, registryDefinitions[EppssToolName])
+		ce.handlers[EppssToolName] = eppss.Handle
 	}
 
 	search := NewSearchTool(
